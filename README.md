@@ -30,7 +30,7 @@ Azure IoT Edge for Linux on Windows is currently in Public Preview. View our Pub
 Documentation for Azure IoT Edge for Linux on Windows (EFLOW) can be found at https://aka.ms/AzEflow-docs.
 
 ## Issues
-Issues can be filed in the issues section of either the [iotedge](https://github.com/Azure/iotedge/issues) or [iotedge-eflow](https://github.com/Azure/iotedge-eflow/issues) Github repositories depending on the specific issue that you are experiencing.  If you are encountering a production level issue, we strongly suggest that you [Create an Azure Support Request](https://docs.microsoft.com/en-us/azure/iot-fundamentals/iot-support-help?view=iotedge-2018-06#create-an-azure-support-request).
+Issues can be filed in the issues section of either the [iotedge](https://github.com/Azure/iotedge/issues) or [iotedge-eflow](https://github.com/Azure/iotedge-eflow/issues) Github repositories depending on the specific issue that you are experiencing.  If you are encountering a production level issue in which you require assistance, we strongly suggest that you [Create an Azure Support Request](https://docs.microsoft.com/en-us/azure/iot-fundamentals/iot-support-help?view=iotedge-2018-06#create-an-azure-support-request).
 
 ## Feature requests
 Feature requests can be filed on the [Azure IoT Edge User Voice page](https://feedback.azure.com/forums/907045-azure-iot-edge). 
