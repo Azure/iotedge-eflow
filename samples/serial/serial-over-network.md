@@ -1,6 +1,8 @@
 # Connecting to serial port over network
 
-Suppose in a workflow, you have an application that works with some devices attached to serial ports. When moving the workflow to run on the EFLOW VM, you have problems accessing serial ports since the EFLOW VM is isolated from serial ports attached to the Windows host. This article describes how to configure the EFLOW VM and host to redirect communications to a serial port over the network. With the redirection, applications running on EFLOW VM can communicate with devices attached to serial ports (USB serial ports included) on the host.
+Suppose in a workflow, you have an application that works with some devices attached to serial ports. When moving the workflow to run on the EFLOW VM, you may have problems accessing serial ports since the EFLOW VM is isolated from serial ports attached to the Windows host.
+
+This article describes how to configure the EFLOW VM and host to redirect communications to a serial port over the network. With the redirection, applications running on EFLOW VM can communicate with devices attached to serial ports (USB serial ports included) on the host.
 
 
 ## The scenario
@@ -64,7 +66,7 @@ Here is an example EFLOW configuration
 	
 
 ### Setup Client
-- Connect EFLOW VM via Windows Admin Center or Powershell.
+- Connect EFLOW VM via Windows Admin Center or Powershell.  Check [Create a new deployment](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-on-windows?view=iotedge-2018-06&tabs=powershell#create-a-new-deployment) on how to create your deployment of EFLOW on your target device.
 - Run socat in client mode: from the WAC CLI or Powershell window, type `sudo socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002`.  The command create a virtual serial port (**/dev/ttyVirtS0**) and relay data between the virtual serial port and server (ip address **172.18.246.137**, port **5002**)
 
 ### Verify connection
