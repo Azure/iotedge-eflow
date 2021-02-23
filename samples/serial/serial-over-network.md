@@ -36,15 +36,15 @@ We can summarize the requirements:
     - Host connection information (IP address and TCP port number).
 
 - For server:
-    - Software to listen to the pre-assigned port and establish a connection to the client
-    - Relay the communications to/from the client with the serial device through a physical serial port
+    - Software to listen to the pre-assigned port and establish a connection to the client.
+    - Relay the communications to/from the client with the serial device through a physical serial port.
 
 
 ## Configure serial over network on EFLOW
 
-Use socat on the client; we configure socat to create a pseudo-ttyS as the device and associate the pseudo-TTYS device with a network port. A pseudo-tty is like a serial port in that it has a /dev entry that can be opened by a program that expects a serial port device, except that instead of belonging to a physical serial device, the data can be intercepted by another program. The socat program intercepts the traffic to/from this pseudo-ttyS and relays the network port data.
+Use socat on the client, we configure socat to create a pseudo-ttyS as the device and associate the pseudo-ttyS device with a network port. A pseudo-tty is like a serial port in that it has a /dev entry that can be opened by a program that expects a serial port device, except that instead of belonging to a physical serial device, the data can be intercepted by another program. The socat program intercepts the traffic to/from this pseudo-ttyS and relays the network port data.
 
-Use hub4com from the com0com project on the server-side. We setup hub4com to associate the network port with the physical serial port, hub4com listens to the assigned port, establishes a connection to the client, and relays data from network port to physical port.
+Use hub4com from the [com0com project](https://sourceforge.net/projects/com0com/files/hub4com/2.1.0.0/) on the server-side. We setup hub4com to associate the network port with the physical serial port, hub4com listens to the assigned port, establishes a connection to the client, and relays data from network port to physical port.
 
 Here is an example EFLOW configuration
 
@@ -55,9 +55,7 @@ Here is an example EFLOW configuration
 - Client virtual serial port name = **/dev/ttyVirtS0**
 
 
-
 ### Setup Host
-Start from the host can set up the host.
 - Download and extract hub4com-2.1.0.0-386.zip from [com0com project](https://sourceforge.net/projects/com0com/files/hub4com/2.1.0.0/) to a local directory, e.g. c:\hub4com
 - Pick a TCP port number to associate to the serial port planned to expose.  In our example environment, we use port number 5002, and the port is associated with COM3
     > If you have a firewall enabled, explicitly configure the firewall rule to allow inbound traffic for TCP port 5002.  Or run the command in the next step and allow access when asked.
@@ -73,26 +71,36 @@ Start from the host can set up the host.
 After the setup complete, you can verify the connection by sending data to the virtual serial port on the client and see if the data is received on the server.  The command window running hub4com will show messages when data received from or sent to the physical serial port.
 
 ### Start the connection when system boot up
-You can further configure to enable the serial over network when the system boot up if necessary.
+You can further configure your host to enable the serial over network server when system boot up if necessary.
 
-- Host: create a scheduled task to run hub4com.  The following PowerShell script example creates a scheduled task that runs when the system starts.
-```
-    # scheduled task properties
-    $taskname='com2tcp_task'
-    $taskpath='\com2tcp_group\'
-    $taskdescription='enable serial over network connection'
-    $taskexecute='C:\hub4com\com2tcp.bat'
-    $taskargument='\\.\COM3 5002'
+- Host: create a scheduled task to run hub4com.  The power shell script [scheduled-task-helper.ps1](./scheduled-task-helper.ps1) provides the following functions:
+    1. `Add-StartupScheduledTask`: takes parameters TaskName, Execute and Argument to create a sheduled task that runs when system starts.
+    2. `Remove-StartupScheduledTask`: task a parameter TaskName to unregister and delete the scheduled task with TaskName.
 
-    # the scheduled task will run in the background when system starts
-    $principal=New-ScheduledTaskPrincipal -UserId admin -LogonType S4U -Id Author
-    $trigger=New-ScheduledTaskTrigger -AtStartup
-    $action=New-ScheduledTaskAction -Execute $taskexecute -Argument $taskargument
+    To use the scripts,
+    1. Save the scripts file to your PC.
+    2. Open an elevated powershell window and change to the directory where you download the script.
+    3. In the powershell window, import functions by dot sourcing the script.
+    ```
+    PS C:\Users\test> . .\scheduled-task-helper.ps1
+    ```
+    4. After importing the script, run the command Add-StartupScheduledTask with arguments
+    ```
+    PS C:\Users\test> Add-StartupScheduledTask -TaskName com2tcp -Execute 'C:\hub4com\com2tcp.bat' -Argument '\\.\COM3 5002'
+    ```
+    5. Check if the task created successfully and is running.  It might take a couple of seconds for task scheduler to start the task so you might see the task in Ready state.  Wait for a couple of seconds and re-run Get-ScheduledTask to get the latest task state.
+    ```
+    PS C:\Users\test> Get-ScheduledTask -TaskName com2tcp
 
-    #register and start the scheduled task
-    Register-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -TaskPath $taskpath -TaskName $taskname -Description $taskdescription
-    Start-ScheduledTask -TaskName $taskname -TaskPath $taskpath
-```
+    TaskPath                                       TaskName                          State
+    --------                                       --------                          -----
+    \                                              com2tcp                           Running
+    ```
+    
+    6. Note: to clean up the scheduled task, run the Remove-StartupScheduledTask command.  You might need to reboot the system to ensure clean up the scheduled task
+    ```
+    PS C:\Users\test> Remove-StartupScheduledTask -TaskName com2tcp
+    ```
 
 - Client: configure socat to run as a service and auto-start at startup
     - Create a SysV init script [$home/socat](#socat-init-script) for running socat as a daemon
