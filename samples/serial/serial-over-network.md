@@ -103,126 +103,46 @@ You can further configure your host to enable the serial over network server whe
     ```
 
 - Client: configure socat to run as a service and auto-start at startup
-    - Create a SysV init script [$home/socat](#socat-init-script) for running socat as a daemon
-    - Create a socat config file [$home/socat.conf](#socat-config-file)
-    - Place socat init script to /etc/init.d and start the socat service
-```
-    sudo cp $home/socat /etc/init.d/
-    chmod +x /etc/init.d/socat
-    sudo update-rc.d socat defaults
-    
-    sudo cp $/home/socat.conf /etc/default/
-    sudo service socat restart
-```
+    1. Create a systemd service file socat-daemon.service for running socat as a daemon.  You can use the sample [socat-daemon.service](./socat-daemon.service) and change the ip address and port number.
+    ```
+    [Unit]
+    Description=service that uses socat to relay /dev/ttyVirtS0 to network connection
+    After=network-online.target
+
+    [Service]
+    ExecStart=/usr/bin/socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002
+    ExecReload=/bin/kill -s HUP $MAINPID
+    ExecStop=/bin/kill -s QUIT $MAINPID
+
+    [Install]
+    WantedBy=multi-user.target
+    ```
+    2. Copy socat-daemon.service to `/etc/systemd/system` and change the file to correct mode.
+    ```
+    sudo cp ~/socat-daemon.service  /etc/systemd/system/socat-daemon.service
+    sudo chmod 644 /etc/systemd/system/socat-daemon.service
+    ```
+    3. Reload systemd configuration.
+    ```
+    sudo systemctl daemon-reload
+    ```
+    4. Now you should be able to `start` and check the service `status`
+    ```
+    sudo systemctl start socat-daemon
+    systemctl status socat-daemon
+    ```
+    5. `Enable` the service to start the serivce automatically on boot
+    ```
+    sudo systemctl enable socat-daemon
+    ```
+    6. You can `stop` or `restart` the socat service when needed.
+    ```
+    sudo systemctl stop socat-daemon
+    sudo systemctl restart socat-daemon
+    ```
 
 
 ## Troubleshooting
 -  Cannot connect to host
     * Make sure the firewall is setup correctly on the host to allow access to the port assigned to the server.
     * On the client, consider run socat with arguments `-d -d -d` to print fatal, error, warning notice, and info messages.
-
-## Appendix
-### socat init script
-
-```
-#! /bin/sh
-### BEGIN INIT INFO
-# Provides:          socat 
-# Required-Start:    $local_fs $time $network $named
-# Required-Stop:     $local_fs $time $network $named
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start/stop (socat a multipurpose relay)
-#
-# Description: The socat init script will start/stop socat as specified in /etc/default/socat 
-#              Then log (FATAL,ERROR,WARN,INFO and Notic) in /var/log/socat.log
-### END INIT INFO
-
-NAME=socat
-DAEMON=/usr/bin/socat
-SOCAT_DEFAULTS='-d -d -d -lf /var/log/socat.log'
-
-. /lib/lsb/init-functions
-. /etc/default/socat.conf
-
-PATH=/bin:/usr/bin:/sbin:/usr/sbin
-
-[ -x $DAEMON ] || exit 0
-
-start_socat() {
-        start-stop-daemon --oknodo --quiet --start \
-                --pidfile /var/run/socat.pid \
-                --background --make-pidfile \
-                --exec $DAEMON -- $SOCAT_DEFAULTS $OPTIONS < /dev/null
-}
-
-stop_socat() {
-        start-stop-daemon --oknodo --stop --quiet --pidfile /var/run/socat.pid --exec $DAEMON
-        rm -f /var/run/socat.pid
-}
-
-start () {
-        start_socat
-        return $?
-}
-
-stop () {
-        for PIDFILE in `ls /var/run/socat.pid 2> /dev/null`; do
-                NAME=`echo $PIDFILE | cut -c16-`
-                NAME=${NAME%%.pid}
-                stop_socat
-        done
-}
-
-case "$1" in
-    start)
-	    log_daemon_msg "Starting multipurpose relay" "socat" 
-	    if start ; then
-		    log_end_msg $?
-	    else
-		    log_end_msg $?
-	    fi
-	    ;;
-    stop)
-	    log_daemon_msg "Stopping multipurpose relay" "socat"
-            if stop ; then
-                   log_end_msg $?
-	   else
-		   log_end_msg $?
-	   fi
-	   ;;
-    restart)
-	    log_daemon_msg "Restarting multipurpose relay" "socat"
-            stop
-            if start ; then
-		    log_end_msg $?
-	    else
-		    log_end_msg $?
-	    fi
-	    ;;
-    reload|force-reload)
-	    log_daemon_msg "Reloading multipurpose relay" "socat"
-	    stop
-	    if start ; then
-		    log_end_msg $?
-	    else
-		    log_end_msg $?
-	    fi
-	    ;;
-    status)
-            status_of_proc -p /var/run/socat.pid /usr/bin/socat socat && exit 0 || exit $?
-	    ;;
-    *)
-        echo "Usage: /etc/init.d/$NAME {start|stop|restart|reload|force-reload|status}"
-        exit 3
-        ;;
-esac
-
-exit 0
-
-```
-
-### socat config file
-```
-OPTIONS="pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002"
-```
