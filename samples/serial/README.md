@@ -2,12 +2,12 @@
 
 Suppose in a workflow, you have an application that works with some devices attached to serial ports. When moving the workflow to run on the EFLOW VM, you may have problems accessing serial ports since the EFLOW VM is isolated from serial ports attached to the Windows host.
 
-This article describes how to configure the EFLOW VM and host to redirect communications to a serial port over the network. With the redirection, applications running on EFLOW VM can communicate with devices attached to serial ports (USB serial ports included) on the host.
+This article describes how to configure the EFLOW VM and host to redirect communications to a serial port over the network. With the redirection, applications running on the EFLOW VM can communicate with devices attached to serial ports (USB serial ports included) on the host.
 
 
 ## The scenario
 
-You have some devices like sensors or Modbus compatible devices connected to serial ports on your host (the **server**), and you want to make use of those devices in applications running on EFLOW VM (the **client**).
+You have some devices like sensors or Modbus compatible devices connected to serial ports on your host (the **server**), and you want to make use of those devices in applications running on the EFLOW VM (the **client**).
 
 Since the client and server are both connected to a Hyper-V virtual switch, we can redirect the communications to a serial port over the network.  The application running on the client only knows how to interact with a serial port, so the client has to have some virtual serial ports for the application.  The client needs the capability to redirect the traffic to/from the virtual serial port to a network socket that connects to the server and, of course, the server information to establish the network socket connection.
 
@@ -48,7 +48,7 @@ Use socat on the client, we configure socat to create a pseudo-ttyS as the devic
 
 Use hub4com from the [com0com project](https://sourceforge.net/projects/com0com/files/hub4com/2.1.0.0/) on the server-side. We setup hub4com to associate the network port with the physical serial port, hub4com listens to the assigned port, establishes a connection to the client, and relays data from network port to physical port.
 
-Here is an example EFLOW configuration
+Here is an example EFLOW configuration:
 
 - Host ip = **172.18.246.137**
 - Host tcp port = **5002**
@@ -60,20 +60,20 @@ Here is an example EFLOW configuration
 ### Setup Host
 - Download and extract hub4com-2.1.0.0-386.zip from [com0com project](https://sourceforge.net/projects/com0com/files/hub4com/2.1.0.0/) to a local directory, e.g. c:\hub4com
 - Pick a TCP port number to associate to the serial port planned to expose.  In our example environment, we use port number 5002, and the port is associated with COM3
-    > If you have a firewall enabled, explicitly configure the firewall rule to allow inbound traffic for TCP port 5002.  Or run the command in the next step and allow access when asked.
+    > If you have a firewall enabled, explicitly configure the firewall rule to allow inbound traffic for TCP port 5002, or run the command in the next step and allow access when asked.
 - Run hub4com in server mode, open a command prompt, type `cd /d c:\hub4com` and `com2tcp.bat \\.\COM3 5002` where **COM3** is the physical serial port name and **5002** is the TCP port number.  Click 'Allow access' if the Windows Defender Firewall dialog box pops up and asks for port access.
 - Hub4Com starts in server mode waiting for a connection.
 	
 
 ### Setup Client
-- Connect EFLOW VM via Windows Admin Center or Powershell.  Check [Create a new deployment](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-on-windows?view=iotedge-2018-06&tabs=powershell#create-a-new-deployment) on how to create your deployment of EFLOW on your target device.
-- Run socat in client mode: from the WAC CLI or Powershell window, type `sudo socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002`.  The command create a virtual serial port (**/dev/ttyVirtS0**) and relay data between the virtual serial port and server (ip address **172.18.246.137**, port **5002**)
+- Connect EFLOW VM via Windows Admin Center or Powershell.  Learn how to [Create a new deployment](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-on-windows?view=iotedge-2018-06&tabs=powershell#create-a-new-deployment) of EFLOW on your target device.
+- Run socat in client mode: from the WAC CLI or Powershell window, type `sudo socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002`.  This command creates a virtual serial port (**/dev/ttyVirtS0**) and relays data between the virtual serial port and server (IP address **172.18.246.137**, port **5002**)
 
 ### Verify connection
-After the setup complete, you can verify the connection by sending data to the virtual serial port on the client and see if the data is received on the server.  The command window running hub4com will show messages when data received from or sent to the physical serial port.
+After the setup is complete, you can verify the connection by sending data to the virtual serial port on the client and see if the data is received on the server.  The command window running hub4com will show messages when data has been received from or sent to the physical serial port.
 
 ### Start the connection when system boot up
-You can further configure your host to enable the serial over network server when system boot up if necessary.
+If necessary, you can further configure your host to enable the serial over network server when system boot up if necessary.
 
 - Host: create a scheduled task to run hub4com.  The power shell script [scheduled-task-helper.ps1](./scheduled-task-helper.ps1) provides the following functions:
     1. `Add-StartupScheduledTask`: takes parameters TaskName, Execute and Argument to create a sheduled task that runs when system starts.
@@ -81,8 +81,8 @@ You can further configure your host to enable the serial over network server whe
 
     To use the scripts,
     1. Save the scripts file to your PC.
-    2. Open an elevated powershell window and change to the directory where you download the script.
-    3. In the powershell window, import functions by dot sourcing the script.
+    2. Open an elevated Powershell window and change to the directory where you download the script.
+    3. In the Powershell window, import functions by dot sourcing the script.
     ```
     PS C:\Users\test> . .\scheduled-task-helper.ps1
     ```
@@ -145,6 +145,6 @@ You can further configure your host to enable the serial over network server whe
 
 
 ## Troubleshooting
--  Cannot connect to host
+-  If you cannot connect to host
     * Make sure the firewall is setup correctly on the host to allow access to the port assigned to the server.
     * On the client, consider run socat with arguments `-d -d -d` to print fatal, error, warning notice, and info messages.
