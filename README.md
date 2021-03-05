@@ -26,8 +26,8 @@ Welcome to the home of Azure IoT Edge for Linux on Windows, a composite project 
 ## Public Preview
 Azure IoT Edge for Linux on Windows is currently in Public Preview. View our Public Preview announcement at https://aka.ms/AzEFLOW-blog as well as a walk through demo at https://aka.ms/AzEFLOW-show.
 
-## Get Started with Azure EFLOW
-To get started with Azure EFLOW Public Preview, you can visit our [EFLOW Docs](https://aka.ms/AzEflow-docs) or [Get Started Now](https://docs.microsoft.com/azure/iot-edge/how-to-install-iot-edge-on-windows).
+- [Get Started Now](https://docs.microsoft.com/azure/iot-edge/how-to-install-iot-edge-on-windows)
+- [Learn More](https://aka.ms/AzEflow-docs)
 
 ## Documentation
 Documentation for Azure IoT Edge for Linux on Windows (EFLOW) can be found at https://aka.ms/AzEflow-docs.
