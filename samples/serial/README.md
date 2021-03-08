@@ -67,7 +67,7 @@ Here is an example EFLOW configuration:
 
 ### Setup Client
 - Connect EFLOW VM via Windows Admin Center or Powershell.  Learn how to [Create a new deployment](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-install-iot-edge-on-windows?view=iotedge-2018-06&tabs=powershell#create-a-new-deployment) of EFLOW on your target device.
-- Run socat in client mode: from the WAC CLI or Powershell window, type `sudo socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002`.  This command creates a virtual serial port (**/dev/ttyVirtS0**) and relays data between the virtual serial port and server (IP address **172.18.246.137**, port **5002**)
+- Run socat in client mode: from the WAC CLI or Powershell window, type `sudo socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=660 tcp:172.18.246.137:5002`.  This command creates a virtual serial port (**/dev/ttyVirtS0**) and relays data between the virtual serial port and server (IP address **172.18.246.137**, port **5002**)
 
 ### Verify connection
 After the setup is complete, you can verify the connection by sending data to the virtual serial port on the client and see if the data is received on the server.  The command window running hub4com will show messages when data has been received from or sent to the physical serial port.
@@ -112,7 +112,7 @@ If necessary, you can further configure your host to enable the serial over netw
     After=network-online.target
 
     [Service]
-    ExecStart=/usr/bin/socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002
+    ExecStart=/usr/bin/socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=660 tcp:172.18.246.137:5002
     ExecReload=/bin/kill -s HUP $MAINPID
     ExecStop=/bin/kill -s QUIT $MAINPID
 

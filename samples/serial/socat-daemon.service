@@ -3,7 +3,7 @@ Description=service that uses socat to relay /dev/ttyVirtS0 to network connectio
 After=network-online.target
 
 [Service]
-ExecStart=/usr/bin/socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=777 tcp:172.18.246.137:5002
+ExecStart=/usr/bin/socat pty,link=/dev/ttyVirtS0,raw,user=iotedge-user,group=dialout,mode=660 tcp:172.18.246.137:5002
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s QUIT $MAINPID
 
