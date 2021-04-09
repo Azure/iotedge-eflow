@@ -20,8 +20,21 @@ These samples require Visual Studio and the Windows Software Development Kit (SD
 Additionally, to stay on top of the latest updates to Windows and the development tools, become a Windows Insider by joining the Windows Insider Program.
 
    [Become a Windows Insider](https://insider.windows.com/)
-   
-   ## Using the samples
+
+## Samples by category
+
+### Azure IoT Edge
+
+| Name           | Description      |  
+|----------------|------------------|  
+| [interop-textmsg-consoleapp](https://aka.ms/AzEFLOW-InteropTextMsgConsoleApp) | Basic interop sample demonstrating text messaging between a Windows console app and an Edge module running insdie the EFLOW VM. | 
+| [interop-customvision-textmsg-uwpapp](https://aka.ms/AzEFLOW-InteropCustomVisionTextMsgUwpApp) | <p>Two more advanced interop samples which demonstrate bidirectional communication between a Windows application and an Edge module running inside the EFLOW VM. </p><ul><li>Text messaging between a UWP application and an Edge module. </li><li>A 'Custom vision' machine learning interop sample with a fruit classifier which uses a Windows UWP app to send camera frames to an Edge module for identification.</li></ul>|  
+
+
+
+
+
+## Using the samples
 
 The easiest way to use these samples without using Git is to download the zip file containing the current version (using the following link or by clicking the "Download ZIP" button on the repo page). You can then unzip the entire archive and use the samples in Visual Studio.
 
@@ -47,19 +60,3 @@ This project welcomes contributions and suggestions. Most contributions require 
 When you submit a pull request, a CLA bot will automatically determine whether you need to provide a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions provided by the bot. You will only need to do this once across all repos using our CLA.
 
 This project has adopted the Microsoft Open Source Code of Conduct. For more information see the Code of Conduct FAQ or contact opencode@microsoft.com with any additional questions or comments.
-
-
-## See also
-
-For additional Windows samples, see [Windows on GitHub](http://microsoft.github.io/windows/). 
-
-## Samples by category
-
-### Azure IoT Edge
-
-| Name           | Description      |  
-|----------------|------------------|  
-| [interop-textmsg-consoleapp](https://aka.ms/AzEFLOW-InteropTextMsgConsoleApp) | Basic interop sample demonstrating text messaging between a Windows console app and an Edge module running insdie the EFLOW VM. | 
-| [interop-customvision-textmsg-uwpapp](https://aka.ms/AzEFLOW-InteropCustomVisionTextMsgUwpApp) | <p>Two more advanced interop samples which demonstrate bidirectional communication between a Windows application and an Edge module running inside the EFLOW VM. </p><ul><li>Text messaging between a UWP application and an Edge module. </li><li>A 'Custom vision' machine learning interop sample with a fruit classifier which uses a Windows UWP app to send camera frames to an Edge module for identification.</li></ul>|  
-
-
