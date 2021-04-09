@@ -12,27 +12,15 @@
 - [ ] [Step 8 - Run samples](./Run%20samples.MD)  
 ---
 # Step 6: Develop the Windows C# UWP Application
-This part describes how to develop the Windows console application in the development VM. Build the Windows application as an [application package in Visual Studio](https://docs.microsoft.com/windows/msix/package/packaging-uwp-apps):
+This part describes how to develop the Windows console application in the development VM. You can follow the [Build and run a C++ console app project](https://docs.microsoft.com/cpp/build/vscpp-step-2-build) guide.
 
-1 Open the below Windows application based on the sample you are running - Use Visual Studio running as Admin.
-   - Text Messaging: `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\textmsg-uwpapp\LeafDeviceUWPApp\LeafDeviceUWPApp.sln`
-   - Custom Vision: `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\customvision\DeviceCustomVisionUWPApp\DeviceCustomVisionUWPApp.sln`
+1 Open the Windows application sample - Use Visual Studio running as Admin.
+   - Network Media Streamer: `WinUSBtoRTSP\NetworkMediaStreamer.sln`
 
-   > **Note:**
-   > Certificate installation
-   > Make sure you include the certificate created on Step 5. The folder should be .\devicetestcertificates\certs
+2. On the top pane, set build to 'Release' and select the 'x64' architecture, and build the project.
 
-2. On the top pane, set build to 'Debug' and select the 'x64' architecture, and build the project.
-
-3. To be able to run the application on the Windows device, build the application as an 'App package' according to [Package a desktop or UWP app in Visual Studio](https://docs.microsoft.com/windows/msix/package/packaging-uwp-apps)
-
-   > **Note:**
-   > Select sideloading without automatic updates
-   > You will be prompted to create a certificate. As this is a test setup, you can create the test certificates for which VS offers an option in the process
-
-4. The output path for UWP package can be found in the below location.
-   - Text Messaging: `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\textmsg-uwpapp\LeafDeviceUWPApp\AppPackages\LeafDeviceUWPApp_1.0.0.0_Debug_Test`
-   - Custom Vision: `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\customvision\DeviceCustomVisionUWPApp\AppPackages\DeviceCustomVisionUWPApp _1.0.0.0_Debug_Test`
+3. The output path for .exe package can be found in the below location.
+   -Network Media Streamer: `WinUSBtoRTSP\CameraRTSPStreamerApp.sl
 
 5. Install the Windows application's dependencies. The Windows host may lack dependencies that are found in the below folders - install of each of these.
 
