@@ -36,6 +36,7 @@ Additionally, to stay on top of the latest updates to Windows and the developmen
 | Name           | Description      |  
 |----------------|------------------|  
 | [serial-passthrough](./serial) | <p>Sample to configure the EFLOW VM and host to redirect communications to a serial port over the network. </li></ul>|  
+| [camera-passthrough](./camera-over-rtsp) | <p>Sample to configure the EFLOW VM and host to redirect video camera feeds over the network using RTSP. </li></ul>|  
 
 
 
