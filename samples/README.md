@@ -21,14 +21,20 @@ Additionally, to stay on top of the latest updates to Windows and the developmen
 
    [Become a Windows Insider](https://insider.windows.com/)
 
-## Samples by category
+### Azure IoT Edge Samples
 
-### Azure IoT Edge
+#### Interop
 
 | Name           | Description      |  
 |----------------|------------------|  
 | [interop-textmsg-consoleapp](./interop-textmsg-consoleapp) | Basic interop sample demonstrating text messaging between a Windows console app and an Edge module running insdie the EFLOW VM. | 
 | [interop-customvision-textmsg-uwpapp](./interop-customvision-textmsg-uwpapp) | <p>Two more advanced interop samples which demonstrate bidirectional communication between a Windows application and an Edge module running inside the EFLOW VM. </p><ul><li>Text messaging between a UWP application and an Edge module. </li><li>A 'Custom vision' machine learning interop sample with a fruit classifier which uses a Windows UWP app to send camera frames to an Edge module for identification.</li></ul>|  
+
+
+#### Hardware Access
+
+| Name           | Description      |  
+|----------------|------------------|  
 | [serial-passthrough](./serial) | <p>Sample to configure the EFLOW VM and host to redirect communications to a serial port over the network. </li></ul>|  
 
 
