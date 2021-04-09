@@ -27,8 +27,8 @@ Additionally, to stay on top of the latest updates to Windows and the developmen
 
 | Name           | Description      |  
 |----------------|------------------|  
-| [interop-textmsg-consoleapp](https://aka.ms/AzEFLOW-InteropTextMsgConsoleApp) | Basic interop sample demonstrating text messaging between a Windows console app and an Edge module running insdie the EFLOW VM. | 
-| [interop-customvision-textmsg-uwpapp](https://aka.ms/AzEFLOW-InteropCustomVisionTextMsgUwpApp) | <p>Two more advanced interop samples which demonstrate bidirectional communication between a Windows application and an Edge module running inside the EFLOW VM. </p><ul><li>Text messaging between a UWP application and an Edge module. </li><li>A 'Custom vision' machine learning interop sample with a fruit classifier which uses a Windows UWP app to send camera frames to an Edge module for identification.</li></ul>|  
+| [interop-textmsg-consoleapp](./interop-textmsg-consoleapp) | Basic interop sample demonstrating text messaging between a Windows console app and an Edge module running insdie the EFLOW VM. | 
+| [interop-customvision-textmsg-uwpapp](./interop-customvision-textmsg-uwpapp) | <p>Two more advanced interop samples which demonstrate bidirectional communication between a Windows application and an Edge module running inside the EFLOW VM. </p><ul><li>Text messaging between a UWP application and an Edge module. </li><li>A 'Custom vision' machine learning interop sample with a fruit classifier which uses a Windows UWP app to send camera frames to an Edge module for identification.</li></ul>|  
 
 
 
