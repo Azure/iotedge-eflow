@@ -85,7 +85,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
     **Note:** Skip the next step if you are on a network with dynamic DNS, then edge modules will automatically be able to resolve the VM’s IP address from its hostname. 
 
     * If you are on a network without dynamic DNS, you will need to assign the VM a static IP address and replace the line
-    `hostname: "…"` with `hostname: "<VM IP Address>"`.
+    `hostname: "…"` with `hostname: "<Linux VM Hostname>"`.
 
  
     * To save the file and exit nano, press <kbd>CTRL</kbd>+<kbd>x</kbd>, confirm save and exit with <kbd>Y</kbd> and press <kbd>Enter</kbd>. This concludes the provisioning and configuration.
