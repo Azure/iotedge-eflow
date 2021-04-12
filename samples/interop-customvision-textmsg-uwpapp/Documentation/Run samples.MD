@@ -10,6 +10,7 @@
 - [x] [Step 6 - Develop the Windows C# Console Application](./Develop%20the%20Windows%20C%23%20Console%20Application.MD)  
 - [x] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [ ] **Step 8 - Run samples**  
+- [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
 
 # Step 9: Run samples
