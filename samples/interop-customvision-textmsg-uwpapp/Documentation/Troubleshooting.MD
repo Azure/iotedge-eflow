@@ -15,11 +15,11 @@ If the previous steps doesn't work, follow these steps:
 
 #### 2. Error when pushing a module to Azure Contianer Registry ####
 To fix an error when pushing the container, ensure that the module.json has the proper registry and container name appended: <repository>.azurecr.io/<containername>. For more information, visit [Can't Push IoT Edge module to Azure Container Registry](https://github.com/MicrosoftDocs/azure-docs/issues/22296).
-<br/>
+<br/><br/>
 
 #### 3. Error when pushing a deploying the CSharpModule app ####
 To fix this error,  change InteropSampleRegistry value in the registry credentials to direct values or add a separate environment variable for the registry container.
-<br/>
+<br/><br/>
 
 #### 4. Operation is not valid due to the current state of the object in microsoft.azure.amqp ####
 This is a bug in AMQP and .NET 5. For more information about this error, check this [thread](https://stackoverflow.com/questions/64804036/operation-is-not-valid-due-to-the-current-state-of-the-object-source-microsoft). The solution is adding AMQP version requirement, as well as using .NET Core 3.1LTS  instead of .NET 5
