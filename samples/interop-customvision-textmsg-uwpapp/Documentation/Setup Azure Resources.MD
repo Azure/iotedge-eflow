@@ -90,6 +90,10 @@ Execute the following instructions:
    Get-AzIotHubDCS -ResourceGroupName InteropSampleRG -IotHubName InteropSampleIoTHub -DeviceId InteropSampleLeafDev -KeyType primary | fl *
    ```
 
+  > **Note:** It is also possible to get the connection streams using Azure Portal
+  >  - Downstream device: in the Azure IoT Hub recently created -> IoT Edge devices -> select the device ID name (InteropSampleDownstreamDev) -> Primary connection string 
+  >  - InteropSampleEdgeDev: in the Azure IoT Hub recently created -> IoT Edge Devices -> select the device ID name (InteropSampleEdgeDev) -> Primary connection string 
+
 *Optional: Create a registry for the modules part of this sample using [New-AzContainerRegistry](https://docs.microsoft.com/powershell/module/az.containerregistry/New-AzContainerRegistry) (or other suitable registry):*
 
    ```
