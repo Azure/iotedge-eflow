@@ -29,6 +29,8 @@ This document uses two samples to demonstrate how Windows applications interoper
 [Step 6 - Develop the Windows C# UWP Application](./Documentation//Develop%20the%20Windows%20C%23%20UWP%20Application.MD)  
 [Step 7 - Configuring the IoT Edge Device](./Documentation/Configuring%20the%20IoT%20Edge%20Device.MD)  
 [Step 8 - Run samples](./Documentation//Run%20samples.MD)  
+[Troubleshooting](./Documentation//Troubleshooting.MD)  
+
 
 ## Feedback
 If you have problems with this sample, please post an issue in this repository.
