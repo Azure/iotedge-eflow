@@ -10,6 +10,7 @@
 - [ ] **Step 6 - Develop the Windows C# Console Application**  
 - [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 8 - Run samples](./Run%20samples.MD)  
+- [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
 # Step 6: Develop the Windows C# UWP Application
 This part describes how to develop the Windows console application in the development VM. Build the Windows application as an [application package in Visual Studio](https://docs.microsoft.com/windows/msix/package/packaging-uwp-apps):
