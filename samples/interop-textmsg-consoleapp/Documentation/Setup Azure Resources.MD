@@ -86,6 +86,11 @@ This part describes how to set up the required Azure entities with the [Azure Cl
    Get-AzIotHubDCS -ResourceGroupName <My Resource Group> -IotHubName <My IoT Hub -DeviceId InteropSampleDownstreamDev -KeyType primary | fl *
    ```
    
+  > **Note:** It is also possible to get the connection streams using Azure Portal
+  >  - Downstream device: in the Azure IoT Hub recently created -> IoT Edge devices -> select the device ID name (InteropSampleDownstreamDev) -> Primary connection string 
+  >  - InteropSampleEdgeDev: in the Azure IoT Hub recently created -> IoT Edge Devices -> select the device ID name (InteropSampleEdgeDev) -> Primary connection string 
+   
+   
    <a name="ContainerRegistry"></a>
 1. **Setup Container Registry**
    > Note: If you already have a container registry you can skip this step.  
