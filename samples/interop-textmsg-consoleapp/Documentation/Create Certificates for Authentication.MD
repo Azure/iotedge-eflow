@@ -11,7 +11,7 @@
 - [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 8 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 9 - Run the Console Application](./Run%20the%20Console%20Application.MD)  
-- [ ] [Troubleshooting](./Troubleshooting.md)  
+- [ ] [Troubleshooting](./Troubleshooting.MD)  
 ---
 # Step 5: Create Certificates for Authentication
 This part describes the relevant steps to create sample certificates for the authentication between downstream device and IoT edge.
