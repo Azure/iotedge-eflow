@@ -33,3 +33,5 @@ We now deploy the Windows application onto the IoT device and run it to let it i
     ```
     You should see something like the following:
       ![Console Application](./Images/IoTEdgeLogs.png)    
+      
+Go to [Next Step](./Troubleshooting.MD)    
