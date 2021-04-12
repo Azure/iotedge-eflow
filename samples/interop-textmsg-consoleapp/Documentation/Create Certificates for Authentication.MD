@@ -17,7 +17,7 @@ This part describes the relevant steps to create sample certificates for the aut
 
 * **To create a sample PKI with certificate validity for one month**  
  Complete the steps within the [Create certificates](https://docs.microsoft.com/azure/iot-edge/tutorial-machine-learning-edge-05-configure-edge-device#create-certificates) section of [Tutorial: Configure an IoT Edge device](https://docs.microsoft.com/azure/iot-edge/tutorial-machine-learning-edge-05-configure-edge-device).  
-    > **Note:** You only need to generate certificates and do not need to upload them to Azure Key Vault as described in the section following Create certificates.. 
+    > **Note:** You only need to generate certificates and do not need to upload them to Azure Key Vault as described in the section following Create certificates. 
 
 * **To generate to generate customizable test certificates**  
 Follow the steps described in [Generate test certificates for Edge Gateway](https://github.com/Azure-Samples/IoTEdgeAndMlSample/tree/master/CreateCertificates) to create sample certificates for use for the interop solution. It generates certificates with default subject name "turbofanGateway" and 30 days validity. To extend the validity of certificates (or) to change the subject name, make the following modifications to **dockerfile** then re-build the docker image.
