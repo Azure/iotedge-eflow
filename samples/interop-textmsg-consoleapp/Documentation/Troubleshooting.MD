@@ -1,5 +1,19 @@
 ## Troubleshooting
 
+## Progress
+
+- [x] [Introduction](../README.md)  
+- [ ] [Step 1 - Setup Azure Resources](./Setup%20Azure%20Resources.MD)
+- [ ] [Step 2 - Setup Azure Resources](./Setup%20Azure%20Resources.MD)
+- [ ] [Step 3 - Setup Azure IoT Edge for Linux on Windows](./Setup%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)
+- [ ] [Step 4 - Develop and publish the IoT Edge Linux module](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
+- [ ] [Step 5 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
+- [ ] [Step 6 - Develop the Windows C# Console Application](./Develop%20the%20Windows%20C%23%20Console%20Application.MD)  
+- [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
+- [ ] [Step 8 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
+- [ ] [Step 9 - Run the Console Application](./Run%20the%20Console%20Application.MD)  
+---
+
 
 #### 1. Console message app shows TLS Error ####
 This problem is usually caused by a gateway issue. On the IoT Edge device configuration (/etc/iotedge/config.yaml) there's a section called hostname. This automatically gets populated with the system hostname. In some cases, hostname is not found and the user will have to use the EFLOW VM IP. Ensure the gateway name in the C# Windows app matches the hostname in the IoT Edge config.yaml. 
