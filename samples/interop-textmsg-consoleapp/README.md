@@ -52,6 +52,7 @@ To exercise this sample you will need the following
 [Step 7 - Configuring the IoT Edge Device](./Documentation/Configuring%20the%20IoT%20Edge%20Device.MD)  
 [Step 8 - Deploy the Modules onto the IoT Edge Device](./Documentation/Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
 [Step 9 - Run the Console Application](./Documentation/Run%20the%20Console%20Application.MD)  
+[Troubleshooting](./Documentation/Troubleshooting.MD)  
 
 ## Feedback
 If you have problems with this sample, please post an issue in this repository.
