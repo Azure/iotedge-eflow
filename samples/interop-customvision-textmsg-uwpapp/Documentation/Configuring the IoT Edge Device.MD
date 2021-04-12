@@ -10,6 +10,7 @@
 - [x] [Step 6 - Develop the Windows C# UWP Application](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD)
 - [ ] **Step 7 - Configuring the IoT Edge Device**  
 - [ ] [Step 8 - Run samples](./Run%20samples.MD) 
+- [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
 
 # Step 7: Configuring the IoT Edge Device.
