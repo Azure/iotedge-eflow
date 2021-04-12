@@ -9,7 +9,8 @@
 - [ ] [Step 5 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
 - [ ] [Step 6 - Develop the Windows C# UWP Application](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD) 
 - [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
-- [ ] [Step 8 - Run samples](./Run%20samples.MD) 
+- [ ] [Step 8 - Run samples](./Run%20samples.MD)
+- [ ] [Troubleshooting](./Troubleshooting.MD)  
 ---
 # Step 3: Setup Azure IoT Edge for Linux on Windows
 This part describes the relevant steps to set up Azure IoT Edge for Linux on Windows (EFLOW).
