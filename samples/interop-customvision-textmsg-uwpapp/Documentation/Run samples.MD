@@ -13,7 +13,7 @@
 - [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
 
-# Step 9: Run samples
+# Step 8: Run samples
 ## Steps to run the Showcase
 
 Having restarted the 'iotedge' service and verified that iotedge is configured correctly, wait until the sample modules are pulled from the IoT Hub. Once the modules are running, the sample setup is ready to take messages from our Windows application.
