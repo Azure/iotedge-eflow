@@ -11,6 +11,7 @@
 - [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 8 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 9 - Run the Console Application](./Run%20the%20Console%20Application.MD)  
+- [ ] [Troubleshooting](./Troubleshooting.md)  
 ---
 # Step 4: Develop and publish the IoT edge Linux module
 In this part we develop and publish the Linux modules in the development VM using Visual Studio Code.
