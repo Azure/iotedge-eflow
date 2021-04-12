@@ -170,7 +170,16 @@ The IoT Edge extension tries to pull your container registry credentials from Az
    }
    ```
 
-1. Add your registry credentials to the deployment.template.json file, setting <registryname> to the name of your container registry:
+
+1. Create an **.env** file in this folder with the container registry authentication details as variables:
+
+   ```
+   CONTAINER_REGISTRY_USERNAME_<registryname>=XXX
+   CONTAINER_REGISTRY_PASSWORD_<registryname>=XXX
+   ```
+  
+   
+1. Check your registry credentials of the deployment.template.json file, and set <registryname> to the name of your container registry:
    ```json
    <registryname>": { "username": "$CONTAINER_REGISTRY_USERNAME_<registryname>", "password": "$CONTAINER_REGISTRY_PASSWORD_<registryname>", "address": "<registryname>.azurecr.io" }
    ```
