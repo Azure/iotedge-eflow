@@ -65,9 +65,9 @@ This part describes how to develop the Windows console application in the develo
                     store.Close();
                 }
             }
-        }
+         }
        }
-       ```
+       
 
 1. Replace the EdgeSolution\LeafDeviceApp\Program.cs file with the below code which includes:
 
