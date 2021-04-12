@@ -11,6 +11,7 @@
 - [x] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [x] [Step 8 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
 - [ ] **Step 9 - Run the Console Application**  
+- [ ] [Troubleshooting](./Troubleshooting.md)  
 ---
 
 # Step 9: Run the Console Application
