@@ -10,6 +10,7 @@
 - [ ] [Step 6 - Develop the Windows C# UWP Application](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD)  
 - [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 8 - Run samples](./Run%20samples.MD) 
+- [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
 
 In this tutorial, we describe how to build the Windows application and the Linux modules, how to upload the latter to our Azure Registry, and how to add our sample deployment to our sample IoT Edge Device. These steps are executed in a separate Windows development environment, which is an Azure cloud VM we set up with the following steps.
