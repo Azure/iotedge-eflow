@@ -11,7 +11,7 @@
 - [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 8 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 9 - Run the Console Application](./Run%20the%20Console%20Application.MD)  
-- [ ] [Troubleshooting](./Troubleshooting.md)  
+- [ ] [Troubleshooting](./Troubleshooting.MD)  
 ---
 Over the course of walk-through for this sample we will be performing various developer tasks including coding, compiling, configuring, and deploying IoT Edge module and IoT devices. To provide a common basis for the performing these tasks, we recommend the use of the [DevVM scripts](https://github.com/Azure-Samples/IoTEdgeAndMlSample/blob/master/DevVM) in the [IoTEdgeandMLSample](https://github.com/Azure-Samples/IoTEdgeAndMlSample) to create an configure an Azure Virtual Machine (VM) specifically for this walk-through.
 
