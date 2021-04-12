@@ -30,7 +30,7 @@ If the previous steps doesn't work, follow these steps:
 
 
 > **Note:** You might get an error rlated to "correct hostname"; however the IoT Edge shoudl work correctly anyway
-> ![TLS Error](./Images/TLS_Error.png)
+> ![LogError](./Images/LogError.png)
 
 
 #### 2. Error when pushing a module to Azure Contianer Registry ####
