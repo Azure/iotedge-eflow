@@ -25,8 +25,8 @@ Build the sample Linux modules in VS Code and add them to your Azure Registry.
 3. Create an **.env** file in this folder with the container registry authentication details as variables:
 
    ```
-   CONTAINER_REGISTRY_USERNAME_partnercontainerregistry=XXX
-   CONTAINER_REGISTRY_PASSWORD_partnercontainerregistry=XXX
+   CONTAINER_REGISTRY_USERNAME_<registryname>=XXX
+   CONTAINER_REGISTRY_PASSWORD_<registryname>=XXX
    ```
 
 4. Replace the two 'XXX' in the .env file by setting the username and password for your container registry as found in the Azure portal. Navigate to your container registry in the Azure portal and go to the tab 'Access Keys'.
