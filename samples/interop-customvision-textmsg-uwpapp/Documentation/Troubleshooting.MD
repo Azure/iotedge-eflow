@@ -13,5 +13,5 @@ If the previous steps doesn't work, follow these steps:
 5. Run the c# console app using the IP address for the gateway address insted of the hostname
 
 
-#### 2.Error when pushing a module to Azure Contianer Registry ####
+#### 2. Error when pushing a module to Azure Contianer Registry ####
 To fix an error when pushing the container, ensure that the module.json has the proper registry and container name appended: <repository>.azurecr.io/<containername>. For more information, visit [Can't Push IoT Edge module to Azure Container Registry](https://github.com/MicrosoftDocs/azure-docs/issues/22296).
