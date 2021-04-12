@@ -57,3 +57,5 @@ Having restarted the 'iotedge' service and verified that iotedge is configured c
 
    #### Fruitclassifier module logs ####
    ![Image of Fruit Classifier Module Log](./Images/fruitclassifier-sample.png)
+
+Go to [Next Step](./Troubleshooting.MD)  
