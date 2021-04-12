@@ -11,6 +11,7 @@
 - [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 8 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
 - [ ] [Step 9 - Run the Console Application](./Run%20the%20Console%20Application.MD)  
+- [ ] [Troubleshooting](./Troubleshooting.md)  
 ---
 # Step 2: Set up Azure resources  
 This part describes how to set up the required Azure entities with the [Azure Cloud Shell](https://docs.microsoft.com/azure/cloud-shell/overview). Alternatively you can use [Azure PowerShell](https://docs.microsoft.com/powershell/azure/) module. This should be executed on any Windows host other than the (emulated) target device. We propose using the VM that serves as development environment. 
