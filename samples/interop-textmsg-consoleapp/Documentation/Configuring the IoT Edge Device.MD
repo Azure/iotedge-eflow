@@ -75,18 +75,20 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
           source: "manual"
           device_connection_string: "<IoT Edge Device connection string>"
         ```
-
-    * Set the location of the certificates that were copied ot the device earlier.
+   * Set the location of the certificates that were copied ot the device earlier.
         ```yaml
         certificates:
           device_ca_cert: "/home/efl-user/certs/new-edge-device-full-chain.cert.pem"
           device_ca_pk: "/home/efl-user/certs/new-edge-device.key.pem"
           trusted_ca_certs: "/home/efl-user/certs/azure-iot-test-only.root.ca.cert.pem"
         ```
-    **Note:** Skip the next step if you are on a network with dynamic DNS, then edge modules will automatically be able to resolve the VM’s IP address from its hostname. 
+        > **Note:** <ake sure there are no whitespaces before certificates paths and two spaces indenting each sub part. 
 
     * If you are on a network without dynamic DNS, you will need to assign the VM a static IP address and replace the line
-    `hostname: "…"` with `hostname: "<VM IP Address>"`.
+    `hostname: "…"` with `hostname: "<Linux VM Hostname>"`.
+    
+      > **Note:** Skip the next step if you are on a network with dynamic DNS, then edge modules will automatically be able to resolve the VM’s IP address from its hostname. 
+
 
  
     * To save the file and exit nano, press <kbd>CTRL</kbd>+<kbd>x</kbd>, confirm save and exit with <kbd>Y</kbd> and press <kbd>Enter</kbd>. This concludes the provisioning and configuration.
