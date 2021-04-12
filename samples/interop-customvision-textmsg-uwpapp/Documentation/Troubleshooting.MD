@@ -38,3 +38,4 @@ To fix this error,  change InteropSampleRegistry value in the registry credentia
 
 #### 4. Operation is not valid due to the current state of the object in microsoft.azure.amqp ####
 This is a bug in AMQP and .NET 5. For more information about this error, check this [thread](https://stackoverflow.com/questions/64804036/operation-is-not-valid-due-to-the-current-state-of-the-object-source-microsoft). The solution is adding AMQP version requirement, as well as using .NET Core 3.1LTS  instead of .NET 5
+<PackageReference Include="Microsoft.Azure.Amqp" Version="2.4.13" /> 
