@@ -25,10 +25,10 @@ This part describes how to develop the Windows console application in the develo
    ```
 1. Create the file “EdgeSolution\LeafDeviceApp\CertificateManager.cs” with the following code
        ```csharp
+       
        using System;
        using System.IO;
        using System.Security.Cryptography.X509Certificates;
-
        namespace LeafDeviceApp
        {
            internal class CertificateManager
