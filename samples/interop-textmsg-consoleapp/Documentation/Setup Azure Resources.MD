@@ -36,7 +36,7 @@ This part describes how to set up the required Azure entities with the [Azure Cl
     <a name="SetAzContext"></a>
 1. **Set the subscription Id context**  
    
-   Use the [Set-AzContext](https://docs.microsoft.com/powershell/module/az.accounts/set-azcontext) command to set the subscription ID context.  
+   Use the [Set-AzContext](https://docs.microsoft.com/powershell/module/az.accounts/set-azcontext) command to set the subscription Id context.  
    > Replace **Id** with the Id copied from above.
    ```powershell
    Set-AzContext -SubscriptionId "Id"
