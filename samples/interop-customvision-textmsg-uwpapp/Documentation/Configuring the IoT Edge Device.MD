@@ -87,7 +87,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
           device_ca_pk: "/home/efl-user/certs/new-edge-device.key.pem"
           trusted_ca_certs: "/home/efl-user/certs/azure-iot-test-only.root.ca.cert.pem"
         ```
-        > **Note:** <ake sure there are no whitespaces before certificates paths and two spaces indenting each sub part. 
+        > **Note:** <Make sure there are no whitespaces before certificates paths and two spaces indenting each sub part. 
 
     * If you are on a network without dynamic DNS, you will need to assign the VM a static IP address and replace the line
     `hostname: "…"` with `hostname: "<Linux VM Hostname>"`.
