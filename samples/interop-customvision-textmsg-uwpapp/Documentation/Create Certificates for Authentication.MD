@@ -20,7 +20,7 @@ This part describes the relevant steps to create sample certificates for the aut
     > **Note:** You only need to generate certificates and do not need to upload them to Azure Key Vault as described in the section following Create certificates.. 
 
 * **To generate customizable test certificates**  
-Follow the steps described in [Generate test certificates for Edge Gateway](https://github.com/Azure-Samples/IoTEdgeAndMlSample/tree/master/CreateCertificates) to create sample certificates for use for the interop solution. It generates certificates with default subject name "turbofanGateway" and 30 days validity. To extend the validity of certificates (or) to change the subject name, make the following modifications to **dockerfile** then rebuild the docker image.
+Follow the steps described in [Generate test certificates for Edge Gateway](https://github.com/Azure-Samples/IoTEdgeAndMlSample/tree/master/CreateCertificates) to create sample certificates to use for the interop solution. It generates certificates with default subject name "turbofanGateway" and 30 days validity. To extend the validity of certificates (or) to change the subject name, make the following modifications to **dockerfile** then rebuild the docker image.
 
     * _To extend the certificate validity to 365 days_
         1. Replace `RUN yum -y install openssl git \` with `RUN yum -y install openssl git sed \`
