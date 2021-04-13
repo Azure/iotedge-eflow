@@ -34,7 +34,7 @@ This part describes how to develop the Windows console application in the develo
    - Text Messaging: `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\textmsg-uwpapp\LeafDeviceUWPApp\AppPackages\LeafDeviceUWPApp_1.0.0.0_Debug_Test`
    - Custom Vision: `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\customvision\DeviceCustomVisionUWPApp\AppPackages\DeviceCustomVisionUWPApp _1.0.0.0_Debug_Test`
 
-5. Install the Windows application's dependencies. The Windows host may lack dependencies that are found in the below folders - install of each of these.
+5. Install the Windows application's dependencies. The Windows host may lack dependencies that are found in the below folders - Ensure to install all the dependencies needed for the the sample used.
 
    - Text Messaging
    `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\textmsg-uwpapp\LeafDeviceUWPApp\AppPackages\LeafDeviceUWPApp_1.0.0.0_Debug_Test\Dependencies`
