@@ -16,6 +16,8 @@
 # Step 6: Develop the Windows C# Console Application
 This part describes how to develop the Windows console application in the development VM.
 
+> **Note:** The C# solution created in the following steps is included in our sample repo. You can use the downloaded sample code and run it
+
 1. In VS Code Explorer, open the EdgeSolution folder created earlier.
 
 1. Open the VS Code integrated terminal by selecting **View** > **Terminal**.
