@@ -40,7 +40,7 @@ Having restarted the 'iotedge' service and verified that iotedge is configured c
 
 ### For custom vision sample interop:
 - Run the application 'UWP-Edge interop sample' and use its GUI to send messages to the Linux module.
-- In this revision, the Windows application runs natively on the Windows IoT device and is note isolated inside a container.
+- In this revision, the Windows application runs natively on the Windows IoT device and is not isolated inside a container.
 - Right click on the app, it would prompt for connection string and gateway DNS name. Enter the leaf device connection string that you have captured above and Linux environment IP address as gateway device. You would see the logs that the connection established successfully.
 - Click on "Start", it will start sending the image frames over to the IoT Edge module.
 - Show "apple fruit" against the camera. The app would display the probability of the object classification at the bottom of the camera preview.
