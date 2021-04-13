@@ -54,7 +54,7 @@ Build the sample Linux modules in VS Code and add them to your Azure Registry.
         - Select the file 'deployment.amd64.json' in the folder 'config' and  push the deployment manifest.
 
    > **Note:**
-   > If the multiple container deploymnet fails, try to push each module separately using the *module.json* file.
+   > If the multiple container deployment fails, try to push each module separately using the *module.json* file.
 
 
 Go to [Next Step](./Create%20Certificates%20for%20Authentication.MD) 
