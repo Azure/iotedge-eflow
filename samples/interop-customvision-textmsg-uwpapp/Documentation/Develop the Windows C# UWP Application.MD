@@ -20,8 +20,7 @@ This part describes how to develop the Windows console application in the develo
    - Custom Vision: `Windows-IoT-Samples\interop-customvision-textmsg-uwpapp\customvision\DeviceCustomVisionUWPApp\DeviceCustomVisionUWPApp.sln`
 
    > **Note:**
-   > Certificate installation
-   > Make sure you include the certificate created on Step 5. The folder should be .\devicetestcertificates\certs
+   > For certificate installation, make sure you include the certificate created on Step 5. The folder should be .\devicetestcertificates\certs
 
 2. On the top pane, set build to 'Debug' and select the 'x64' architecture, and build the project.
 
