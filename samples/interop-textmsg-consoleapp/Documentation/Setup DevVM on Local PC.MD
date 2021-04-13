@@ -20,16 +20,21 @@ Where would you like to create your developer environment?
 - [x] Virtual Maching on Local PC
     
 ---
-# Step 1: Setup DevVM on Local PC   
+# Step 1: Setup Local PC   
 
-1. Download Scripts
+
+1. Setup using local machine
+    >   **Note:**  The scripts can be run on a machine outside of Azure.  This requires physical hardware or virtual machine that is capable of [nested virtualization](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization)
+    >   
+1. Alternate: Setup using Azure Cloud Vm  Scripts
+    > **Note:** To run these scripts you will need an [Azure Subscription](https://azure.microsoft.com/en-us/free/) in which you have rights to deploy resources
+   
 Download the DevVM scripts from the following project to your local machine:   
 https://github.com/Azure-Samples/IoTEdgeAndMlSample/blob/master/DevVM  
 
-    > **Note:** To run these scripts you will need an [Azure Subscription](https://azure.microsoft.com/en-us/free/) in which you have rights to deploy resources.
 
-1. Alternate setup using local machine
-    >   **Note:**  The scripts can be run on a machine outside of Azure.  This requires physical hardware or virtual machine that is capable of [nested virtualization](https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/user-guide/nested-virtualization)
+
+
 
 1. Log into the Windows environment you wish to configure
 
