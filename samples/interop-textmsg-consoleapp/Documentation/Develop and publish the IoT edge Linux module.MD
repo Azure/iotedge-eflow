@@ -22,6 +22,8 @@ In this part we develop and publish the Linux modules in the development VM usin
 1. [Update the module with custom code](#UpdateModule)
 1. [Build and push your module](#BuildAndPush)   
 
+> **Note:** The C# solution created in the following steps is included in our sample repo. You can use the downloaded sample code and run it
+
 ---  
 <a name="CreateProject"></a>  
 
