@@ -32,7 +32,7 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
 
 2. **Copy Certificates to EFLOW VM environment**
 
-   * Use PowerShell to get the EFLOW VM IP address.  
+   * Use PowerShell on the Windows host to get the EFLOW VM IP address.  
 
        ```powershell
        Get-EflowVmAddr
