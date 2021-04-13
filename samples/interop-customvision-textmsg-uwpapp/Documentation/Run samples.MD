@@ -22,7 +22,7 @@ Having restarted the 'iotedge' service and verified that iotedge is configured c
 
 - Run the application 'Azure IoT Edge for windows in linux interop sample' and use its GUI to send messages to the Linux module. In this revision, the Windows application runs natively on the Windows IoT device and is not isolated inside a container.
 
-- Right click on the app, it would prompt for connection string and gateway DNS name. Enter the leaf device connection string that you have captured above and the Linux environment's IP address as gateway device. The logs show whether the connection was established successfully.
+- Right click on the app, it would prompt for connection string and gateway DNS name. Enter the leaf device connection string that you have captured in [Step 2-6](./Setup%20Azure%20Resources.MD)  above and the Linux environment's IP address as gateway device. The logs show whether the connection was established successfully.
 
     ![Connection settings UI](./Images/uwp-app-setup-sample.png)
 
