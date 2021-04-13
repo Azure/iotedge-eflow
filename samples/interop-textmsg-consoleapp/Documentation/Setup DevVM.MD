@@ -18,5 +18,5 @@ Over the course of walk-through for this sample we will be performing various de
 Where would you like to create your developer environment?  
 
 - [ ] [Virtual Machine in Azure](./Setup%20DevVM%20in%20Azure.MD)  
-- [ ] [Virtual Machine on Local PC](./Setup%20DevVM%20on%20Local%20PC.MD)
+- [ ] [Local PC](./Setup%20DevVM%20on%20Local%20PC.MD)
     
