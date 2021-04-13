@@ -29,8 +29,8 @@ Where would you like to create your developer environment?
 1. Alternate: Setup using Azure Cloud Vm  Scripts
     > **Note:** To run these scripts you will need an [Azure Subscription](https://azure.microsoft.com/en-us/free/) in which you have rights to deploy resources
    
-Download the DevVM scripts from the following project to your local machine:   
-https://github.com/Azure-Samples/IoTEdgeAndMlSample/blob/master/DevVM  
+    Download the DevVM scripts from the following project to your local machine:   
+    https://github.com/Azure-Samples/IoTEdgeAndMlSample/blob/master/DevVM  
 
 
 
