@@ -24,7 +24,7 @@ This part describes how to develop the Windows console application in the develo
 
 2. On the top pane, set build to 'Debug' and select the 'x64' architecture, and build the project.
 
-3. To be able to run the application on the Windows device, build the application as an 'App package' according to [Package a desktop or UWP app in Visual Studio](https://docs.microsoft.com/windows/msix/package/packaging-uwp-apps)
+3. To be able to run the application on the Windows device, build the application as an 'App package' according to [Package a desktop or UWP app in Visual Studio](https://docs.microsoft.com/windows/msix/package/packaging-uwp-apps).
 
    > **Note:**
    > Select sideloading without automatic updates
