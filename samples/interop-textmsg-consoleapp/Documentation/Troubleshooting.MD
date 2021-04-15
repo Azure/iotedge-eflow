@@ -50,7 +50,6 @@ This is a bug in AMQP and .NET 5. For more information about this error, check t
 <br/>
 
 #### 5. Modules not showing up in the IoT Edge device ####
-![TLS Error](./Images/TLS_Error.png)
 This error is generally related to an authentication issue when pulling the module from the container registryl. For further information, use the IoTEdge logs.
 ```powershell
 sudo iotedge logs edgeAgent 
@@ -58,6 +57,7 @@ sudo iotedge logs edgeHub
 ```
 
 #### 6. Error when building & pushing a IoT Edge Module  ####
+![BuildAndPushError](./Images/BuildAndPushError.png)
 This error is generally related to an authentication issue when pulling the module from the container registryl. For further information, use the IoTEdge logs.
 ```powershell
 sudo iotedge logs edgeAgent 
