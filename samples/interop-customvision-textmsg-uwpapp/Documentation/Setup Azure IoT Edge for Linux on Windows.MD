@@ -18,6 +18,10 @@ This part describes the relevant steps to set up Azure IoT Edge for Linux on Win
 * **To create a EFLOW device**  
  Complete the steps described in [Install and provision Azure IoT Edge for Linux on a Windows device](https://docs.microsoft.com/azure/iot-edge/how-to-install-iot-edge-on-windows) guide. 
  
+ > ### Important ###
+ > When creating the Azure IoT Edge for Linux on Windows deploymnet, ensure to select _"Default Switch"_ under Switch Type.
+ > We plan to support _"External Switch"_ soon in our next updates.
+ 
 * **To learn more about EFLOW**  
  For more information, review [EFLOW docs](https://docs.microsoft.com/azure/iot-edge/iot-edge-for-linux-on-windows).
  
