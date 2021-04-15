@@ -16,16 +16,16 @@
 
 
 #### 1. Console message app shows TLS Error ####
-This problem is usually caused by a gateway issue. On the IoT Edge device configuration (/etc/iotedge/config.yaml) there's a section called hostname. This automatically gets populated with the system hostname. In some cases, hostname is not found and the user will have to use the EFLOW VM IP. Ensure the gateway name in the C# Windows app matches the hostname in the IoT Edge config.yaml. 
+This problem is usually caused by a gateway issue. On the IoT Edge device configuration (/etc/iotedge/config.yaml) there's a section called hostname. This automatically gets populated with the system hostname. In some cases, the hostname is not found, and the user will have to use the EFLOW VM IP. Ensure the gateway name in the C# Windows app matches the hostname in the IoT Edge config.yaml. 
 
 ![TLS Error](./Images/TLS_Error.png)
 
-If the previous steps doesn't work, follow these steps:
+If the previous steps don't work, follow these steps:
 1. In the config.yaml, change the hostname to the IP address of the EFLOW VM. 
 2. `sudo systemctl restart iotedge` 
 3. `sudo systemctl status iotedge` - Make sure it says active (running)  
 4. `sudo iotedge check` 
-5. Run the c# console app using the IP address for the gateway address insted of the hostname
+5. Run the C# console app using the IP address for the gateway address instead of the hostname.
 <br/>
 
 
@@ -61,19 +61,19 @@ sudo iotedge logs edgeHub
 ![BuildAndPushError](./Images/BuildAndPushError.png)
 
 This error is generally related to the building process. To fix it, follow these steps:
-1. Build the module separately - Move to the module's base directory and run the commnad `dotnet build --configuration Release`
+1. Build the module separately - Move to the module's base directory and run the command `dotnet build --configuration Release`
 2. Edit the Docker build file and comment the line `RUN dotnet publish -c Release -o out`
 3. Try building the image again
 
 <br/>
 
 #### 7. Windows module won't connect to Linux modules  ####
-There are diffrent reasons why the connectio between modules is not being accomplished. 
-1. Check the EFLOW VM firewall configuration and make sure ports 443 and 5671 are open. For more information check the [Wiki - Firewall section](https://github.com/Azure/iotedge-eflow/wiki/Firewall).
+There are different reasons why the connection between modules is not successful. 
+1. Check the EFLOW VM firewall configuration and ensure ports 443 and 5671 are open. For more information, check the [Wiki - Firewall section](https://github.com/Azure/iotedge-eflow/wiki/Firewall).
 2. Check the IoT Edge module logs
 ```powershell
 sudo iotedge logs edgeAgent 
 sudo iotedge logs edgeHub 
 sudo iotedge logs proxymodule
 ```
-3. If you are using a _"Default Switch"_ on the EFLOW VM, there might be some network and routing issues related. Try changing the EFLOW VM configuration to use the _"Default Switch"_.
+3. If you are using a _"Default Switch"_ on the EFLOW VM, there might be some network and routing issues related. Try changing the EFLOW VM configuration to use the _"Default Switch"_. Once changed, ensure to change the new IP on the `/etc/iotedge/config.yaml`
