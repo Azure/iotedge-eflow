@@ -73,5 +73,6 @@ There are diffrent reasons why the connectio between modules is not being accomp
 ```powershell
 sudo iotedge logs edgeAgent 
 sudo iotedge logs edgeHub 
-sudo iotedge logs CSharpModule
+sudo iotedge logs proxymodule
 ```
+3. If you are using a "Default Switch" on the EFLOW VM, there might be some network and routing issues related. Try changing the EFLOW VM configuration to use the "Default Switch"
