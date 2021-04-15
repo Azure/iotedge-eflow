@@ -31,7 +31,7 @@ The following diagram shows the architecture described:
 
 ## Run Sample
 
-> **Note: **
+> **Note:**
 > Make sure Windows 10 SDK, version 1809 (10.0.17763.0) is isntalled on the Windows host. If not installed, check [Windows SDK Archive](https://developer.microsoft.com/windows/downloads/sdk-archive/)
 
 This part describes how to develop the Windows console application in the development VM. You can follow the [Build and run a C++ console app project](https://docs.microsoft.com/cpp/build/vscpp-step-2-build) guide.
