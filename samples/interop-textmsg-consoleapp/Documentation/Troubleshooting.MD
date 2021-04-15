@@ -55,6 +55,7 @@ This error is generally related to an authentication issue when pulling the modu
 sudo iotedge logs edgeAgent 
 sudo iotedge logs edgeHub 
 ```
+<br/>
 
 #### 6. Error when building & pushing a IoT Edge Module  ####
 ![BuildAndPushError](./Images/BuildAndPushError.png)
