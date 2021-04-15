@@ -49,7 +49,7 @@ This is a bug in AMQP and .NET 5. For more information about this error, check t
 <br/>
 
 #### 5. Modules not showing up in the IoT Edge device ####
-This error is generally related to an authentication issue when pulling the module from the container registryl. For further information, use the IoTEdge logs.
+This error is generally related to an authentication issue when pulling the module from the container registry. For further information, use the IoTEdge logs.
 ```powershell
 sudo iotedge logs edgeAgent 
 sudo iotedge logs edgeHub 
