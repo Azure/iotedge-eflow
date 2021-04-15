@@ -65,6 +65,7 @@ This error is generally related to the building process. To fix it, follow these
 2. Edit the Docker build file and comment the line `RUN dotnet publish -c Release -o out`
 3. Try building the image again
 
+<br/>
 
 #### 7. Windows module won't connect to Linux modules  ####
 There are diffrent reasons why the connectio between modules is not being accomplished. 
