@@ -75,4 +75,4 @@ sudo iotedge logs edgeAgent
 sudo iotedge logs edgeHub 
 sudo iotedge logs proxymodule
 ```
-3. If you are using a "Default Switch" on the EFLOW VM, there might be some network and routing issues related. Try changing the EFLOW VM configuration to use the "Default Switch"
+3. If you are using a _"Default Switch"_ on the EFLOW VM, there might be some network and routing issues related. Try changing the EFLOW VM configuration to use the _"Default Switch"_
