@@ -69,7 +69,7 @@ This error is generally related to the building process. To fix it, follow these
 #### 7. Windows module won't connect to Linux modules  ####
 There are diffrent reasons why the connectio between modules is not being accomplished. 
 1. Check the EFLOW VM firewall configuration and make sure ports 443 and 5671 are open. For more information check the [Wiki - Firewall section](https://github.com/Azure/iotedge-eflow/wiki/Firewall).
-2. Check the IoT Edge module logs.
+2. Check the IoT Edge module logs
 ```powershell
 sudo iotedge logs edgeAgent 
 sudo iotedge logs edgeHub 
