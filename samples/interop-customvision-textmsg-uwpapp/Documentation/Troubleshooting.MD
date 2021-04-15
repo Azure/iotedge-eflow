@@ -29,7 +29,7 @@ If the previous steps doesn't work, follow these steps:
 <br/>
 
 
-> **Note:** You might get an error related to "correct hostname"; however the IoT Edge shoudl work correctly anyway
+> **Note:** You might get an error related to "correct hostname"; however the IoT Edge should work correctly anyway
 > ![LogError](./Images/LogError.png)
 
 
