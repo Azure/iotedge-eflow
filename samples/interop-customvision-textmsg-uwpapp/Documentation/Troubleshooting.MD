@@ -54,3 +54,13 @@ This error is generally related to an authentication issue when pulling the modu
 sudo iotedge logs edgeAgent 
 sudo iotedge logs edgeHub 
 ```
+
+<br/>
+
+#### 6. Error when building & pushing a IoT Edge Module  ####
+![BuildAndPushError](./Images/BuildAndPushError.png)
+
+This error is generally related to the building process. To fix it, follow these steps:
+1. Build the module separately - Move to the module's base directory and run the commnad `dotnet build --configuration Release`
+2. Edit the Docker build file and comment the line `RUN dotnet publish -c Release -o out`
+3. Try building the image again
