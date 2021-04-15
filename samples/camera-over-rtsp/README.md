@@ -43,7 +43,7 @@ This part describes how to develop the Windows console application in the develo
 4. The output path for the .exe package can be found in the below location.
      - Network Media Streamer: `WinUSBtoRTSP\x64\Release\CameraRTSPStreamer.exe`
    
-5. Run the 'CameraRTSPStreamer.exe' as an Administrator
+5. Run the 'CameraRTSPStreamer.exe' as an Administrator on the Windows host
 
 > **Note:** If you are using RTSPS, make sure a local certificate is installed 
 
