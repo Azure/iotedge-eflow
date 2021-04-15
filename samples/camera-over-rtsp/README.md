@@ -45,7 +45,7 @@ This part describes how to develop the Windows console application in the develo
    
 5. Run the 'CameraRTSPStreamer.exe' as an Administrator on the Windows host
 
-> **Note:** If you are using RTSPS, make sure a local certificate is installed 
+> **Note:** If you are using secure RTSP (RTSPS), make sure local certificate is installed.
 
 6. There are two different usage modes:
 
