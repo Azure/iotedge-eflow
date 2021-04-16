@@ -55,25 +55,3 @@ This error is generally related to an authentication issue when pulling the modu
 sudo iotedge logs edgeAgent 
 sudo iotedge logs edgeHub 
 ```
-<br/>
-
-#### 6. Error when building & pushing a IoT Edge Module  ####
-![BuildAndPushError](./Images/BuildAndPushError.png)
-
-This error is generally related to the building process. To fix it, follow these steps:
-1. Build the module separately - Move to the module's base directory and run the command `dotnet build --configuration Release`
-2. Edit the Docker build file and comment the line `RUN dotnet publish -c Release -o out`
-3. Try building the image again
-
-<br/>
-
-#### 7. Windows module won't connect to Linux modules  ####
-There are different reasons why the connection between modules is not successful. 
-1. Check the EFLOW VM firewall configuration and ensure ports 443 and 5671 are open. For more information, check the [Wiki - Firewall section](https://github.com/Azure/iotedge-eflow/wiki/Firewall).
-2. Check the IoT Edge module logs
-```powershell
-sudo iotedge logs edgeAgent 
-sudo iotedge logs edgeHub 
-sudo iotedge logs proxymodule
-```
-3. If you are using a _"Default Switch"_ on the EFLOW VM, there might be some network and routing issues related. Try changing the EFLOW VM configuration to use the _"Default Switch"_. Once changed, ensure to change the new IP on the `/etc/iotedge/config.yaml`

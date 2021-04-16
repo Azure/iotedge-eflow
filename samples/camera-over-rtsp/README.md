@@ -31,9 +31,6 @@ The following diagram shows the architecture described:
 
 ## Run Sample
 
-> **Note:**
-> Make sure Windows 10 SDK version 1809 (10.0.17763.0) is installed on the Windows host. If not installed, check [Windows SDK Archive](https://developer.microsoft.com/windows/downloads/sdk-archive/) for more information. 
-
 This part describes how to develop the Windows console application in the development VM. You can follow the [Build and run a C++ console app project](https://docs.microsoft.com/cpp/build/vscpp-step-2-build) guide.
 
 1. Open the Windows application sample - Use Visual Studio running as Admin.
@@ -46,9 +43,9 @@ This part describes how to develop the Windows console application in the develo
 4. The output path for the .exe package can be found in the below location.
      - Network Media Streamer: `WinUSBtoRTSP\x64\Release\CameraRTSPStreamer.exe`
    
-5. Run the 'CameraRTSPStreamer.exe' as an Administrator on the Windows host
+5. Run the 'CameraRTSPStreamer.exe' as an Administrator
 
-> **Note:** If you are using secure RTSP (RTSPS), make sure local certificate is installed.
+> **Note:** If you are using RTSPS, make sure a local certificate is installed 
 
 6. There are two different usage modes:
 
