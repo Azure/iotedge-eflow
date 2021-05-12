@@ -39,7 +39,11 @@ Additionally, to stay on top of the latest updates to Windows and the developmen
 | [camera-passthrough](./camera-over-rtsp) | <p>Sample to configure the EFLOW VM and host to redirect video camera feeds over the network using RTSP. </li></ul>|  
 
 
+#### Scripts
 
+| Name           | Description      |  
+|----------------|------------------|  
+| [execute-SshCommand](./scripts/execute-SshCommand.ps1) | <p>Sample script to execute a Linux command inside the EFLOW VM using a PowerShell function. Example usage: `Execute-SshCommand -command "sudo iotedge list" ` </li></ul>| 
 
 
 ## Using the samples
