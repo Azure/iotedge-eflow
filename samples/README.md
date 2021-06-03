@@ -23,7 +23,10 @@ Additionally, to stay on top of the latest updates to Windows and the developmen
 
 ### Azure IoT Edge Samples
 
+
 #### Interop
+
+_:warning: **WARNING**: Enabling a communication channel between the Windows host and the EFLOW VM may increase security risks._
 
 | Name           | Description      |  
 |----------------|------------------|  
@@ -32,6 +35,10 @@ Additionally, to stay on top of the latest updates to Windows and the developmen
 
 
 #### Hardware Access
+
+
+_:warning: **WARNING**: Enabling serial or camera passthrough may increase security risks._
+
 
 | Name           | Description      |  
 |----------------|------------------|  
