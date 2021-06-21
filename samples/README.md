@@ -46,6 +46,17 @@ _:warning: **WARNING**: Enabling serial or camera passthrough may increase secur
 | [camera-passthrough](./camera-over-rtsp) | <p>Sample to configure the EFLOW VM and host to redirect video camera feeds over the network using RTSP. </li></ul>|  
 
 
+#### GPU/VPU Acceleration
+
+_:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks._
+
+
+| Name           | Description      |  
+|----------------|------------------|  
+| [GPU Passthrough](https://aka.ms/AzEFLOW-VoE) | <p> [Vision on Edge](https://github.com/Azure-Samples/azure-intelligent-edge-patterns/tree/master/factory-ai-vision) is a sample illustrating how to create an end-to-end AI/ML inferencing solution. VoE ties together technologies such as: Microsoft LVA or OpenCV, Onyxruntime, TensorRT for NVIDIA GPUs, Custom Vision, and more. This tutorial walks you through how to deploy the VoE IoT Edge modules to your EFLOW device. </li></ul>|  
+
+
+
 #### Scripts
 
 | Name           | Description      |  
