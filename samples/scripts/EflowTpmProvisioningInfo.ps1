@@ -1,4 +1,4 @@
-  function Get-EflowVmTpmProvisioningInfo
+  function Get-EflowVmTpmProvisioningInformation
 {
     <#
     .DESCRIPTION
