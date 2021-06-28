@@ -57,13 +57,6 @@ _:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks
 
 
 
-#### Scripts
-
-| Name           | Description      |  
-|----------------|------------------|  
-| [execute-SshCommand](./scripts/execute-SshCommand.ps1) | <p>Sample script to execute a Linux command inside the EFLOW VM using a PowerShell function. Example usage: `Execute-SshCommand -command "sudo iotedge list" ` </li></ul>| 
-
-
 ## Using the samples
 
 The easiest way to use these samples without using Git is to download the zip file containing the current version (using the following link or by clicking the "Download ZIP" button on the repo page). You can then unzip the entire archive and use the samples in Visual Studio.
