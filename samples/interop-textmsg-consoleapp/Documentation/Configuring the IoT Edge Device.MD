@@ -43,7 +43,7 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
 3. **Log in to the Linux environment**
 
     ```powershell
-    Ssh-EflowVm
+    Connect-EflowVm
     ```
 
 1. **Set up the Linux firewall**   
