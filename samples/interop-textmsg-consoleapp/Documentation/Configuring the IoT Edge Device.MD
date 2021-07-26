@@ -22,7 +22,7 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
     * Use SSH to log in to the EFLOW VM environment.  
 
       ```powershell
-       Ssh-EflowVm
+       Connect-EflowVm
        ``` 
 
     * Inside the EFLOW VM environment, use mkdir to create the Certificates folder  
@@ -33,17 +33,12 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
 
 2. **Copy Certificates to EFLOW VM environment**
 
-   * Use PowerShell on the Windows host to get the EFLOW VM IP address.  
-
-       ```powershell
-       Get-EflowVmAddr
-       ``` 
-
-    * Use SCP to copy the certificates created in [Step 5](./Create%20Certificates%20for%20Authentication.MD) to the `~/certs` folder of your EFLOW VM environment.  
+    * Use EFLOW Copy command to copy the certificates created in [Step 5](./Create%20Certificates%20for%20Authentication.MD) to the `~/certs` folder of your EFLOW VM environment.  
 
         ```powershell
-        scp -i 'C:\Program Files\Azure IoT Edge\id_rsa'  .\certs\* iotedge-user@<eflowvm-ip>:~/certs/​
+        Copy-EflowVmFile -fromFile .\certs\*  -toFile ~/certs/ -pushFile
         ```
+    
     
 3. **Log in to the Linux environment**
 
