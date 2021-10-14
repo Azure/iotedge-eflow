@@ -1,8 +1,6 @@
-$EflowVmUserName           = "iotedge-user"
-$identityCertDirVm         = "/home/$EflowVmUserName/certs/"
-$identityPkDirVm           = "/home/$EflowVmUserName/private/"
-
+$EflowVmUserName = "iotedge-user"
 Import-Module AzureEflow
+
 
 function EflowUtil-CopyEdgeCertificates
 {
@@ -18,6 +16,13 @@ function EflowUtil-CopyEdgeCertificates
 
     .PARAMETER deviceCAPrivateKeyPath
         Device CA Private Key path on Windows
+
+    .PARAMETER identityCertDirVm
+        Certificates folder path on CBL-Mariner
+
+    .PARAMETER identityPkDirVm
+        Private Key folder path on CBL-Mariner
+
     #>
 
     param (
@@ -28,7 +33,10 @@ function EflowUtil-CopyEdgeCertificates
         [String] $deviceCACertificatePath,
 
         [Parameter(Mandatory)]
-        [String] $deviceCAPrivateKeyPath
+        [String] $deviceCAPrivateKeyPath,
+
+        [String] $identityCertDirVm,
+        [String] $identityPkDirVm
     )
 
     try
@@ -38,6 +46,20 @@ function EflowUtil-CopyEdgeCertificates
             [string]::IsNullOrEmpty($deviceCAPrivateKeyPath))
         {
             throw "Root CA Certificate, Device CA Certificate Path, and/or Device CA Private Key parameters not specified"
+        }
+
+
+        if([string]::IsNullOrEmpty($identityCertDirVm))
+        {
+            $identityCertDirVm = "/home/$EflowVmUserName/certs/"
+            Write-Host "identityCertDirVm is empy - Using default: $identityCertDirVm"
+        }
+          
+        
+        if([string]::IsNullOrEmpty($identityPkDirVm))
+        {
+            $identityPkDirVm = "/home/$EflowVmUserName/private/"
+            Write-Host "identityPkDirVm is empy - Using default: $identityPkDirVm"
         }
 
 
@@ -62,21 +84,21 @@ function EflowUtil-CopyEdgeCertificates
         $deviceCACertificateFileName = Split-Path $deviceCACertificatePath -leaf
         $deviceCAPrivateKeyFileName = Split-Path $deviceCAPrivateKeyPath -leaf
 
-        $rootCACertPathVm = $script:identityCertDirVm + $rootCACertFileName
-        $deviceCACertificatePathVm = $script:identityCertDirVm + $deviceCACertificateFileName
-        $deviceCAPrivateKeyPathVm = $script:identityPkDirVm + $deviceCAPrivateKeyFileName
+        $rootCACertPathVm = $identityCertDirVm + $rootCACertFileName
+        $deviceCACertificatePathVm = $identityCertDirVm + $deviceCACertificateFileName
+        $deviceCAPrivateKeyPathVm = $identityPkDirVm + $deviceCAPrivateKeyFileName
         
         Write-Host "Copying certificates  virtual machine..."
         
-        Invoke-EflowVmCommand -command "sudo mkdir -p $script:identityCertDirVm; sudo chown -R ${userName}: $script:identityCertDirVm"
-        Invoke-EflowVmCommand -command "sudo mkdir -p $script:identityPkDirVm; sudo chown -R ${userName}: $script:identityPkDirVm"
+        Invoke-EflowVmCommand -command "sudo mkdir -p $identityCertDirVm; sudo chown -R ${userName}: $identityCertDirVm"
+        Invoke-EflowVmCommand -command "sudo mkdir -p $identityPkDirVm; sudo chown -R ${userName}: $identityPkDirVm"
 
         Copy-EflowVmFile -fromFile "$rootCAPath" -toFile "$rootCACertPathVm" -pushFile
         Copy-EflowVmFile -fromFile "$deviceCACertificatePath" -toFile "$deviceCACertificatePathVm" -pushFile
-        Invoke-EflowVmCommand -command "sudo chown -R iotedge: $script:identityCertDirVm"
+        Invoke-EflowVmCommand -command "sudo chown -R iotedge: $identityCertDirVm"
 
         Copy-EflowVmFile -fromFile "$deviceCAPrivateKeyPath" -toFile "$deviceCAPrivateKeyPathVm" -pushFile
-        Invoke-EflowVmCommand -command "sudo chown -R iotedge: $script:identityPkDirVm"
+        Invoke-EflowVmCommand -command "sudo chown -R iotedge: $identityPkDirVm"
 
         Write-Host "Certificates copied."
         
