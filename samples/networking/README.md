@@ -17,7 +17,7 @@ The following diagram shows the architecture described:
 +------------------------+                            +--------------+                                                                                                                                           
 ```
 
-### Route
+## Route
 
 EFLOW uses [route](https://man7.org/linux/man-pages/man8/route.8.html) service to manage the network routing alternatives. In order to check the available EFLOW VM routes, use the following steps:
 
@@ -30,7 +30,7 @@ EFLOW uses [route](https://man7.org/linux/man-pages/man8/route.8.html) service t
 _Image above shows the route command output with two NIC's assigned (eth0 and eth1). The VM will create two different _Default_ destinations rules with different Metrics (priorities - the lower the metric, the higher the priority)._
 
 
-### Static Routes fix
+## Static Routes fix
 Every time EFLOW VM starts, it will recreate all the different routes, and the previously assigned priority could change. A workaround to this scenario would be to assign the desired priority every time the VM starts. We can create a service that is executed every time the VM starts and use the `route` command to set the desired route priorities.
 
 First, create a bash script that will execute the necessary commands to set the routes. For example, imagine you had an EFLOW VM that has two NICs. First NIC, **eth0**, is connected using the GW IP xxx.xxx.xxx.xxx. The second NIC, **eth1**, is connected using the GW IP yyy.yyy.yyy.yyy. 
@@ -53,5 +53,6 @@ sudo ip route del default via yyy.yyy.yyy.yyy dev eth1
 sudo route add -net default gw yyy.yyy.yyy.yyy netmask 0.0.0.0 dev eth1 metric <number>
 ```
 
+The 
         
   
