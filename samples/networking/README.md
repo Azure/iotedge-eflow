@@ -27,7 +27,7 @@ EFLOW uses [route](https://man7.org/linux/man-pages/man8/route.8.html) service t
 
 ![Routing Output](./route-output.png)
 
-_Image above shows the route command output with two NIC's assigned (eth0 and eth1). The VM will create two different _Default_ destinations rules with different Metrics (priorities - the lower the metric, the higher the priority)._
+_Image above shows the route command output with two NIC's assigned (eth0 and eth1). The VM will create two different _Default_ destinations rules with different Metrics (the lower the metric, the higher the priority)._
 
 
 ## Static Routes fix
