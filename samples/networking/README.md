@@ -1,20 +1,20 @@
 # EFLOW Routing
 
-When using EFLOW multiple NICs feature, you may want to setup the different routes. By default, EFLOW will create one _Default_ route per _ehtX_ interface assigned to the VM, and associate a random priority.
-If all interfaces are connected to internet, random priorities may no be a problem. However if some of the NIC is connected to an _Offline_ network, you may want to prioritize the _Online_ NIC in order to get the EFLOW VM connected to internet. 
+When using EFLOW multiple NICs feature, you may want to set up the different routes. By default, EFLOW will create one _Default_ route per _ehtX_ interface assigned to the VM and assign a random priority.
+If all interfaces are connected to the internet, random priorities may not be a problem. However, if some of the NIC is connected to an _Offline_ network, you may want to prioritize the _Online_ NIC to get the EFLOW VM connected to the internet. 
 
 The following diagram shows the architecture described:
 ```
-        Secure Network                                      EFLOW VM                                       Internet
-      +----------------+                                                                                      |
-      | Offline Device |                                                                                      |
-      +----------------+                                                                                      |
-             |                                            +--------------+                             +------------------+
-             |                                            |     eth0     | .... ( online network) .... |  Online Router   |
-             |                                            +--------------+                             +------------------+
-+------------------------+                                +--------------+
-|     Offline Router     | ..... ( offline network) ..... |     eth1     |
-+------------------------+                                +--------------+                                                                                                                                           
+        Secure Network                                      EFLOW VM                                  Internet
+      +----------------+                                                                                 |
+      | Offline Device |                                                                                 |
+      +----------------+                                                                                 |
+             |                                        +--------------+                           +------------------+
+             |                                        |     eth0     | ... ( online network) ... |  Online Router   |
+             |                                        +--------------+                           +------------------+
++------------------------+                            +--------------+
+|     Offline Router     | ... ( offline network) ... |     eth1     |
++------------------------+                            +--------------+                                                                                                                                           
 ```
 
 ### Route
@@ -26,3 +26,32 @@ EFLOW uses [route](https://man7.org/linux/man-pages/man8/route.8.html) service t
 3. Run `sudo route`
 
 ![Routing Output](./route-output.png)
+
+_Image above shows the route command output with two NIC's assigned (eth0 and eth1). The VM will create two different _Default_ destinations rules with different Metrics (priorities - the lower the metric, the higher the priority)._
+
+
+### Static Routes fix
+Every time EFLOW VM starts, it will recreate all the different routes, and the previously assigned priority could change. A workaround to this scenario would be to assign the desired priority every time the VM starts. We can create a service that is executed every time the VM starts and use the `route` command to set the desired route priorities.
+
+First, create a bash script that will execute the necessary commands to set the routes. For example, imagine you had an EFLOW VM that has two NICs. First NIC, **eth0**, is connected using the GW IP xxx.xxx.xxx.xxx. The second NIC, **eth1**, is connected using the GW IP yyy.yyy.yyy.yyy. 
+
+The script below will reset the _Default_ routes for both eth0 and eth1, and set them using a desire <number> metric.
+_Remember: The lower the metric, the higher the priority._ 
+
+```
+#!/bin/sh
+
+# Wait 30s for the interfaces to be up
+sleep 30
+
+# Delete previous eth0 route and create a new one with desired metric
+sudo ip route del default via xxx.xxx.xxx.xxx dev eth0
+sudo route add -net default gw xxx.xxx.xxx.xxx netmask 0.0.0.0 dev eth0 metric <number>
+
+# Delete previous eth1 route and create a new one with desired metric
+sudo ip route del default via yyy.yyy.yyy.yyy dev eth1
+sudo route add -net default gw yyy.yyy.yyy.yyy netmask 0.0.0.0 dev eth1 metric <number>
+```
+
+        
+  
