@@ -6,7 +6,7 @@ Understand EFLOW-Util PowerShell functions that provide further mechanisms to co
  
  
  ## EflowUtil-GetEdgeCertificates
- The **EflowUtil-GetEdgeCertificates** command checks if IoT Edge is configured to use certificates. If so, will display the path of the certificates. 
+ The [**EflowUtil-GetEdgeCertificates**](./EflowUtil-GetEdgeCertificates.ps1) command checks if IoT Edge is configured to use certificates. If so, will display the path of the certificates. 
  This command takes no parameters. It returns an object that contains three properties:
  - Root CA certificate path
  - Device CA certiciate path
