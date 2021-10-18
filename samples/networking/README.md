@@ -6,9 +6,9 @@ If all interfaces are connected to internet, random priorities may no be a probl
 The following diagram shows the architecture described:
 ```
         Secure Network                                      EFLOW VM                                       Internet
-      +----------------+
-      | Offline Device |  
-      +----------------+
+      +----------------+                                                                                      |
+      | Offline Device |                                                                                      |
+      +----------------+                                                                                      |
              |                                            +--------------+                             +------------------+
              |                                            |     eth0     | .... ( online network) .... |  Online Router   |
              |                                            +--------------+                             +------------------+
