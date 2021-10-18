@@ -13,11 +13,12 @@ Understand EFLOW-Util PowerShell functions that provide further mechanisms to co
  - Private Key path
  
   ## EflowUtil-SetEdgeCertificates
- The **EflowUtil-SetEdgeCertificates** command sets the IoT Edge certificates in the virtual machine. The command handles copying the certificates into the EFLOW VM, assign the needed permissions, and configure IoT Edge.
- Use the optional parameters to define specific file/folder for configuration.
+ The **EflowUtil-SetEdgeCertificates** command sets the IoT Edge certificates in the virtual machine. The command handles copying the certificates into the EFLOW VM, assign the needed permissions, and configure IoT Edge. Use the optional parameters to define specific file/folder for configuration.
  
 | Parameter | Accepted values | Comments |
 | --------- | --------------- | -------- |
 | _rootCAPath_ | Root CA source path on Windows | Root CA it's the topmost certificate authority for the IoT Edge scenario. |
 | _deviceCACertificatePath_ | Device CA Certificate path on Windows | - |
 | _deviceCAPrivateKeyPath_ | Device CA Private Key path on Windows | - |
+| identityCertDirVm |  Certificates folder path on CBL-Mariner (EFLOW VM) | **Optional** |
+| _deviceCAPrivateKeyPath_ |  Private Key folder path on CBL-Mariner (EFLOW VM) | **Optional** |
