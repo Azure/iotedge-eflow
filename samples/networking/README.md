@@ -31,7 +31,7 @@ _Image above shows the route command output with two NIC's assigned (eth0 and et
 
 
 ## Static Routes fix
-Every time EFLOW VM starts, it will recreate all routes, and any previously assigned priority could change. A workaround to this scenario would be to assign the desired priority for each route, every time the VM starts. We can create a service that is executed every time the VM starts and use the `route` command to set the desired route priorities.
+Every time EFLOW VM starts, it will recreate all routes, and any previously assigned priority could change. A workaround is to assign the desired priority for each route every time the EFLOW VM starts. We can create a service that is executed every time the VM starts and use the `route` command to set the desired route priorities.
 
 First, create a bash script that will execute the necessary commands to set the routes. For example, imagine you had an EFLOW VM that has two NICs. First NIC, **eth0**, is connected using the GW IP xxx.xxx.xxx.xxx. The second NIC, **eth1**, is connected using the GW IP yyy.yyy.yyy.yyy. 
 
