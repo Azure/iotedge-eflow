@@ -5,7 +5,7 @@ If all interfaces are connected to the internet, random priorities may not be a 
 
 The following diagram shows the architecture described:
 ```
-        Secure Network                                      EFLOW VM                                  Internet
+        Secure Network                                    EFLOW VM                                    Internet
       +----------------+                                                                                 |
       | Offline Device |                                                                                 |
       +----------------+                                                                                 |
