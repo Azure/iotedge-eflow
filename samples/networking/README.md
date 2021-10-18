@@ -53,7 +53,7 @@ sudo ip route del default via yyy.yyy.yyy.yyy dev eth1
 sudo route add -net default gw yyy.yyy.yyy.yyy netmask 0.0.0.0 dev eth1 metric <number>
 ```
 
-You can use the above script to create your own custom script specific to your networking scenario. Once script is defined, make sure you save it and assign execute permission. E.g if the sciprt name is _route-setup.sh_, you can assign execute permission using the command `sudo chmod +x route-setup.sh`. You can test if the script is running by executing it manually using the command `sh ./route-setup.sh` and then checking the routing table using the `sudo route` command. 
+You can use the above script to create your own custom script specific to your networking scenario. Once script is defined, make sure you save it and assign execute permission. E.g if the sciprt name is _route-setup.sh_, you can assign execute permission using the command `sudo chmod +x route-setup.sh`. You can test if the script is running by executing it manually using the command `sudo sh ./route-setup.sh` and then checking the routing table using the `sudo route` command. 
         
 The final step is to create a Linux service that will run on startup, and execute the bash script to set the routes. You wil have to create a systemd unit file, to load the service. Below is an example of that file.
         
