@@ -69,5 +69,5 @@ ExecStart=/bin/bash /home/iotedge-user/route-setup.sh
 WantedBy=default.target
 ```
 
- To check the service is working, reboot the EFLOW VM (`Stop-EflowVm` & `Start-EflowVm`),  then `Connect-EflowVm` to get inside the VM, and finanlly list the routes. You should be able to see the new _Default_ rules, with the assinged metric.
+ To check the service is working, reboot the EFLOW VM (`Stop-EflowVm` & `Start-EflowVm`),  then `Connect-EflowVm` to get inside the VM, and finally list the routes. You should be able to see the new _Default_ rules, with the assinged metric.
       
