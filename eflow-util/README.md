@@ -13,7 +13,7 @@ Understand EFLOW-Util PowerShell functions that provide further mechanisms to co
  - Private Key path
  
   ## EflowUtil-SetEdgeCertificates
- The **EflowUtil-SetEdgeCertificates** command sets the IoT Edge certificates in the virtual machine. The command handles copying the certificates into the EFLOW VM, assign the needed permissions, and configure IoT Edge. Use the optional parameters to define specific file/folder for configuration.
+ The [**EflowUtil-SetEdgeCertificates**](./EflowUtil-SetEdgeCertificates.ps1) command sets the IoT Edge certificates in the virtual machine. The command handles copying the certificates into the EFLOW VM, assign the needed permissions, and configure IoT Edge. Use the optional parameters to define specific file/folder for configuration.
  
 | Parameter | Accepted values | Comments |
 | --------- | --------------- | -------- |
