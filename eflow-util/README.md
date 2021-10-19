@@ -45,5 +45,6 @@ Understand EFLOW-Util PowerShell functions that provide extra mechanisms to comm
 | _port_ | Integer value (0, 65535) | Port number inside CBL-Mariner. |
 | _state_ | INVALID, ESTABLISHED, NEW, RELATED, SNAT, DNAT | Network connection states to match. |
 | _jump_ | REJECT, ACCEPT, DROP | Network connection states to match. |
+| _unset_ | - | If this parameter is present, the provided rule will be unset/deleted. |
 | _customRule_ | String |  If a more complex rule is needed, this parameter cna be used to input the rule string. |
 
