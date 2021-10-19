@@ -28,6 +28,8 @@ Understand EFLOW-Util PowerShell functions that provide extra mechanisms to comm
  The [**EflowUtil-GetFirewallRules**](./EflowUtil-GetFirewallRules.ps1) command checks the CBL-Mariner firewall rules. 
  The command returns the list of all firewall rules configured. Use the optional parameters to define a table or chain.
  
+ The EFLOW VM uses CBL-Mariner, which includes an iptables based firewall. For more information about iptables, visit iptables page
+ 
 | Parameter | Accepted values | Comments |
 | --------- | --------------- | -------- |
 | _table_ | filter, nat, mangle, raw | Name of table - Each table contains a number of built-in chains and may also contain user-defined chains. |
@@ -36,6 +38,8 @@ Understand EFLOW-Util PowerShell functions that provide extra mechanisms to comm
  ## EflowUtil-SetFirewallRules
  The [**EflowUtil-SetFirewallRules**](./EflowUtil-GetFirewallRules.ps1) command adds the specified rule to CBL-Mariner firewall. 
  Use the optional parameters to define a custom rule. For more specific rule, use _customRule_ parameter.
+ 
+ The EFLOW VM uses CBL-Mariner, which includes an iptables based firewall. For more information about iptables, visit iptables page
  
 | Parameter | Accepted values | Comments |
 | --------- | --------------- | -------- |
