@@ -33,4 +33,17 @@ Understand EFLOW-Util PowerShell functions that provide extra mechanisms to comm
 | _table_ | filter, nat, mangle, raw | Name of table - Each table contains a number of built-in chains and may also contain user-defined chains. |
 | _chain_ | INPUT, OUTPUT, FORWARD, DOCKER, DOCKER-ISOLATION-STAGE-1, DOCKER-ISOLATION-STAGE-2, DOCKER-USER | Name of chain - Each chain is a list of rules which can match a set of packets.  |
 
+ ## EflowUtil-SetFirewallRules
+ The [**EflowUtil-SetFirewallRules**](./EflowUtil-GetFirewallRules.ps1) command adds the specified rule to CBL-Mariner firewall. 
+ Use the optional parameters to define a custom rule. For more specific rule, use _customRule_ parameter.
+ 
+| Parameter | Accepted values | Comments |
+| --------- | --------------- | -------- |
+| _table_ | filter, nat, mangle, raw | Name of table - Each table contains a number of built-in chains and may also contain user-defined chains. |
+| _chain_ | INPUT, OUTPUT, FORWARD, DOCKER, DOCKER-ISOLATION-STAGE-1, DOCKER-ISOLATION-STAGE-2, DOCKER-USER | Name of chain - Each chain is a list of rules which can match a set of packets.  |
+| _protocol_ | udp, tcp, icmp, all | Name of network protocol. |
+| _port_ | Integer value (0, 65535) | Port number inside CBL-Mariner. |
+| _state_ | INVALID, ESTABLISHED, NEW, RELATED, SNAT, DNAT | Network connection states to match. |
+| _jump_ | REJECT, ACCEPT, DROP | Network connection states to match. |
+| _customRule_ | String |  If a more complex rule is needed, this parameter cna be used to input the rule string. |
 
