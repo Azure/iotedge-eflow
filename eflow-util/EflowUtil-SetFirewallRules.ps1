@@ -20,6 +20,9 @@
 .PARAMETER jump
     This specifies the target of the rule; i.e., what to do if the packet matches it.
 
+.PARAMETER unset
+    If unset is present, the rule be unset/deleted.
+
 .PARAMETER customRule
     If a more complex rule is needed, this parameter cna be used to input the rule string
 
@@ -45,9 +48,11 @@ param (
     [ValidateSet("INVALID", "ESTABLISHED", "NEW", "RELATED", "SNAT", "DNAT")]
     [String] $state,
 
-    [ValidateSet("REJECT", "ACCEPT", "DROP", "RELATED", "SNAT", "DNAT")]
+    [ValidateSet("REJECT", "ACCEPT", "DROP")]
     [Parameter(Mandatory)]
     [String] $jump,
+
+    [Switch] $unset,
 
     [String] $customRule
 )
@@ -64,7 +69,16 @@ try
     }
     else
     {
-         $vmCommand = "sudo iptables -A "
+        if($unset.IsPresent)
+        {
+            $vmCommand = "sudo iptables -D "
+        }
+        else
+        {
+            $vmCommand = "sudo iptables -A "
+        }
+
+         
 
         if (![string]::IsNullOrEmpty($chain))
         {
