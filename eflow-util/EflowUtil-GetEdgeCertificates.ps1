@@ -1,9 +1,8 @@
-
 try
 {
     Import-Module AzureEflow
 
-    $result = Invoke-EflowVmCommand -command 'sudo cat /etc/iotedge/config.yaml  | grep "^certificates:" -A4' -ignoreError
+    $result = Invoke-EflowVmCommand -command 'sudo cat /etc/iotedge/config.yaml  | grep "[[:blank:]]*certificates:" -A4' -ignoreError
     
     if([string]::IsNullOrEmpty($result))
     {
@@ -28,4 +27,3 @@ catch [Exception]
     Write-Host "Exception caught!!!"  -color "Red"
     Write-Host $_.Exception.Message.ToString()  -color "Red" 
 }
-
