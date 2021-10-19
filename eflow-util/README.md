@@ -26,4 +26,11 @@ Understand EFLOW-Util PowerShell functions that provide extra mechanisms to comm
 
  ## EflowUtil-GetFirewallRules
  The [**EflowUtil-GetFirewallRules**](./EflowUtil-GetFirewallRules.ps1) command checks the CBL-Mariner firewall rules. 
- This command takes no parameters. It returns the list of all firewall rules configured.
+ The command returns the list of all firewall rules configured. Use the optional parameters to define a table or chain.
+ 
+| Parameter | Accepted values | Comments |
+| --------- | --------------- | -------- |
+| _table_ | filter, nat, mangle, raw | Name of table - Each table contains a number of built-in chains and may also contain user-defined chains. |
+| _chain_ | INPUT, OUTPUT, FORWARD, DOCKER, DOCKER-ISOLATION-STAGE-1, DOCKER-ISOLATION-STAGE-2, DOCKER-USER | Name of chain - Each chain is a list of rules which can match a set of packets.  |
+
+
