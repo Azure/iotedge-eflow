@@ -22,3 +22,8 @@ Understand EFLOW-Util PowerShell functions that provide extra mechanisms to comm
 | _deviceCAPrivateKeyPath_ | Device CA Private Key path on Windows | - |
 | identityCertDirVm |  Certificates folder path on CBL-Mariner (EFLOW VM) | **Optional** |
 | _deviceCAPrivateKeyPath_ |  Private Key folder path on CBL-Mariner (EFLOW VM) | **Optional** |
+
+
+ ## EflowUtil-GetFirewallRules
+ The [**EflowUtil-GetFirewallRules**](./EflowUtil-GetFirewallRules.ps1) command checks the CBL-Mariner firewall rules. 
+ This command takes no parameters. It returns the list of all firewall rules configured.
