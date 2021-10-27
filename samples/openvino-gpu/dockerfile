@@ -1,0 +1,36 @@
+FROM openvino/ubuntu20_data_dev
+
+USER root
+
+RUN apt update
+RUN apt remove -y intel-opencl-icd intel-level-zero-gpu #remove the default opencl icd driver
+RUN apt install wget
+
+WORKDIR /neo
+
+#ENV http_proxy <proxy>
+#ENV https_proxy <proxy>
+
+# Installs the correct drivers with iGPU acceleration support
+RUN wget https://github.com/intel/compute-runtime/releases/download/21.37.20939/intel-gmmlib_21.2.1_amd64.deb
+RUN wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.8517/intel-igc-core_1.0.8517_amd64.deb
+RUN wget https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.8517/intel-igc-opencl_1.0.8517_amd64.deb
+RUN wget https://github.com/intel/compute-runtime/releases/download/21.37.20939/intel-opencl_21.37.20939_amd64.deb
+RUN wget https://github.com/intel/compute-runtime/releases/download/21.37.20939/intel-ocloc_21.37.20939_amd64.deb
+RUN wget https://github.com/intel/compute-runtime/releases/download/21.37.20939/intel-level-zero-gpu_1.2.20939_amd64.deb
+
+RUN dpkg -i *.deb
+
+WORKDIR /opt/intel/openvino_2021.4.689/data_processing/dl_streamer/samples
+ENV MODELS_PATH "/root/intel/dl_streamer/models"
+ENV INTEL_OPENVINO_DIR "/opt/intel/openvino"
+RUN mkdir -p /root/intel/dl_streamer/models
+RUN ./download_models.sh
+
+ENV DETECTION_MODEL "/root/intel/dl_streamer/models/intel/person-vehicle-bike-detection-2004/FP32/person-vehicle-bike-detection-2004.xml"
+ENV DETECTION_MODEL_PROC "/opt/intel/openvino_2021.4.689/data_processing/dl_streamer/samples/gst_launch/vehicle_pedestrian_tracking/model_proc/person-vehicle-bike-detection-2004.json"
+
+RUN wget https://github.com/aler9/rtsp-simple-server/releases/download/v0.17.3/rtsp-simple-server_v0.17.3_linux_amd64.tar.gz
+RUN tar -xzvf rtsp-simple-server_v0.17.3_linux_amd64.tar.gz
+
+#ENV no_proxy <no proxy setting>
