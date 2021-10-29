@@ -62,7 +62,34 @@ Before installing EFLOW and connectiong the OPC UA Publisher to the offline devi
 4. Get the Connection string from the OPC UA Simulation Server.
 5. Copy the Connection string inside the OPC UA Client, and connect.
 6. When asked about Security Settings, chose your OPC UA Simulation Server settings (by default None).
-7. Check the incoming data under Objects -> Simulation
+7. Check the incoming data under Objects -> Simulation.
 
 ![OPC UA Client](./../images/Prosys-OPC-UA-Client.png)
+
+### Install EFLOW
+To install EFLOW, follow the instructions [Install Azure IoT Edge for Linux on Windows](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-provision-single-device-linux-on-windows-symmetric?view=iotedge-2018-06&tabs=powershell) until Step 3 (Execution Policy).
+Before deploying the EFLOW-VM we will create an External Virtual switch to connect to the Secure network.
+
+1. Open Hyper-V Manager.
+2. On the right bar, select Virutal Switch Manager. 
+3. On the Virtual Switch Manager window, on the left bar, select New Virtual network switch.
+4. Select type _External_ and click _Create Virtual Switch_.
+5. Use a name that represents the Secure network, like _OfflineUPCUA_.
+6. Under _Connection Type_ select _External Network_ and make sure to select the Netork Adapter that is connected to your Secure network.
+7. Select _Apply_.
+
+If everything was correct, we will have a new External virtual switch, that we will use to connect the EFLOW VM directly to the Secure network. 
+
+Once the external virtual swtich is created, make sure to deploy  the EFLOW VM using the command `Deploy-Eflow` with the recently created switch. For information about all the optional parameters available, see [PowerShell functions for IoT Edge for Linux on Windows](https://docs.microsoft.com/en-us/azure/iot-edge/reference-iot-edge-for-linux-on-windows-functions?view=iotedge-2018-06#deploy-eflow). If you are using Static IP, make sure to specify the IP parameters (-ip4Address, ip4PrefixLength, ip4GatewayAddress). For our custom External Virutal Swithc, with Static IP, the command would be the following: 
+
+`Deploy-Eflow -cpuCount 2 -memoryInMb 2048 -vswitchName OfflineUPCUA -vswitchType External -ip4Address 192.168.2.4 -ip4PrefixLength 24 -ip4GatewayAddress 192.168.2.1`.
+
+Once installation is completed, check that the EFLOW VM has connectivity with the OPC UA devices. You can check this by pinging the offline devices (make sure ICMP traffic is allowed in Windows Firewall).
+1. Open an elevetad PowerShell Session.
+2. Connect to the EFLOW VM using the command `Connect-EflowVm`
+3. Inside the VM, do an `ifconfig` to check the eth0 interface has the correct IP configuration
+4. Test connectivity by pinging the OPC UA Simulation Server device: `ping <OPC-UA-Device-IP>`
+
+
+### Configure multiple NIC for EFLOW
 
