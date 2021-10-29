@@ -118,7 +118,7 @@ If everything is correct, we will have the _OnlineOPCUA_ switch assigned to the 
 If there's an issue with the network routing, check [EFLOW Network Routing](./routing/README.md).
 
 
-### Provision EFLOW and Configure OPC
+### Provision EFLOW and Configure OPC Publisher
 To complete the demo, we need to provision the EFLOW VM, get the OPC Publisher module deployed, configure this module to connect to the OPC UA Simulation Server, and upload the incoming data to Azure IoT Hub.
 First, let's start by provisioning the EFLOW VM. There are multiple ways to Provision the device (Manual, DPS). In this case, we will use Manual Connection String. 
 
