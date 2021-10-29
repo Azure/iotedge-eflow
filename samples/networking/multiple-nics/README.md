@@ -39,7 +39,7 @@ In order to test the scenario described above, we will simulate OPC UA devices. 
 4. Navigate to Objects, and check the simulated parameters. If needed, change the Name and the value creation method.
 5. Make sure the Simulator is Running.
 
-![OPC UA Device IP](./../images/Prosys-OPC-UA-Simulator.png)
+![OPC UA Simlulation Server](./../images/Prosys-OPC-UA-Simulator.png)
 
 ### Check IP configuration
 1. Open a PowerShell session.
@@ -47,4 +47,22 @@ In order to test the scenario described above, we will simulate OPC UA devices. 
 3. Check the IP configuration - Make sure you get the IP Address of the switch that is connected to the offline network. In our case, it's the Ehternet adapter, with the IP Address 192.168.2.1
 
 ![OPC UA Device IP](./../images/OPC-UA-IP.png)
+
+
+## Configure EFLOW device
+The EFLOW device will act as a gateway, and upload the data from the OPC UA Simulation Server to Azure using the OPC Publisher module. To do so, the EFLOW VM needs to be connected to both the Secure network (offline) and the DMZ netwrok (online).
+The following steps will guide you how to setup the EFLOW VM, check connectivity with OPC UA Simulation Server, add a second NIC to the EFLOW VM, and finally configure OPC UA Publisher module to upload the data.
+
+### Check connectivity to the OPC UA Simulation Server
+Before installing EFLOW and connectiong the OPC UA Publisher to the offline devices, we will test that the Windows host can access the OPC UA Simulation Server data. To do so, there are different OPC UA Clients, in particular we will use [Prosys OPC UA Client](https://downloads.prosysopc.com/opc-ua-client-downloads.php). 
+
+1. Download [Prosys OPC UA Client](https://www.prosysopc.com/opcua/apps/JavaClient/dist/3.2.0-328/prosys-opc-ua-client-3.2.0-328.exe).
+2. Run the installer.
+3. Run Prosys OPC UA Client.
+4. Get the Connection string from the OPC UA Simulation Server.
+5. Copy the Connection string inside the OPC UA Client, and connect.
+6. When asked about Security Settings, chose your OPC UA Simulation Server settings (by default None).
+7. Check the incoming data under Objects -> Simulation
+
+![OPC UA Client](./../images/Prosys-OPC-UA-Client.png)
 
