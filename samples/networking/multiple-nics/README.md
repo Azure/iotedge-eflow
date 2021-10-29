@@ -98,12 +98,22 @@ The EFLOW VM was deployed with an External virtual switch connected to the Secur
 2. On the right bar, select Virtual Switch Manager. 
 3. On the Virtual Switch Manager window, select New Virtual network switch on the left bar.
 4. Select type _External_ and click _Create Virtual Switch_.
-5. Use a name that represents the Secure network, like _OnlineUPCUA_.
+5. Use a name that represents the Secure network, like _OnlineOPCUA_.
 6. Under _Connection Type_, select _External Network_ and select the Network Adapter connected to your DMZ network.
 7. Select _Apply_.
 
 Once the External Virtual Switch is created, we need to attach this VM switch to the EFLOW VM. For more information, check [EFLOW Multiple NICs](https://github.com/Azure/iotedge-eflow/wiki/Multiple-NICs). For our custom new External Virtual Switch, using Static IP, the necessary commands are the following: 
 
-1. `Add-EflowNetwork -vswitchName OnlineUPCUA -vswitchType External`
-2. `Add-EflowVmEndpoint -vswitchName OnlineUPCUA -vEndpointName OnlineEndpoint -ip4Address 192.168.0.103 -ip4PrefixLength 24 -ip4GatewayAddress 192.168.0.1`
+1. `Add-EflowNetwork -vswitchName OnlineOPCUA -vswitchType External`
+2. `Add-EflowVmEndpoint -vswitchName OnlineOPCUA -vEndpointName OnlineEndpoint -ip4Address 192.168.0.103 -ip4PrefixLength 24 -ip4GatewayAddress 192.168.0.1`
 
+If everything is correct, we will have the _OnlineOPCUA_ switch assigned to the EFOLOW VM. To check the multiple NIC attactment, use the folllowing steps:
+
+1. Open a PowerShell session.
+2. Run the command `ipconfig`.
+3. Check the IP configuration - Make sure you see the eth0 interface (connected to Secure network) and the eth1 interface (connected to DMZ network).
+
+![Ifconfig Multiple NIC](./../images/ifconfig-multiple-nic.png)
+
+
+### Provision EFLOW and Configure OPC
