@@ -28,7 +28,7 @@ We can summarize the requirements:
   - EFLOW VM connected to Azure IoT Hub, using either an Internal/External virtual switch.
   - OPC Publisher running as a module inside the EFLOW VM used to publish data to Azure.
 
-
+<br><br/>
 ## Configure OPC UA devices
 To test the scenario described above, we will simulate OPC UA devices. There are different OPC UA Server simulators; we will use [Prosys OPC UA Simulation Server](https://www.prosysopc.com/products/opc-ua-simulation-server/). This program will simulate OPC UA traffic that we will publish to Azure using OPC UA Publisher module. 
 
@@ -48,7 +48,7 @@ To test the scenario described above, we will simulate OPC UA devices. There are
 
 ![OPC UA Device IP](./../images/OPC-UA-IP.png)
 
-
+<br><br/>
 ## Configure EFLOW device
 The EFLOW device will act as a gateway and upload the OPC UA Simulation Server data to Azure using the OPC Publisher module. To do so, the EFLOW VM needs to be connected to both the Secure network (offline) and the DMZ network (online).
 The following steps will guide you through setting up the EFLOW VM, checking connectivity with the OPC UA Simulation Server, adding a second NIC to the EFLOW VM, and finally configuring the OPC Publisher module to upload the data.
