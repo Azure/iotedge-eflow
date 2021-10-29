@@ -37,11 +37,14 @@ In order to test the scenario described above, we will simulate OPC UA devices. 
 2. Run the installer.
 3. Run Prosys OPC UA Simulation Server.
 4. Navigate to Objects, and check the simulated parameters. If needed, change the Name and the value creation method.
+5. Make sure the Simulator is Running.
+
+![OPC UA Device IP](./../images/Prosys-OPC-UA-Simulator.png)
 
 ### Check IP configuration
 1. Open a PowerShell session.
 2. Run the command `ipconfig`.
-3. Check the IP configuration - Make sure you get the IP Address of the switch that is connected to the offline network.
+3. Check the IP configuration - Make sure you get the IP Address of the switch that is connected to the offline network. In our case, it's the Ehternet adapter, with the IP Address 192.168.2.1
 
 ![OPC UA Device IP](./../images/OPC-UA-IP.png)
 
