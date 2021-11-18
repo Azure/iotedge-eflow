@@ -38,7 +38,7 @@ To exercise this sample you will need the following
 * A Windows device with the following minimum system requirements:
    * Windows 10 Version 1809 or later; build 17763 or later
    * Professional, Enterprise, or Server editions
-   * Minimum Free Memory: 2 GB
+   * Minimum Free Memory: 1 GB
    * Minimum Free Disk Space: 10 GB
 
 
