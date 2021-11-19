@@ -11,7 +11,9 @@
 
 
 # Step 3 - Configure EFLOW Multiple NIC
-The EFLOW VM was deployed with an External virtual switch connected to the Secure Network (offline) in the previous steps. To provision the EFLOW VM and communicate with Azure, we need to assign another NIC that is connected to the DMZ network (online). For this demo, we will assign an External Virtual Switch connected to the DMZ network. For more information, review [Create a virtual switch for Hyper-V virtual machines](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/create-a-virtual-switch-for-hyper-v-virtual-machines). 
+In [Step 2](./Install%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD), the EFLOW VM was deployed with an _External virtual switch_ connected to the Secure Network (offline). To provision the EFLOW VM and communicate with Azure, we need to assign another NIC that is connected to the DMZ network (online). 
+
+For this demo, we will assign an _External Virtual Switch_ connected to the DMZ network. For more information, review [Create a virtual switch for Hyper-V virtual machines](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/create-a-virtual-switch-for-hyper-v-virtual-machines). 
 
 To create the new virtual switch, follow these steps:
 
@@ -25,11 +27,11 @@ To create the new virtual switch, follow these steps:
 
 Once the External Virtual Switch is created, we need to attach this VM switch to the EFLOW VM. For more information, check [EFLOW Multiple NICs](https://github.com/Azure/iotedge-eflow/wiki/Multiple-NICs). For our custom new External Virtual Switch, using Static IP, the necessary commands are the following: 
 
-1. `Add-EflowNetwork -vswitchName OnlineOPCUA -vswitchType External`
+1. `Add-EflowNetwork -vswitchName "OnlineOPCUA" -vswitchType "External"`
 
 ![Add-EflowNetwork](./../Images/Add-EflowNetwork.png)
 
-2. `Add-EflowVmEndpoint -vswitchName OnlineOPCUA -vEndpointName OnlineEndpoint -ip4Address 192.168.0.103 -ip4PrefixLength 24 -ip4GatewayAddress 192.168.0.1`
+2. `Add-EflowVmEndpoint -vswitchName "OnlineOPCUA" -vEndpointName "OnlineEndpoint" -ip4Address 192.168.0.103 -ip4PrefixLength 24 -ip4GatewayAddress 192.168.0.1`
 
 ![Add-EflowNetwork](./../Images/Add-EflowVmEndpoint.png)
 
@@ -39,10 +41,8 @@ If everything is correct, we will have the _OnlineOPCUA_ switch assigned to the 
 2. Run the command `ipconfig`.
 3. Check the IP configuration - Make sure you see the eth0 interface (connected to the Secure network) and the eth1 interface (connected to the DMZ network).
 
-![Ifconfig Multiple NIC](./../images/ifconfig-multiple-nic.png)
+![Ifconfig Multiple NIC](./../Images/ifconfig-multiple-nic.png)
 
-**To learn more about EFLOW Multiple NIC**  
- * For more information, review [EFLOW docs](https://docs.microsoft.com/azure/iot-edge/iot-edge-for-linux-on-windows).
  * If there's an issue with the network routing, check [EFLOW Network Routing](./routing/README.md).
 
 

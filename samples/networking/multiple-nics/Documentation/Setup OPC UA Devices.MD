@@ -22,14 +22,14 @@ This part describes the relevant steps to setup OPC UA Server simulators to test
 ![OPC UA Simlulation Server](./../Images/Prosys-OPC-UA-Simulator.png)
 
 ## Check IP configuration
-1. Open a PowerShell session.
+1. Open a Command Prompt or PowerShell session.
 2. Run the command `ipconfig`.
 3. Check the IP configuration - Make sure you get the IP Address of the switch connected to the offline network. In our case, it's the Ethernet adapter, with the IP Address 192.168.2.1
 
 ![OPC UA Device IP](./../Images/OPC-UA-IP.png)
 
 ## Check connectivity to the OPC UA Simulation Server
-Before installing EFLOW and connecting the OPC UA Publisher to the offline devices, we will test that the Windows host can access the OPC UA Simulation Server data. There are different OPC UA Clients; in particular, we will use [Prosys OPC UA Client](https://downloads.prosysopc.com/opc-ua-client-downloads.php). 
+Before installing EFLOW and connecting the OPC UA Publisher to the offline devices, we will test that the Windows host can access the OPC UA Simulation Server data. There are different OPC UA Clients. For the purpose of this sample code, we'll use [Prosys OPC UA Client](https://downloads.prosysopc.com/opc-ua-client-downloads.php). 
 
 1. Download [Prosys OPC UA Client](https://www.prosysopc.com/opcua/apps/JavaClient/dist/3.2.0-328/prosys-opc-ua-client-3.2.0-328.exe).
 2. Run the installer.
