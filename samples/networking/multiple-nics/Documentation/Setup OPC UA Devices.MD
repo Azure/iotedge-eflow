@@ -29,7 +29,7 @@ This part describes the relevant steps to setup OPC UA Server simulators to test
 ![OPC UA Device IP](./../Images/OPC-UA-IP.png)
 
 ## Check connectivity to the OPC UA Simulation Server
-Before installing EFLOW and connecting the OPC UA Publisher to the offline devices, we will test that the Windows host can access the OPC UA Simulation Server data. There are different OPC UA Clients; in particular, we will use [Prosys OPC UA Client](https://downloads.prosysopc.com/opc-ua-client-downloads.php). 
+Before installing EFLOW and connecting the OPC UA Publisher to the offline devices, we will test that the Windows host can access the OPC UA Simulation Server data. There are different OPC UA Clients. For the purpose of this sample code, we'll use [Prosys OPC UA Client](https://downloads.prosysopc.com/opc-ua-client-downloads.php). 
 
 1. Download [Prosys OPC UA Client](https://www.prosysopc.com/opcua/apps/JavaClient/dist/3.2.0-328/prosys-opc-ua-client-3.2.0-328.exe).
 2. Run the installer.
