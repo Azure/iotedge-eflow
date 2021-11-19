@@ -22,7 +22,7 @@ This part describes the relevant steps to setup OPC UA Server simulators to test
 ![OPC UA Simlulation Server](./../Images/Prosys-OPC-UA-Simulator.png)
 
 ## Check IP configuration
-1. Open a PowerShell session.
+1. Open a Command Prompt or PowerShell session.
 2. Run the command `ipconfig`.
 3. Check the IP configuration - Make sure you get the IP Address of the switch connected to the offline network. In our case, it's the Ethernet adapter, with the IP Address 192.168.2.1
 
