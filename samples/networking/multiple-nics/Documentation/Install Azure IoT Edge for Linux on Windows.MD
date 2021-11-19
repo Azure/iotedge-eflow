@@ -13,7 +13,7 @@
 # Step 2: Install Azure IoT Edge for Linux on Windows (EFLOW)
 This part describes the relevant steps to set up Azure IoT Edge for Linux on Windows (EFLOW).
 
-Before deploying the EFLOW Virtual Machine, we need to an External Virtual switch to connect to the Secure (offline) network. For more information, review [Create a virtual switch for Hyper-V virtual machines](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/create-a-virtual-switch-for-hyper-v-virtual-machines).
+Before deploying the EFLOW Virtual Machine, we need to create an _External Virtual switch_ to connect to the Secure (offline) network. For more information, review [Create a virtual switch for Hyper-V virtual machines](https://docs.microsoft.com/en-us/windows-server/virtualization/hyper-v/get-started/create-a-virtual-switch-for-hyper-v-virtual-machines).
 
 1. Open Hyper-V Manager.
 2. On the right bar, select Virtual Switch Manager. 
