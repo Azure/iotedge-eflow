@@ -2,10 +2,10 @@
 ## Progress
 
 - [x] [Introduction](../README.md)  
-- [x] [Step 1 - Setup OPC UA devices]() 
-- [x] [Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)](./Documentation/Install%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)
+- [x] [Step 1 - Setup OPC UA devices](./Setup%20OPC%20UA%20Devices.MD) 
+- [x] [Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)](./Install%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)
 - [ ] **Step 3 - Configure EFLOW Multiple NIC**
-- [ ] [Step 4 - Provision EFLOW and Configure OPC Publisher](./Develop%20the%20Windows%20C%23%20Console%20Application.MD)  
+- [ ] [Step 4 - Provision EFLOW and Configure OPC Publisher](./Provision%20EFLOW%20and%20Configure%20OPC%20Publisher.MD)  
 - [ ] [Troubleshooting](./Troubleshooting.MD)  
 ---
 
@@ -44,3 +44,6 @@ If everything is correct, we will have the _OnlineOPCUA_ switch assigned to the 
 **To learn more about EFLOW Multiple NIC**  
  * For more information, review [EFLOW docs](https://docs.microsoft.com/azure/iot-edge/iot-edge-for-linux-on-windows).
  * If there's an issue with the network routing, check [EFLOW Network Routing](./routing/README.md).
+
+
+ Go to [Next Step](./Provision%20EFLOW%20and%20Configure%20OPC%20Publisher.MD)  

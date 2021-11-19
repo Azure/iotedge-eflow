@@ -2,10 +2,10 @@
 ## Progress
 
 - [x] [Introduction](../README.md)  
-- [x] [Step 1 - Setup OPC UA devices]() 
+- [x] [Step 1 - Setup OPC UA devices](./Setup%20OPC%20UA%20Devices.MD) 
 - [ ] **Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)**  
-- [ ] [Step 3 - Configure EFLOW Multiple NIC](./Create%20Certificates%20for%20Authentication.MD)  
-- [ ] [Step 4 - Provision EFLOW and Configure OPC Publisher](./Develop%20the%20Windows%20C%23%20Console%20Application.MD)  
+- [ ] [Step 3 - Configure EFLOW Multiple NIC](./Configure%20EFLOW%20Multiple%20NIC.MD)  
+- [ ] [Step 4 - Provision EFLOW and Configure OPC Publisher](./Provision%20EFLOW%20and%20Configure%20OPC%20Publisher.MD)  
 - [ ] [Troubleshooting](./Troubleshooting.MD)  
 ---
 
@@ -44,7 +44,7 @@ Once installation is completed, check that the EFLOW VM has connectivity with th
  For more information, review [EFLOW docs](https://docs.microsoft.com/azure/iot-edge/iot-edge-for-linux-on-windows).
  
 
- Go to [Next Step](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
+ Go to [Next Step](./Configure%20EFLOW%20Multiple%20NIC.MD)  
 
 
 
