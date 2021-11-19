@@ -3,7 +3,7 @@
 
 - [x] [Introduction](../README.md)  
 - [ ] **Step 1 - Setup OPC UA devices** 
-- [ ] [Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
+- [ ] [Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)](./Documentation/Install%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)  
 - [ ] [Step 3 - Configure EFLOW Multiple NIC](./Create%20Certificates%20for%20Authentication.MD)  
 - [ ] [Step 4 - Provision EFLOW and Configure OPC Publisher](./Develop%20the%20Windows%20C%23%20Console%20Application.MD)  
 - [ ] [Troubleshooting](./Troubleshooting.MD)  
@@ -42,4 +42,4 @@ Before installing EFLOW and connecting the OPC UA Publisher to the offline devic
 
 ![OPC UA Client](./../Images/Prosys-OPC-UA-Client.png)
 
- Go to [Next Step](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
+ Go to [Next Step](./Install%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)  

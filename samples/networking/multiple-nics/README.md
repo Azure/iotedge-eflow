@@ -43,7 +43,7 @@ A Windows device with the following minimum requirements:
 
 ## Instructions
 [Step 1 - Setup OPC UA Devices](./Documentation/Setup%20OPC%20UA%20Devices.MD)  
-[Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)](./Documentation/)  
+[Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)](./Documentation/Install%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)  
 [Step 3 - Configure EFLOW Multiple NIC](./Documentation/)  
 [Step 4 - Provision EFLOW and Configure OPC Publisher](./Documentation/Develop%20the%20Windows%20C%23%20Console%20Application.MD)  
 [Troubleshooting](./Documentation/Troubleshooting.MD)  

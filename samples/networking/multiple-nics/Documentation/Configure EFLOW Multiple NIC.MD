@@ -3,7 +3,7 @@
 
 - [x] [Introduction](../README.md)  
 - [x] [Step 1 - Setup OPC UA devices]() 
-- [x] [Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)]()
+- [x] [Step 2 - Install Azure IoT Edge for Linux on Windows (EFLOW)](./Documentation/Install%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)
 - [ ] **Step 3 - Configure EFLOW Multiple NIC**
 - [ ] [Step 4 - Provision EFLOW and Configure OPC Publisher](./Develop%20the%20Windows%20C%23%20Console%20Application.MD)  
 - [ ] [Troubleshooting](./Troubleshooting.MD)  
