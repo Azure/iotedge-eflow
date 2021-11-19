@@ -11,12 +11,17 @@
 
 
 # Step 4- Provision EFLOW and Configure OPC Publisher
-To complete the demo, we need to provision the EFLOW VM, get the OPC Publisher module deployed, configure this module to connect to the OPC UA Simulation Server, and upload the incoming data to Azure IoT Hub.
-First, let's start by provisioning the EFLOW VM. There are multiple ways to Provision the device (Manual, DPS). In this case, we will use Manual Connection String. 
+
+### Provision EFLOW VM
+To complete the demo, we first need to provision the EFLOW VM and get the OPC Publisher module deployed. EFLOW supports multiple provisioning methods. For more information check [Create and Provision and IoT Edge device](https://docs.microsoft.com/en-us/azure/iot-edge/how-to-create-iot-edge-device?view=iotedge-2018-06). For the purpose of this sample code, we will use Manual Connection String. 
 
 `Provision-EflowVm -provisioningType ManualConnectionString -devConnString <edge-device-connection-string>`.
 
+### Deploy OPC Publisher
+
 Once the EFLOW VM is provisioned, follow [Tutorial: Deploy the OPC Publisher](https://docs.microsoft.com/en-us/azure/industrial-iot/tutorial-publisher-deploy-opc-publisher-standalone) guide to deploying the OPC Publisher module to the EFLOW VM.
+
+### COnfigure OPC Publisher
 
 The last step is to configure the OPC Publisher module to connect with the OPC UA Simulation Server. Follow the [Tutorial: Configurar OPC Publisher](https://docs.microsoft.com/en-us/azure/industrial-iot/tutorial-publisher-configure-opc-publisher). Make sure to edit the configuration file taking into account the scenario networking configuration. Under _EndpointUrl_ use the OPC UA Simulation Server connection string that was previously tested with the OPC UA Client. 
 
