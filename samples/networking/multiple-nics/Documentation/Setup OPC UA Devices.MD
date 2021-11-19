@@ -28,10 +28,6 @@ This part describes the relevant steps to setup OPC UA Server simulators to test
 
 ![OPC UA Device IP](./../Images/OPC-UA-IP.png)
 
-## Configure EFLOW device
-The EFLOW device will act as a gateway and upload the OPC UA Simulation Server data to Azure using the OPC Publisher module. To do so, the EFLOW VM needs to be connected to both the Secure network (offline) and the DMZ network (online).
-The following steps will guide you through setting up the EFLOW VM, checking connectivity with the OPC UA Simulation Server, adding a second NIC to the EFLOW VM, and finally configuring the OPC Publisher module to upload the data.
-
 ## Check connectivity to the OPC UA Simulation Server
 Before installing EFLOW and connecting the OPC UA Publisher to the offline devices, we will test that the Windows host can access the OPC UA Simulation Server data. There are different OPC UA Clients; in particular, we will use [Prosys OPC UA Client](https://downloads.prosysopc.com/opc-ua-client-downloads.php). 
 
