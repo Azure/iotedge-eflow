@@ -43,7 +43,7 @@ If everything is correct, we will have the _OnlineOPCUA_ switch assigned to the 
 
 ![Ifconfig Multiple NIC](./../Images/ifconfig-multiple-nic.png)
 
- * If there's an issue with the network routing, check [EFLOW Network Routing](./routing/README.md).
+ * If there's an issue with the network routing, check [EFLOW Network Routing](./../../routing/README.md).
 
 
  Go to [Next Step](./Provision%20EFLOW%20and%20Configure%20OPC%20Publisher.MD)  
