@@ -56,6 +56,12 @@ _:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks
 | [GPU Passthrough](https://aka.ms/AzEFLOW-VoE) | <p> [Vision on Edge](https://github.com/Azure-Samples/azure-intelligent-edge-patterns/tree/master/factory-ai-vision) is a sample illustrating how to create an end-to-end AI/ML inferencing solution. VoE ties together technologies such as: Microsoft LVA or OpenCV, Onyxruntime, TensorRT for NVIDIA GPUs, Custom Vision, and more. This tutorial walks you through how to deploy the VoE IoT Edge modules to your EFLOW device. </li></ul>|  
 
 
+#### Networking Access
+
+| Name           | Description      |  
+|----------------|------------------|  
+| [multiple-nics](./networking/multiple-nics) | <p>Sample to configure the EFLOW VM with multiple NICs and simulate an Industrial IoT scenario using OPC Publisher module.</li></ul>|  
+| [routing](./networking/routing) | <p>Sample to configure the EFLOW VM network routing - Configure routes and setting up a service.</li></ul>|  
 
 ## Using the samples
 

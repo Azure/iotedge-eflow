@@ -35,11 +35,15 @@ To realize this communication model for the development of both the Windows appl
 ## Prerequisites
 To exercise this sample you will need the following
 * An [Azure Subscription](https://azure.microsoft.com/free/) in which you have rights to deploy resources.  
-* A Windows device with the following minimum system requirements:
-   * Windows 10 Version 1809 or later; build 17763 or later
-   * Professional, Enterprise, or Server editions
-   * Minimum Free Memory: 2 GB
-   * Minimum Free Disk Space: 10 GB
+
+A Windows device with the following minimum requirements:
+* System Requirements
+   * Windows 10¹/11 (Pro, Enterprise, IoT Enterprise)
+   * Windows Server 2019¹/2022  
+   <sub>¹ Windows 10 and Windows Server 2019 minimum build 17763 with all current cumulative updates installed.</sub>
+* Hardware requirements
+  * Minimum Free Memory: 1 GB
+  * Minimum Free Disk Space: 10 GB
 
 
 ## Instructions

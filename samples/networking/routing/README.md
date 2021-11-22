@@ -1,4 +1,4 @@
-# EFLOW Routing
+# EFLOW Network Routing
 
 When using EFLOW multiple NICs feature, you may want to set up the different routes priorities. By default, EFLOW will create one _Default_ route per _ehtX_ interface assigned to the VM and assign a random priority.
 If all interfaces are connected to the internet, random priorities may not be a problem. However, if one of the NICs is connected to an _Offline_ network, you may want to prioritize the _Online_ NIC over the _Offline_ NIC to get the EFLOW VM connected to the internet. 
@@ -25,7 +25,7 @@ EFLOW uses [route](https://man7.org/linux/man-pages/man8/route.8.html) service t
 2. Connect to the EFLOW VM using `Connect-EflowVm`
 3. Run `sudo route`
 
-![Routing Output](./route-output.png)
+![Routing Output](./../multiple-nics/Images/route-output.png)
 
 _Image above shows the route command output with two NIC's assigned (eth0 and eth1). The VM will create two different _Default_ destinations rules with different Metrics (the lower the metric, the higher the priority)._
 
