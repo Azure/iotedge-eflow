@@ -1,4 +1,4 @@
-# EFLOW Industrial IoT OPC UA scenario using multiple NIC support
+# EFLOW multiple NIC support for DMZs
 
 Suppose in a workflow you have a networking configuration divided into two different networks/zones. First, you have a Secure network or also defined as the offline network, which has no internet connectivity and is limited to internal access. Secondly, you have a demilitarized zone (DMZ), in which you may have a couple of devices that have limited internet connectivity. When moving the workflow to run on the EFLOW VM, you may have problems accessing the different networks since the EFLOW VM by default has only one NIC attached. 
 
