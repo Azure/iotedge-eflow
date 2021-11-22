@@ -25,7 +25,7 @@ EFLOW uses [route](https://man7.org/linux/man-pages/man8/route.8.html) service t
 2. Connect to the EFLOW VM using `Connect-EflowVm`
 3. Run `sudo route`
 
-![Routing Output](./route-output.png)
+![Routing Output](./../multiple-nics/Images/route-output.png)
 
 _Image above shows the route command output with two NIC's assigned (eth0 and eth1). The VM will create two different _Default_ destinations rules with different Metrics (the lower the metric, the higher the priority)._
 
