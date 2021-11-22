@@ -9,7 +9,7 @@
 - [ ] **Troubleshooting**
 ---
 
-#### 1. OPC Publisher doesn't appear to be deployed to the EFLOW VM####
+#### 1. OPC Publisher doesn't appear to be deployed to the EFLOW VM
 This problem is usually caused by a networking issue. Ensure the EFLOW VM has internet connectivity and it's correctly provisioned. 
 
 If the previous steps doesn't work, follow these steps:
@@ -18,17 +18,12 @@ If the previous steps doesn't work, follow these steps:
 3. `sudo systemctl status iotedge` - Make sure it says active (running)  
 4. `sudo iotedge check` 
 
-#### 2. Error when pushing a module to Azure Contianer Registry ####
-To fix an error when pushing the container, ensure that the module.json has the proper registry and container name appended: <repository>.azurecr.io/<containername>. For more information, visit [Can't Push IoT Edge module to Azure Container Registry](https://github.com/MicrosoftDocs/azure-docs/issues/22296).
-<br/><br/>
+#### 2. Error when connecting to the OPC UA Simulation Server
+This problem is usually caused by a networking issue. Ensure the Windows host has connectivity with the device that is running the OPC UA Simulation Server. You can try pinging between the different devices. If ping works, but still no connectivity, make sure there's no firewall blocking the Port 53530.
 
-#### 3. Error when pushing a deploying the CSharpModule app ####
-To fix this error,  change InteropSampleRegistry value in the registry credentials to direct values or add a separate environment variable for the registry container.
-<br/><br/>
+#### 3. Error when trying to install Azure IoT Edge for Linux on Windows.
+Make sure you are meeting all the Azure IoT Edge for Linux on Winodws. For more information, check [AzEFLOW-Requirements](https://aka.ms/AzEFLOW-Requirements).
+For any other issue related with installation, check our [EFLOW Wiki](https://aka.ms/AzEFLOW-Wiki) and [EFLOW Issues](https://aka.ms/AzEFLOW-Issues).
 
-#### 4. Operation is not valid due to the current state of the object in microsoft.azure.amqp ####
-This is a bug in AMQP and .NET 5. For more information about this error, check this [thread](https://stackoverflow.com/questions/64804036/operation-is-not-valid-due-to-the-current-state-of-the-object-source-microsoft). The solution is adding AMQP version requirement, as well as using .NET Core 3.1LTS  instead of .NET 5
-```csharp
-<PackageReference Include="Microsoft.Azure.Amqp" Version="2.4.13" /> 
-```
-<br/>
+#### 4. Error trying to reach internet from EFLOW VM after setting multiple NICs
+This problem is usually cause by networking routes inside the EFLOW VM. For more information about network routing, check [EFLOW Network Routing](./../../routing/README.md).
