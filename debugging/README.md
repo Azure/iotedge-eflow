@@ -85,19 +85,25 @@ dule running inside EFLOW from the Window host OS.
     
     `Invoke-EflowVmCommand “sudo iptables -A INPUT -p tcp --dport 10022 -j ACCEPT”`
 
-Note: For security reasons, every time the EFLOW VM reboots, the IP table rule will delete and go back to the original settings. Also, the module SSH service will have to be started again manually. 
+      _Note: For security reasons, every time the EFLOW VM reboots, the IP table rule will delete and go back to the original settings. Also, the module SSH service will have to be started again manually._
 
-11)	After successfully starting SSH service, click Debug -> Attach to Process, set Connection Type to SSH, and Connection target to the IP address of your EFLOW VM. If you don’t know the EFLOW VM IP, you can use the Get-EflowVmAddr cmdlet. First, type the IP and then press enter. In the pop-up window, input the following configurations:
+11)	After successfully starting SSH service, click **Debug** -> **Attach to Process**, set Connection Type to SSH, and Connection target to the IP address of your EFLOW VM. If you don’t know the EFLOW VM IP, you can use the `Get-EflowVmAddr` cmdlet. First, type the IP and then press enter. In the pop-up window, input the following configurations:
 
-Hostname:  Use the EFLOW VM IP
-Port: 10022 (Or the one you used in your deployment configuration)
-User name: root
-Authentication type: Private Key
-Private Key File: Full path to the id_rsa that was previously created in Step 5
-Passphrase: The one used for the key created in Step 5
+      | Field               | Value                                                         |
+      |---------------------|---------------------------------------------------------------|
+      | **Hostname**            | Use the EFLOW VM IP                                           |
+      | **Port**                | 10022 (Or the one you used in your deployment configuration)  |
+      | **Username**            | root                                                          |
+      | **Authentication type** | Private Key                                                   |
+      | **Private Key File**    | Full path to the id_rsa that was previously created in Step 5 |
+      | **Passphrase**          | The one used for the key created in Step 5                    |
+      
+<p align="left"><img src="./images/ConnectRemoteSystem.png" height="400"/></p>
 
-  
-12)	After successfully connecting to the module using SSH, then you can choose the process and click Attach. For the C# module you need to choose process dotnet and “Attach to” to Managed (CoreCLR).
+12)	After successfully connecting to the module using SSH, then you can choose the process and click **Attach**. For the C# module you need to choose process **dotnet** and **“Attach to” to Managed (CoreCLR).**
  
+ <p align="left"><img src="./images/AttrachToProcess.png" height="400"/></p>
 
 13)	Now you can set breakpoint and debug your C# Linux module from Visual Studio on Windows. 
+
+ <p align="left"><img src="./images/DebugCode.png" height="400"/></p>
