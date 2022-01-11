@@ -98,11 +98,11 @@ dule running inside EFLOW from the Window host OS.
       | **Private Key File**    | Full path to the id_rsa that was previously created in Step 5 |
       | **Passphrase**          | The one used for the key created in Step 5                    |
       
-<p align="left"><img src="./images/ConnectRemoteSystem.png" height="400"/></p>
+      <p align="left"><img src="./images/ConnectRemoteSystem.png" height="400"/></p>
 
 12)	After successfully connecting to the module using SSH, then you can choose the process and click **Attach**. For the C# module you need to choose process **dotnet** and **“Attach to” to Managed (CoreCLR).**
  
- <p align="left"><img src="./images/AttrachToProcess.png" height="400"/></p>
+ <p align="left"><img src="./images/AttachToProcess.png" height="400"/></p>
 
 13)	Now you can set breakpoint and debug your C# Linux module from Visual Studio on Windows. 
 
