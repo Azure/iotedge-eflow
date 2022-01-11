@@ -18,17 +18,17 @@ dule running inside EFLOW from the Window host OS.
 
 1)	Open Visual Studio 2019/2022 and click menu **File** -> **New** -> **Project**. In the New Project dialog, select **Platform** -> **Linux**, select **Project** **Type** -> **IoT**, and then choose **Azure IoT Edge (Linux amd64)**. Next, enter a name for your project, specify the location, and select **OK**.
 
-<p align="left"><img src="./images/NewProject.png" height="350"/></p>
+      <p align="left"><img src="./images/NewProject.png" height="350"/></p>
 
 2)	In the project wizard, select C# Module, and replace **localhost:5000** with your **own registry info**, then click **Yes**
 
-<p align="left"><img src="./images/AddModule.png" height="400"/></p>
+      <p align="left"><img src="./images/AddModule.png" height="400"/></p>
 
 3)	There are two projects in the solution:
       -  One is the IoT Edge module project, which is just a simple C# project
       -  The other, the Edge project, is called the same as you’re the Visual Studio solution.
 
-<p align="left"><img src="./images/Solution.png" height="300"/></p>
+      <p align="left"><img src="./images/Solution.png" height="300"/></p>
 
 
 4)	To debug the C# Linux module, we need to update **Dockerfile.amd64.debug** to enable SSH service. Update the **Dockerfile.amd64.debug** file to use the following template: [Dockerfile for Azure IoT Edge AMD64 C# Module with Remote Debug Support](./Dockerfile.amd64.debug)
@@ -39,7 +39,7 @@ dule running inside EFLOW from the Window host OS.
      
      `ssh-keygen -t RSA -b 4096 -m PEM`
 
-<p align="left"><img src="./images/Ssh-keygen.png" width="800"/></p> 
+      <p align="left"><img src="./images/Ssh-keygen.png" width="800"/></p> 
 
 6)	If you’re using a private registry like Azure Container Registry, use the following Docker command to sign in.
 
@@ -102,8 +102,8 @@ dule running inside EFLOW from the Window host OS.
 
 12)	After successfully connecting to the module using SSH, then you can choose the process and click **Attach**. For the C# module you need to choose process **dotnet** and **“Attach to” to Managed (CoreCLR).**
  
- <p align="left"><img src="./images/AttachToProcess.png" height="400"/></p>
+      <p align="left"><img src="./images/AttachToProcess.png" height="400"/></p>
 
 13)	Now you can set breakpoint and debug your C# Linux module from Visual Studio on Windows. 
 
- <p align="left"><img src="./images/DebugCode.png" height="400"/></p>
+      <p align="left"><img src="./images/DebugCode.png" height="400"/></p>
