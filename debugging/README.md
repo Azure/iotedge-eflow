@@ -16,17 +16,34 @@ dule running inside EFLOW from the Window host OS.
 ## Debug C / C# Module Container Running in Remote Edge Device
 
 
-1)	Open Visual Studio 2019/2022 and click menu File -> New ->Project. In the New Project dialog, select Platform -> Linux, select Project Type -> IoT, and then choose Azure IoT Edge (Linux amd64). Next, enter a name for your project, specify the location, and select OK.
-2)	In the project wizard, select C# Module, and replace localhost:5000 with your own registry info, then click Yes
-3)	There are two projects in the solution; one is the IoT Edge module project, which is just a simple C# project, and the other, the Edge project, is called the same as you’re the Visual Studio solution.
-4)	To debug the C# Linux module, we need to update Dockerfile.amd64.debug to enable SSH service. Update the Dockerfile.amd64.debug file to use the following template: Dockerfile for Azure IoT Edge AMD64 C# Module with Remote Debug Support
-5)	To establish an SSH connection with the Linux module, we need to create an RSA key. Open an elevated PowerShell session and run the following commands to create a new RSA key. IMPORTANT: When asked for a directory, use the folder path where the IoTEdgeModule1 is stored
-ssh-keygen -t RSA -b 4096 -m PEM
+1)	Open Visual Studio 2019/2022 and click menu **File** -> **New** -> **Project**. In the New Project dialog, select **Platform** -> **Linux**, select **Project** **Type** -> **IoT**, and then choose **Azure IoT Edge (Linux amd64)**. Next, enter a name for your project, specify the location, and select **OK**.
 
- 
+<p align="left"><img src="./images/NewProject.png" height="350"/></p>
+
+2)	In the project wizard, select C# Module, and replace **localhost:5000** with your **own registry info**, then click **Yes**
+
+<p align="left"><img src="./images/AddModule.png" height="400"/></p>
+
+3)	There are two projects in the solution:
+      -  One is the IoT Edge module project, which is just a simple C# project
+      -  The other, the Edge project, is called the same as you’re the Visual Studio solution.
+
+<p align="left"><img src="./images/Solution.png" height="300"/></p>
+
+
+4)	To debug the C# Linux module, we need to update Dockerfile.amd64.debug to enable SSH service. Update the Dockerfile.amd64.debug file to use the following template: [Dockerfile for Azure IoT Edge AMD64 C# Module with Remote Debug Support](./Dockerfile.amd64.debug)
+
+5)	To establish an SSH connection with the Linux module, we need to create an RSA key. Open an elevated PowerShell session and run the following commands to create a new RSA key. 
+
+     :warning: **Important:**  _When asked for a directory, use the folder path where the IoTEdgeModule1 is stored_. 
+     
+     `ssh-keygen -t RSA -b 4096 -m PEM`
+
+<p align="left"><img src="./images/Ssh-keygen.png" width="800"/></p> 
 
 6)	If you’re using a private registry like Azure Container Registry, use the following Docker command to sign in.
-docker login -u <ACR username> -p <ACR password> <ACR login server>
+
+     `docker login -u <ACR username> -p <ACR password> <ACR login server>`
 
 7)	Click Show All Files icon as below; a .env file should be displayed under the Edge project, named as your VS solution. Open the .env file to input credentials for your registry. These credentials will be used by IoT Edge runtime to pull/push module images after deployment. If the .env file is not created, go to the project folder, and make sure it’s not being hidden.
 
