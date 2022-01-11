@@ -31,11 +31,11 @@ dule running inside EFLOW from the Window host OS.
 <p align="left"><img src="./images/Solution.png" height="300"/></p>
 
 
-4)	To debug the C# Linux module, we need to update Dockerfile.amd64.debug to enable SSH service. Update the Dockerfile.amd64.debug file to use the following template: [Dockerfile for Azure IoT Edge AMD64 C# Module with Remote Debug Support](./Dockerfile.amd64.debug)
+4)	To debug the C# Linux module, we need to update **Dockerfile.amd64.debug** to enable SSH service. Update the **Dockerfile.amd64.debug** file to use the following template: [Dockerfile for Azure IoT Edge AMD64 C# Module with Remote Debug Support](./Dockerfile.amd64.debug)
 
 5)	To establish an SSH connection with the Linux module, we need to create an RSA key. Open an elevated PowerShell session and run the following commands to create a new RSA key. 
 
-     :warning: **Important:**  _When asked for a directory, use the folder path where the IoTEdgeModule1 is stored_. 
+     :warning: **Important:  _When asked for a directory, use the folder path where the IoTEdgeModule1 is stored_.**
      
      `ssh-keygen -t RSA -b 4096 -m PEM`
 
@@ -45,37 +45,45 @@ dule running inside EFLOW from the Window host OS.
 
      `docker login -u <ACR username> -p <ACR password> <ACR login server>`
 
-7)	Click Show All Files icon as below; a .env file should be displayed under the Edge project, named as your VS solution. Open the .env file to input credentials for your registry. These credentials will be used by IoT Edge runtime to pull/push module images after deployment. If the .env file is not created, go to the project folder, and make sure it’s not being hidden.
+7)	Click **Show All Files** icon as below; a **.env** file should be displayed under the Edge project, named as your VS solution. Open the .env file to input credentials for your registry. These credentials will be used by IoT Edge runtime to pull/push module images after deployment. If the .env file is not created, go to the project folder, and make sure it’s not being hidden.
 
-8)	Right-click on the Edge project and click Build and Push IoT Edge Modules to build, push the C# module to the container registry.
+8)	Right-click on the Edge project and click **Build and Push IoT Edge Modules** to build, push the C# module to the container registry.
 
 9)	Next, you’ll have to deploy the built module to the EFLOW device. There are multiple ways to deploy a module to an IoT Edge device. You may use the one you’re most comfortable with. For deployments using Azure:
 
-a.	Go to Azure Portal
-b.	Go to the IoT Edge device provisioned to the EFLOW VM
-c.	Set Modules and add the recently built.
-d.	We need to expose port 22 to access the module SSH service. Here we use 10022 as the host port, but you may specify a different port, which will be used as an SSH port to connect into the Linux C# moduler. Under “Container Create Options” make sure to include the following:
-{
-    "HostConfig": {
-        "Privileged": true,
-        "PortBindings": {
-            "22/tcp": [
-                {
-                    "HostPort": "10022"
-                }
-            ]
-        }
-    }
-}
+     1) Go to Azure Portal
+     2) Go to the IoT Edge device provisioned to the EFLOW VM
+     3) Set Modules and add the recently built.
+     4) We need to expose port 22 to access the module SSH service. Here we use 10022 as the host port, but you may specify a different port, which will be used as an SSH port to connect into the Linux C# moduler. Under “Container Create Options” make sure to include the following:
 
+      ```yaml
+      {
+          "HostConfig": {
+              "Privileged": true,
+              "PortBindings": {
+                  "22/tcp": [
+                      {
+                          "HostPort": "10022"
+                      }
+                  ]
+              }
+          }
+      }
+      ```
+            
 10)	Open an elevated PowerShell session
-a.	Get the moduleId based on the name used for the Linux C# module
-$moduleId = Invoke-EflowVmCommand “sudo docker ps -aqf name=<iot-edge-module-name>”
-b.	Check that the $moduleId is correct – If the variable is empty, make sure you’re using the correct module name
-c.	Start the SSH service inside the Linux container
-Invoke-EflowVmCommand “sudo docker exec -it -d $moduleId service ssh start”
-d.	Open the module SSH port on the EFLOW VM (in our case was 10022)
-Invoke-EflowVmCommand “sudo iptables -A INPUT -p tcp --dport 10022 -j ACCEPT”
+    1) Get the moduleId based on the name used for the Linux C# module
+    
+      `$moduleId = Invoke-EflowVmCommand “sudo docker ps -aqf name=<iot-edge-module-name>”`
+      
+    2) Check that the $moduleId is correct – If the variable is empty, make sure you’re using the correct module name
+    3) Start the SSH service inside the Linux container
+    
+    `Invoke-EflowVmCommand “sudo docker exec -it -d $moduleId service ssh start”`
+    
+    4) Open the module SSH port on the EFLOW VM (in our case was 10022)
+    
+    `Invoke-EflowVmCommand “sudo iptables -A INPUT -p tcp --dport 10022 -j ACCEPT”`
 
 Note: For security reasons, every time the EFLOW VM reboots, the IP table rule will delete and go back to the original settings. Also, the module SSH service will have to be started again manually. 
 
