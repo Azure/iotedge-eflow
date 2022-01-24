@@ -6,7 +6,7 @@ RUN apt-get update && \
 
 RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/vsdbg 
 
-COPY authorized_keys ./authorized_keys 
+COPY id_rsa.pub ./authorized_keys 
 RUN mkdir ~/.ssh/ 
 RUN mv /authorized_keys ~/.ssh/authorized_keys 
 
