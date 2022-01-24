@@ -31,23 +31,23 @@ param (
     [ValidateSet("INPUT", "OUTPUT", "FORWARD", "DOCKER", "DOCKER-ISOLATION-STAGE-1", "DOCKER-ISOLATION-STAGE-2", "DOCKER-USER")]
     [String] $chain,
 
-    [ValidateSet("filter", "nat", "mangle", "raw")]
-    [String] $table,
-
     [ValidateSet("udp", "tcp", "icmp", "all")]
     [Parameter(Mandatory)]
     [String] $protocol,
 
-    [ValidateRange(0,65535)]
+    [ValidateRange(1,65535)]
     [Parameter(Mandatory)]
     [int] $port,
-
-    [ValidateSet("INVALID", "ESTABLISHED", "NEW", "RELATED", "SNAT", "DNAT")]
-    [String] $state,
 
     [ValidateSet("REJECT", "ACCEPT", "DROP")]
     [Parameter(Mandatory)]
     [String] $jump,
+
+    [ValidateSet("filter", "nat", "mangle", "raw")]
+    [String] $table,
+
+    [ValidateSet("INVALID", "ESTABLISHED", "NEW", "RELATED", "SNAT", "DNAT")]
+    [String] $state,
 
     [String] $customRule
 )
@@ -55,7 +55,6 @@ param (
 
 try
 {
-    Import-Module AzureEflow
     [String]$vmCommand = "";
 
     if (![string]::IsNullOrEmpty($customRule))
@@ -64,32 +63,14 @@ try
     }
     else
     {
-         $vmCommand = "sudo iptables -A "
-
-        if (![string]::IsNullOrEmpty($chain))
-        {
-            $vmCommand += " $($chain)"  
-        }
-
-        if (![string]::IsNullOrEmpty($protocol))
-        {
-            $vmCommand += " -p $($protocol)"  
-        }
+        $vmCommand = "sudo iptables";
         
-        if ($port -ge 1)
-        {
-            $vmCommand += " --dport $($port)"  
-        }
-
         if (![string]::IsNullOrEmpty($table))
         {
             $vmCommand += " --table $($table)"  
         }
 
-        if (![string]::IsNullOrEmpty($jump))
-        {
-            $vmCommand += " -j $($jump)"  
-        }
+        $vmCommand += "-A $($chain) -p $($protocol) --dport $($port) -j $($jump)"
 
         if (![string]::IsNullOrEmpty($state))
         {
@@ -101,7 +82,7 @@ try
     
     if([string]::IsNullOrEmpty($result))
     {
-         Write-Host "Rule added"
+         Write-Host "Rule not found"
     }
     else
     {
