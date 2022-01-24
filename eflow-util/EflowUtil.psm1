@@ -5,7 +5,7 @@ Root Module including all the required modules
 # Check for admin privilege first before proceeding...
 If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole(`
             [Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Host "Ensure to tun this PowerShell module in  Administrator mode!" -color "Red"
+    Write-Host "Ensure to tun this PowerShell module in  Administrator mode!" -ForegroundColor "Red"
     return
 }
 
