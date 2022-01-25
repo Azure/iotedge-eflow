@@ -56,7 +56,7 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
 
 7)	Click **Show All Files** icon as below; a **.env** file should be displayed under the Edge project, named as your VS solution. Open the .env file to input credentials for your registry. These credentials will be used by IoT Edge runtime to pull/push module Images after deployment. If the .env file is not created, go to the project folder, and make sure it’s not being hidden.
 
-8) **OPTIONAL:** Build the module using moby-engine running inside the EFLOW VM
+8) **OPTIONAL: Build the module using moby-engine running inside the EFLOW VM**
 
       1) Open the Docker port inside the EFLOW VM. Using an elevated PowerShell session, run the following command:
                   
