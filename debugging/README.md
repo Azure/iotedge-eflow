@@ -14,7 +14,7 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
       
      <sub>¹ Only needed if building the module using Windows Docker instance.</sub>
 
-## Debug C / C# Module Container Running in Remote Edge Device
+## Build & Debug C / C# Module Container Running in Remote Edge Device
 
 
 1)	Open Visual Studio 2019/2022 and click menu **File** -> **New** -> **Project**. In the New Project dialog, select **Platform** -> **Linux**, select **Project** **Type** -> **IoT**, and then choose **Azure IoT Edge (Linux amd64)**. Next, enter a name for your project, specify the location, and select **OK**.
