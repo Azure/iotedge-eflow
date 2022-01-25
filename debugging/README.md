@@ -94,7 +94,7 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
 
       6) Replace the _DOCKER_HOST_ localhost value with the EFLOW VM IP from Step 8.2
 
-            <p align="left"><img src="./Images/VsDocker.png" height="250"/></p>
+            <p align="left"><img src="./Images/VsDocker.png" height="350"/></p>
 
 
 9)	Right-click on the Edge project and click **Build and Push IoT Edge Modules** to build, push the C# module to the container registry.
