@@ -12,7 +12,7 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
 -	Azure IoT Edge Tools extension for Visual Studio
 -	Docker Desktop on Windows¹
       
-     <sub>¹ Only needed if building the module using Windows Docker instance.</sub>
+     <sub>¹ Only needed if building the module using Windows Docker instance. Not required if following Step 8</sub>
 
 ## Build & Debug C# Linux Module Container Running in EFLOW Edge Device
 
@@ -46,7 +46,7 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
 
       <p align="left"><img src="./Images/Ssh-keygen.png" width="800"/></p> 
 
-      _Note: Make sure that the id_rsa and id_rsa.pub key files are created inside the same folder as the IoTEdgeModule1 solution. If not, copy the files or the module building process will fail._
+      _Note: If you strictly follow Step 4, key names must be id_rsa and id_rsa.pub. Make sure that the id_rsa and id_rsa.pub key files are created inside the same folder as the IoTEdgeModule1 project. If not, copy the files or the module building process will fail._
 
 6)	If you’re using a private registry like Azure Container Registry, use the following Docker command to sign in.
 
@@ -57,6 +57,8 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
 7)	Click **Show All Files** icon as below; a **.env** file should be displayed under the Edge project, named as your VS solution. Open the .env file to input credentials for your registry. These credentials will be used by IoT Edge runtime to pull/push module Images after deployment. If the .env file is not created, go to the project folder, and make sure it’s not being hidden.
 
 8) **OPTIONAL: Build the module using moby-engine running inside the EFLOW VM**
+
+      This step is **optional** is you have Docker Desktop installed. If you do not have Docker Desktop, you will have to use the moby-engine from the EFLOW VM, hence this step is **required**.
 
       1) Open the Docker port inside the EFLOW VM. Using an elevated PowerShell session, run the following command:
                   
@@ -104,7 +106,7 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
      1) Go to Azure Portal
      2) Go to the IoT Edge device provisioned to the EFLOW VM
      3) Set Modules and add the recently built.
-     4) We need to expose port 22 to access the module SSH service. Here we use 10022 as the host port, but you may specify a different port, which will be used as an SSH port to connect into the Linux C# moduler. Under “Container Create Options” make sure to include the following:
+     4) We need to expose port 22 to access the module SSH service. For the purpose of this example,  we use 10022 as the host port, but you may specify a different port, which will be used as an SSH port to connect into the Linux C# moduler. If another module is already using the port 10022, make sure to use another port number, otherwise the module will fail to start. Under “Container Create Options” make sure to include the following:
 
       ```yaml
       {
