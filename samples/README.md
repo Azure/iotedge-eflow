@@ -17,11 +17,11 @@ These samples require Visual Studio and the Windows Software Development Kit (SD
 
    [Get a free copy of Visual Studio Community Edition with support for building Universal Windows Platform apps](http://go.microsoft.com/fwlink/p/?LinkID=280676)
 
-Additionally, to stay on top of the latest updates to Windows and the development tools, become a Windows Insider by joining the Windows Insider Program.
+Additionally, to stay on top of the latest updates to Windows and the development tools, become a Windows Insider by joining the Windows Insider Program. [Become a Windows Insider](https://insider.windows.com/)
 
-   [Become a Windows Insider](https://insider.windows.com/)
+<br/>
 
-### Azure IoT Edge Samples
+## Azure IoT Edge Samples
 
 
 #### Interop
@@ -33,6 +33,7 @@ _:warning: **WARNING**: Enabling a communication channel between the Windows hos
 | [interop-textmsg-consoleapp](./interop-textmsg-consoleapp) | Basic interop sample demonstrating text messaging between a Windows console app and an Edge module running inside the EFLOW VM. | 
 | [interop-customvision-textmsg-uwpapp](./interop-customvision-textmsg-uwpapp) | <p>Two more advanced interop samples which demonstrate bidirectional communication between a Windows application and an Edge module running inside the EFLOW VM. </p><ul><li>Text messaging between a UWP application and an Edge module. </li><li>A 'Custom vision' machine learning interop sample with a fruit classifier which uses a Windows UWP app to send camera frames to an Edge module for identification.</li></ul>|  
 
+<br/>
 
 #### Hardware Access
 
@@ -45,6 +46,7 @@ _:warning: **WARNING**: Enabling serial or camera passthrough may increase secur
 | [serial-passthrough](./serial) | <p>Sample to configure the EFLOW VM and host to redirect communications to a serial port over the network. </li></ul>|  
 | [camera-passthrough](./camera-over-rtsp) | <p>Sample to configure the EFLOW VM and host to redirect video camera feeds over the network using RTSP. </li></ul>|  
 
+<br/>
 
 #### GPU/VPU Acceleration
 
@@ -55,13 +57,27 @@ _:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks
 |----------------|------------------|  
 | [GPU Passthrough](https://aka.ms/AzEFLOW-VoE) | <p> [Vision on Edge](https://github.com/Azure-Samples/azure-intelligent-edge-patterns/tree/master/factory-ai-vision) is a sample illustrating how to create an end-to-end AI/ML inferencing solution. VoE ties together technologies such as: Microsoft LVA or OpenCV, Onyxruntime, TensorRT for NVIDIA GPUs, Custom Vision, and more. This tutorial walks you through how to deploy the VoE IoT Edge modules to your EFLOW device. </li></ul>|  
 
+<br/>
 
 #### Networking Access
 
 | Name           | Description      |  
 |----------------|------------------|  
 | [multiple-nics](./networking/multiple-nics) | <p>Sample to configure the EFLOW VM with multiple NICs and simulate an Industrial IoT scenario using OPC Publisher module. Although this sample code is limited to Industrial OPC/UA scenarios, can be used for otehr PCI Compliance or Retail scenarios with DMZs.</li></ul>|  
-| [routing](./networking/routing) | <p>Sample to configure the EFLOW VM network routing - Configure routes and setting up a service.</li></ul>|  
+| [routing](./networking/routing) | <p>Sample to configure the EFLOW VM network routing - Configure routes and setting up a service.</li></ul>|
+
+<br/>
+
+#### TPM Read-Only Passthrough
+
+_:warning: **WARNING**:  Enabling TPM passthrough to the virtual machine may increase security risks._
+
+
+| Name           | Description      |  
+|----------------|------------------|  
+| [Read-Only TPM](./tpm-read-nv) | <p> This is a sample modified from the [TSS.MSR](https://github.com/microsoft/TSS.MSR) libraries to enable reading from the TPM NV Memory via the TPM2 linux access broker. The following sample allows the underlying EFLOW VM to read from a previously initialized and written NV index.  </li></ul>|  
+
+<br/>
 
 ## Using the samples
 
@@ -77,6 +93,8 @@ The samples use Linked files in Visual Studio to reduce duplication of common fi
 **Reminder:** If you unzip individual samples, they will not build due to references to other portions of the ZIP file that were not unzipped. You must unzip the entire archive if you intend to build the samples.
 
 For more info about the programming models, platforms, languages, and APIs demonstrated in these samples, please refer to the guidance, tutorials, and reference topics provided in the Windows 10 documentation available in the [Windows Developer Center](http://go.microsoft.com/fwlink/p/?LinkID=532421). These samples are provided as-is in order to indicate or demonstrate the functionality of the programming models and feature APIs for Windows and EFLOW.
+
+<br/>
 
 ## Contributing
 These samples are direct from the feature teams and we welcome your input on issues and suggestions for new samples. If you would like to see new coverage or have feedback, please consider contributing. You can edit the existing content, add new content, or simply create new issues. We’ll take a look at your suggestions and will work together to incorporate them into the docs.
