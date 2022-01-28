@@ -61,7 +61,16 @@ _:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks
 | Name           | Description      |  
 |----------------|------------------|  
 | [multiple-nics](./networking/multiple-nics) | <p>Sample to configure the EFLOW VM with multiple NICs and simulate an Industrial IoT scenario using OPC Publisher module. Although this sample code is limited to Industrial OPC/UA scenarios, can be used for otehr PCI Compliance or Retail scenarios with DMZs.</li></ul>|  
-| [routing](./networking/routing) | <p>Sample to configure the EFLOW VM network routing - Configure routes and setting up a service.</li></ul>|  
+| [routing](./networking/routing) | <p>Sample to configure the EFLOW VM network routing - Configure routes and setting up a service.</li></ul>|
+
+
+#### TPM Read-Only Passthrough
+
+| Name           | Description      |  
+|----------------|------------------|  
+| [Read-Only TPM](./tpm-read-nv) | <p> This is a sample modified from the [TSS.MSR](https://github.com/microsoft/TSS.MSR) libraries to enable reading from the TPM NV Memory via the TPM2 linux access broker. The following sample allows the underlying EFLOW VM to read from a previously initialized and written NV index.  </li></ul>|  
+
+
 
 ## Using the samples
 
