@@ -64,7 +64,11 @@ _:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks
 | [routing](./networking/routing) | <p>Sample to configure the EFLOW VM network routing - Configure routes and setting up a service.</li></ul>|
 
 
+
 #### TPM Read-Only Passthrough
+
+_:warning: **WARNING**:  Enabling TPM passthrough to the virtual machine may increase security risks.
+
 
 | Name           | Description      |  
 |----------------|------------------|  
