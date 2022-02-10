@@ -10,9 +10,13 @@
 # Azure IoT Edge for Linux on Windows
 Welcome to the home of Azure IoT Edge for Linux on Windows, a composite project enabling the abilty to run Linux-based Edge modules on Windows using a curated virtual machine based on [CBL Mariner Linux](https://github.com/microsoft/CBL-Mariner) with [Azure IoT Edge](https://github.com/Azure/iotedge) built-in.  
 
-Azure IoT Edge for Linux on Windows is now **Generally Available**. 
-- [Generally Availability Announcement](https://aka.ms/AzEFLOW-blog)
-- [The IoT Show Demo](https://aka.ms/AzEFLOW-show)
+
+Azure IoT Edge for Linux on Windows supports the following versions:
+- 1.1 LTS using Azure IoT Edge 1.1 LTS - **Generally Available**. 
+  - [Generally Availability Announcement](https://aka.ms/AzEFLOW-blog)
+  - [The IoT Show Demo](https://aka.ms/AzEFLOW-show)
+- Continuous Release (CR) using Azure IoT Edge 1.2 currently in **Public Preview**. 
+
 
 ## Getting Started
 
