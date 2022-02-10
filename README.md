@@ -15,8 +15,9 @@ Azure IoT Edge for Linux on Windows supports the following versions:
 - 1.1 LTS using Azure IoT Edge 1.1 LTS - **Generally Available**. 
   - [Generally Availability Announcement](https://aka.ms/AzEFLOW-blog)
   - [The IoT Show Demo](https://aka.ms/AzEFLOW-show)
+  
 - Continuous Release (CR) using Azure IoT Edge 1.2 currently in **Public Preview**. 
-
+  - [Public Preview Announcement](https://azure.microsoft.com/en-us/updates/public-preview-azure-iot-edge-for-linux-on-windows-eflow-update/)
 
 ## Getting Started
 
