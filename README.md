@@ -32,7 +32,6 @@ Issues can be filed in the issues section of either the [iotedge](https://github
 ## Feature requests
 Feature requests can be filed in our [iotedge-eflow isssues](https://github.com/Azure/iotedge-eflow/issues) page. 
 
----
 ## Microsoft Open Source Code of Conduct
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 
