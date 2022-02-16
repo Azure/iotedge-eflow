@@ -55,7 +55,8 @@ _:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks
 
 | Name           | Description      |  
 |----------------|------------------|  
-| [GPU Passthrough](https://aka.ms/AzEFLOW-VoE) | <p> [Vision on Edge](https://github.com/Azure-Samples/azure-intelligent-edge-patterns/tree/master/factory-ai-vision) is a sample illustrating how to create an end-to-end AI/ML inferencing solution. VoE ties together technologies such as: Microsoft LVA or OpenCV, Onyxruntime, TensorRT for NVIDIA GPUs, Custom Vision, and more. This tutorial walks you through how to deploy the VoE IoT Edge modules to your EFLOW device. </li></ul>|  
+| [GPU Passthrough](https://aka.ms/AzEFLOW-VoE) | <p> [Vision on Edge](https://github.com/Azure-Samples/azure-intelligent-edge-patterns/tree/master/factory-ai-vision) is a sample illustrating how to create an end-to-end AI/ML inferencing solution. VoE ties together technologies such as: Microsoft LVA or OpenCV, Onyxruntime, TensorRT for NVIDIA GPUs, Custom Vision, and more. This tutorial walks you through how to deploy the VoE IoT Edge modules to your EFLOW device. </li></ul>| 
+| [Intel GPU Acceleration](https://cdrdv2.intel.com/v1/dl/getContent/648435) | <p> This guide outlines how to enable and deploy GPU-accelerated OpenVINO-based inferencing solution on EFLOW. More information about Intel's GPU support for EFLOW and Windows IoT can be found in Intel's [BKC (Best Known Configuration) Document](https://cdrdv2.intel.com/v1/dl/getContent/648433) (may require registering for Intel's development portal).</li></ul>| 
 
 <br/>
 
