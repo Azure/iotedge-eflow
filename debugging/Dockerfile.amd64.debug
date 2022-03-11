@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build-env
 
 RUN apt-get update && \ 
     apt-get install -y --no-install-recommends unzip procps && \ 
@@ -15,8 +15,6 @@ RUN apt-get install unzip
 RUN apt-get install openssh-server unzip curl -y 
 RUN apt-get install emacs24-nox -y 
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build-env
-
 WORKDIR /app 
 
 COPY *.csproj ./ 
@@ -25,6 +23,7 @@ RUN dotnet restore
 COPY . ./ 
 RUN dotnet publish -c Debug -o out 
 
+FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim AS base
 FROM base 
 WORKDIR /app 
 
