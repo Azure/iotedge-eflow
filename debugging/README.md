@@ -21,11 +21,11 @@ Building and remote debugging a module running inside the EFLOW VM is not straig
 
       <p align="left"><img src="./Images/NewProject.png" height="350"/></p>
 
-2)	In the project wizard, select C# Module, and replace **localhost:5000** with your **own registry info**, then click **Yes**
+2)	In the project wizard, select C# Module, and replace **localhost:5000** with your **own container registry info**, then click **Yes**
 
       <p align="left"><img src="./Images/AddModule.png" height="400"/></p>
 
-      _Note: If using the iotedgemodule1 name for the module, make sure you only only replace localhost:5000 with user’s registry info. If using another module name, change the name in the upcoming steps also._
+      _Note: If using the iotedgemodule1 name for the module, make sure you only only replace localhost:5000 with user’s container registry info. If using another module name, change the name in the upcoming steps also._
 
 3)	There are two projects in the solution:
       -  One is the IoT Edge module project, which is just a simple C# project
