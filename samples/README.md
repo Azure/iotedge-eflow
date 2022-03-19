@@ -4,7 +4,7 @@
 
 # EFLOW Internet of Things (IoT) Samples
 
-This repo contains samples that demonstrate usage patterns for interoperatibility between Microsoft's Windows 10 and the EFLOW VM.  These code samples were created with templates available in Visual Studio and are designed, but not limited to, run on devices using EFLOW. For more information, review [EFLOW docs](https://docs.microsoft.com/en-us/windows/iot/iot-enterprise/eflow).
+This repo contains samples that demonstrate usage patterns for interoperatibility between Microsoft's Windows 10 and the EFLOW VM.  These code samples were created with templates available in Visual Studio and are designed, but not limited to, run on devices using EFLOW. For more information, review [EFLOW docs](https://docs.microsoft.com/en-us/windows/iot/iot-enterprise/azure-iot-edge-for-linux-on-windows).
 
 > **Note:** If you are unfamiliar with Git and GitHub, you can download the entire collection as a 
 > [ZIP file](https://github.com/Microsoft/Windows-universal-samples/archive/master.zip), but be 
