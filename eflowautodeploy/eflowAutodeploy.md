@@ -48,14 +48,45 @@ Start-EflowDeployment c:\myconfigs\eflow-userconfig.json
 
 The below table provides the details of the supported parameters in the json file.
 
-| Parameter | Required | Accepted values | Comments |
+| Parameter | Required | Type / Values | Comments |
 | --------- | -------- |---------------- | -------- |
 | schemaVersion | Mandatory | 1.0 | Fixed value, schema version. Reserved|
 | Version | Mandatory | 1.0 | Fixed value, json instance version. Reserved |
 | eflowProduct | Mandatory | <ul><li>Azure IoT Edge LTS</li><li>Azure IoT Edge CR X64</li><li>Azure IoT Edge CR ARM64</li></ul>| Supported EFLOW product versions |
-| enduser | |  | End user configuration |
+| `enduser` | |  | End user configuration |
 | acceptEula | Mandatory | Yes |  Accept Eula |
 | acceptOptionalTelemetry | Optional | Yes | Accept optional telemetry |
+| `network` | Optional | | **Network configuration optional for Client SKU**. Mandatory for Server SKU |
+| vswitchType | Mandatory | <ul><li>External</li><li>Internal</li></ul> | `Internal`  is supported for Server SKU only |
+| vswitchName | Mandatory | String | Switch name to use |
+| ip4Address | Optional | IPAddress |  Static IP Address for the EFLOW VM |
+| ip4GatewayAddress | Optional | IPAddress | Static Gateway IP Address |
+| ip4PrefixLength | Optional | 24 | IP PrefixLength |
+| httpProxy | Optional | String | httpProxy link |
+| httpsProxy | Optional | String | httpsProxy link |
+| dnsServers | Optional | String[] | Array of valid dns servers for VM |
+| `vmConfig` | Optional|  | VM configuration |
+| cpuCount | Optional |0 | cpuCount|
+| memoryInMB | Optional |0| memoryInMB|
+| vmDiskSize | Optional |21-2000| Size in GB|
+| vmDataSize | Optional | 2-2000| Size in GB, not supported in LTS|
+| gpuPassthroughType | Optional |<ul><li>DirectDeviceAssignment</li><li>ParaVirtualization</li></ul>| gpuPassthroughType|
+| gpuName | Optional |String| gpuName|
+| gpuCount | Optional |0| gpuCount|
+| `vmFeature` | Optional|  | Features  |
+| DpsTpm| Optional |Boolean| Enable TPM for DPS|
+| Defender| Optional |Boolean| Enable Defender feature in VM|
+| `eflowProvisioning` | Optional|  | Provisioning configurations  |
+| provisioningType| Optional |<ul><li>ManualConnectionString</li><li>ManualX509</li><li>DpsTPM</li><li>DpsX509</li><li>DpsSymmetricKey</li></ul>| Supported provisioning types|
+| devConnString| Optional |String| Mandatory for *ManualConnectionString*|
+| iotHubHostname| Optional |String| Mandatory for *ManualX509*|
+| deviceId| Optional |String| Mandatory for *ManualX509*|
+| identityCertPath| Optional |String| Mandatory for *ManualX509*,*DpsX509*|
+| identityPrivKeyPath| Optional |String| Mandatory for *ManualX509*,*DpsX509*|
+| scopeId| Optional |String| Mandatory for *DpsTPM*,*DpsX509*,*DpsSymmetricKey*|
+| symmKey| Optional |String| Mandatory for *DpsSymmetricKey*|
+| registrationId| Optional |String| Mandatory for *DpsSymmetricKey*|
+| globalEndpoint| Optional |String| DPS endpoint|
 
 ```json
 {
