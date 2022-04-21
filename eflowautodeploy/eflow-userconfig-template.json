@@ -1,0 +1,45 @@
+{
+    "schemaVersion":"1.0",
+    "version":"1.0",
+    "eflowProduct" : "Azure IoT Edge LTS",
+    "enduser":{
+        "acceptEula" : "Yes",
+        "acceptOptionalTelemetry" : ""
+    },
+    "network":{
+        "adapterName": "Ethernet",
+        "vswitchName" : "",
+        "vswitchType" : "",
+        "ip4Address": "",
+        "ip4GatewayAddress": "",
+        "ip4PrefixLength" : "",
+        "httpProxy":"",
+        "httpsProxy":"",
+        "dnsServers":""
+    },
+    "vmConfig":{
+        "cpuCount" : 0,
+        "memoryInMB" : 0,
+        "vmDiskSize" : 0,
+        "vmDataSize" : 0,
+        "gpuPassthroughType" : "",
+        "gpuName" : "",
+        "gpuCount" : 0
+    },
+    "vmFeature":{
+        "DpsTpm": false,
+        "Defender": false
+    },
+    "eflowProvisioning":{
+        "provisioningType" : "",
+        "devConnString" : "",
+        "iotHubHostname" : "",
+        "deviceId" : "",
+        "scopeId" : "",
+        "symmKey": "",
+        "registrationId" : "",
+        "identityCertPath" : "",
+        "identityPrivKeyPath" : "",
+        "globalEndpoint" : ""
+    }
+}

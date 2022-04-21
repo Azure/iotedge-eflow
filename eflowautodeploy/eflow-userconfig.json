@@ -1,0 +1,9 @@
+{
+    "schemaVersion":"1.0",
+    "version":"1.0",
+    "eflowProduct" : "Azure IoT Edge LTS",
+    "enduser":{
+        "acceptEula" : "Yes",
+        "acceptOptionalTelemetry" : "Yes"
+    }
+}
