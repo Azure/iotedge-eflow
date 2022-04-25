@@ -24,6 +24,7 @@ Azure IoT Edge for Linux on Windows supports the following versions:
 - [Get Started Now](https://docs.microsoft.com/azure/iot-edge/how-to-install-iot-edge-on-windows)
 - [Learn More](https://aka.ms/AzEflow-docs)
 - [Sample Codes](./samples)
+- [EFLOW Auto Deploy](./eflowautodeploy/))
 - [Build & Debug IoT Edge Linux modules using EFLOW](https://docs.microsoft.com/azure/iot-edge/tutorial-develop-for-linux-on-windows?view=iotedge-2018-06)
 
 ## Issues
