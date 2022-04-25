@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-$eflowAutoDeployVersion = "1.0.220420.1200"
+$eflowAutoDeployVersion = "1.0.220425.1200"
 $isServerSKU = $false
 $EFLOWUserConfigFile = $null
 $EFLOWUserConfig = $null
@@ -39,6 +39,9 @@ function Get-HostPCInfo {
     $script:isServerSKU = ($pOS.ProductType -eq 2 -or $pOS.ProductType -eq 3)
 }
 function Get-EFLOWUserConfig {
+    if ($null -eq $Script:EFLOWUserConfig){
+        Write-Host "Error: EFLOW UserConfig is not set." -ForegroundColor Red
+    }
     return $Script:EFLOWUserConfig
 }
 function Read-EFLOWUserConfig {
@@ -398,15 +401,11 @@ function Test-EFLOWInstall {
         [Switch] $Install
     )
 
-    $modules = Get-Module -ListAvailable
-    $eflowmodule = $modules | Where-Object { $_.Name -like 'AzureEFLOW' }
-    #check if module is installed
-    if ($null -eq $eflowmodule) {
-        Write-Host "AzureEFLOW Module not found." -ForegroundColor Red
-        if (!$Install) {
-            return
-        }
-        Invoke-EFLOWInstall
+    $eflowVersion = Get-EFLOWInstalledVersion
+
+    if ($null -eq $eflowVersion) {
+        if (!$Install) { return $false }
+        if (-not (Invoke-EFLOWInstall)){ return $false }
     }
     $mod = Get-Module -Name AzureEFLOW
     #check if module is loaded
@@ -415,7 +414,8 @@ function Test-EFLOWInstall {
         Import-Module -Name AzureEFLOW -Force
     }
     $version = (Get-Module -Name AzureEFLOW).Version.ToString()
-    Write-Host "AzureEFLOW $version"
+    Write-Host "AzureEFLOW Module:$version"
+    return $true
 }
 function Test-HyperVStatus {
     Param
@@ -444,13 +444,19 @@ function Invoke-EFLOWInstall {
     #>
     #TODO : Add Force flag to uninstall and install req product
     $version = Get-EFLOWInstalledVersion
+    $retval = $false
     if ($version) {
         Write-Host "$version is already installed"
     }
     else {
         $eflowConfig = Get-EFLOWUserConfig
+        if ($null -eq $eflowConfig) { return $retval }
         $reqProduct = $eflowConfig.eflowProduct
         $url = $Script:eflowProducts[$reqProduct]
+        if (-not [string]::IsNullOrEmpty($eflowConfig.eflowProductUrl) -and
+            ([system.uri]::IsWellFormedUriString($eflowConfig.eflowProductUrl,[System.UriKind]::Absolute))) {
+            $url = $eflowConfig.eflowProductUrl
+        }
         Write-Host "Installing $reqProduct from $url"
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
@@ -458,7 +464,9 @@ function Invoke-EFLOWInstall {
         Remove-Item .\AzureIoTEdge.msi
         $ProgressPreference = 'Continue'
         Write-Host "$reqProduct successfully installed"
+        $retval = $true
     }
+    return $retval
 }
 function Remove-EFLOWInstall {
     <#
