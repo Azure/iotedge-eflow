@@ -54,6 +54,7 @@ The below table provides the details of the supported parameters in the json fil
 | schemaVersion | Mandatory | 1.0 | Fixed value, schema version. Reserved|
 | Version | Mandatory | 1.0 | Fixed value, json instance version. Reserved |
 | eflowProduct | Mandatory | <ul><li>Azure IoT Edge LTS</li><li>Azure IoT Edge CR X64</li><li>Azure IoT Edge CR ARM64</li></ul>| Supported EFLOW product versions |
+| eflowProductUrl | Optional | String (url) | Download Url to install specific  Eflow versions |
 | `enduser` | |  | End user configuration |
 | acceptEula | Mandatory | Yes |  Accept Eula |
 | acceptOptionalTelemetry | Optional | Yes | Accept optional telemetry |
