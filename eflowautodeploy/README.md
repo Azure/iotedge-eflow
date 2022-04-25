@@ -31,19 +31,37 @@ Alternatively, you can *dot source* the script and invoke functions individually
 
 ```powershell
 . .\eflowAutoDeploy.ps1
-Start-EflowDeployment C:\MyConfigs\eflow-userconfig.json
+Start-EflowDeployment 'C:\MyConfigs\eflow-userconfig.json'
 ```
 
-### Useful functions
+## Supported Functions
 
-| Function | Remarks |
-| --------- | ------ |
-|**Config Functions**<ul><li>Get-EFLOWUserConfig</li><li>Set-EFLOWUserConfig -json</li><li>Read-EFLOWUserConfig</li></ul>| UserConfig json functions |
-|**Test Functions**<ul><li>Test-EFLOWUserConfig</li><li>Test-EFLOWUserConfigDeploy</li><li>Test-EFLOWUserConfigProvision</li><li>Test-EFLOWUserConfigNetwork</li></ul>| Validates the user configuration for deployment,provisioning. |
-|**VM Switch related Functions**<ul><li>New-EFLOWVMSwitch</li><li>Test-EFLOWVMSwitch `-Create` </li><li>Remove-EFLOWVMSwitch</li></ul>| Create EFLOWVMSwitch, Test switch presence with optional `-create` flag and Remove EFLOWVMSwitch. |
-|**Deployment functions**<ul><li>Invoke-EFLOWDeploy</li><li>Invoke-EFLOWProvision</li>| Run Deploy and Provision |
-|**EFLOW Install related**<ul><li>Get-EFLOWInstalledVersion</li><li>Invoke-EFLOWInstall</li><li>Test-EFLOWInstall `-Install` </li><li>Remove-EFLOWInstall</li></ul>| Install EFLOW, Test EFLOW install with optional `-Install` switch and Remove EFLOW. |
-|**Helper functions**<ul><li>Get-HostPCInfo</li><li>Test-AdminRole</li><li>Test-HyperVStatus `-Install` </li>| Get PC info, test admin role and Test Hyper-V install with optional `-Install` switch. |
+| Config Functions |   Description |
+|:------------ |:-----------|
+|Get-EFLOWUserConfig| Returns the json object that is cached |
+|Set-EFLOWUserConfig| Sets the user config and reads the config into the cache |
+|Read-EFLOWUserConfig| Reads the json file into the cache |
+| **Test Functions** |  |
+|Test-EFLOWUserConfig| Tests the User Config json for parameter correctness |
+|Test-EFLOWUserConfigDeploy| Tests the deployment specific parameters |
+|Test-EFLOWUserConfigProvision| Tests the provisioning specific parameters|
+|Test-EFLOWUserConfigNetwork| Tests the network specific parameters|
+|**VM Switch Functions** ||
+|New-EFLOWVMSwitch| Creates an new VM switch based on user config. If Internal switch is specified, it also assigns a static ip address (no DHCP used) |
+|Test-EFLOWVMSwitch `-Create`| Tests if the VM switch is present, `-create` flag invokes New-EFLOWVMSwitch if switch is not present |
+|Remove-EFLOWVMSwitch| Removes the VM switch if present. Also removes the Nat if created (for internal switch) |
+|**Deployment functions**||
+|Invoke-EFLOWDeploy| Validates the deployment parameters in user json and deploys EFLOW VM|
+|Invoke-EFLOWProvision| Validates the provisioning parameters in user json and provisions EFLOW VM|
+|**Install functions**||
+|Get-EFLOWInstalledVersion| Returns the installed product name and version (comma separated) or Null if none found|
+|Invoke-EFLOWInstall| Installs the requested product from the eflowProductUrl if specified, otherwise it installs the latest (default)|
+|Test-EFLOWInstall `-Install`| Tests if EFLOW is installed and `-Install` switch is specified, it installs when not found|
+|Remove-EFLOWInstall| Removes the installed EFLOW product|
+|**Helper functions**||
+|Get-HostPCInfo| Gets the PC information such as OS version etc|
+|Test-AdminRole| Checks if the Powershell session is in Admin mode|
+|Test-HyperVStatus `-Install`| Checks if Hyper-V is installed and if `-Install` switch is specified, it installs Hyper-V feature. *Requires reboot*.|
 
 ## JSON schema
 
@@ -90,50 +108,5 @@ The below table provides the details of the supported parameters in the json fil
 | registrationId| Optional |String| Mandatory for *DpsSymmetricKey*|
 | globalEndpoint| Optional |String| DPS endpoint|
 
-```json
-{
-    "schemaVersion":"1.0",
-    "version":"1.0",
-    "eflowProduct" : "Azure IoT Edge LTS",
-    "enduser":{
-        "acceptEula" : "Yes",
-        "acceptOptionalTelemetry" : ""
-    },
-    "network":{
-        "adapterName": "Ethernet",
-        "vswitchName" : "",
-        "vswitchType" : "",
-        "ip4Address": "",
-        "ip4GatewayAddress": "",
-        "ip4PrefixLength" : "",
-        "httpProxy":"",
-        "httpsProxy":"",
-        "dnsServers":""
-    },
-    "vmConfig":{
-        "cpuCount" : 0,
-        "memoryInMB" : 0,
-        "vmDiskSize" : 0,
-        "vmDataSize" : 0,
-        "gpuPassthroughType" : "",
-        "gpuName" : "",
-        "gpuCount" : 0
-    },
-    "vmFeature":{
-        "DpsTpm": false,
-        "Defender": false
-    },
-    "eflowProvisioning":{
-        "provisioningType" : "",
-        "devConnString" : "",
-        "iotHubHostname" : "",
-        "deviceId" : "",
-        "scopeId" : "",
-        "symmKey": "",
-        "registrationId" : "",
-        "identityCertPath" : "",
-        "identityPrivKeyPath" : "",
-        "globalEndpoint" : ""
-    }
-}
-```
+## JSON schema visualization
+![eflowAutoDeploy json](eflowAutoDeploy.png)

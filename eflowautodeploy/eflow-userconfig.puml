@@ -1,0 +1,73 @@
+@startjson eflowAutoDeploy
+<style>
+jsonDiagram {
+  node {
+    FontName Segoe UI
+    FontColor blue
+    FontSize 14
+    RoundCorner 10
+    LineThickness 1
+    separator {
+      LineThickness 0.25
+      LineColor black
+    }
+  }
+  arrow {
+    LineColor blue
+    LineThickness 1
+    LineStyle 2;5
+  }
+  highlight {
+      BackgroundColor Blue
+      FontColor White
+  }
+}
+</style>
+#highlight "schemaVersion"
+{
+    "schemaVersion":"1.0",
+    "version":"1.0",
+    "eflowProduct" :["Azure IoT Edge LTS", "Azure IoT Edge CR X64","Azure IoT Edge CR ARM64"],
+    "eflowProductUrl" : "URL",
+    "enduser":{
+        "acceptEula" : ["Yes","No"],
+        "acceptOptionalTelemetry" : ["Yes","No"]
+    },
+    "network":{
+        "adapterName": "String",
+        "vswitchName" : "String",
+        "vswitchType" : ["External", "Internal"],
+        "ip4Address": "IPAddress",
+        "ip4GatewayAddress": "IPAddress",
+        "ip4PrefixLength" : "24",
+        "httpProxy":"URL",
+        "httpsProxy":"URL",
+        "dnsServers":"IPAddress[]"
+    },
+    "vmConfig":{
+        "cpuCount" : "1 or more",
+        "memoryInMB" : "1024 or more",
+        "vmDiskSize" : "[21-2000]",
+        "vmDataSize" : "[2-2000]",
+        "gpuPassthroughType" : ["DirectDeviceAssignment", "ParaVirtualization"],
+        "gpuName" : "String",
+        "gpuCount" : "0 or more"
+    },
+    "vmFeature":{
+        "DpsTpm": "Boolean",
+        "Defender": "Boolean"
+    },
+    "eflowProvisioning":{
+        "provisioningType" : ["ManualConnectionString","ManualX509","DpsTPM","DpsX509","DpsSymmetricKey"],
+        "devConnString" : "String",
+        "iotHubHostname" : "String",
+        "deviceId" : "String",
+        "scopeId" : "String",
+        "symmKey": "String",
+        "registrationId" : "String",
+        "identityCertPath" : "String",
+        "identityPrivKeyPath" : "String",
+        "globalEndpoint" : "String"
+    }
+}
+@endjson
