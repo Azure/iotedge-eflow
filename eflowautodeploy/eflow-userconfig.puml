@@ -2,7 +2,7 @@
 <style>
 jsonDiagram {
   node {
-    FontName Segoe UI
+    FontName Segoe UI SemiBold
     FontColor blue
     FontSize 14
     RoundCorner 10
@@ -33,16 +33,9 @@ jsonDiagram {
         "acceptEula" : ["Yes","No"],
         "acceptOptionalTelemetry" : ["Yes","No"]
     },
-    "network":{
-        "adapterName": "String",
-        "vswitchName" : "String",
-        "vswitchType" : ["External", "Internal"],
-        "ip4Address": "IPAddress",
-        "ip4GatewayAddress": "IPAddress",
-        "ip4PrefixLength" : "24",
-        "httpProxy":"URL",
-        "httpsProxy":"URL",
-        "dnsServers":"IPAddress[]"
+    "vmFeature":{
+        "DpsTpm": "Boolean",
+        "Defender": "Boolean"
     },
     "vmConfig":{
         "cpuCount" : "1 or more",
@@ -53,9 +46,16 @@ jsonDiagram {
         "gpuName" : "String",
         "gpuCount" : "0 or more"
     },
-    "vmFeature":{
-        "DpsTpm": "Boolean",
-        "Defender": "Boolean"
+    "network":{
+        "adapterName": "String",
+        "vswitchName" : "String",
+        "vswitchType" : ["External", "Internal"],
+        "ip4Address": "IPAddress",
+        "ip4GatewayAddress": "IPAddress",
+        "ip4PrefixLength" : "24",
+        "httpProxy":"URL",
+        "httpsProxy":"URL",
+        "dnsServers":"IPAddress[]"
     },
     "eflowProvisioning":{
         "provisioningType" : ["ManualConnectionString","ManualX509","DpsTPM","DpsX509","DpsSymmetricKey"],
