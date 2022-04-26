@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-$eflowAutoDeployVersion = "1.0.220425.1200"
+$eflowAutoDeployVersion = "1.0.220426.0900"
 $isServerSKU = $false
 $EFLOWUserConfigFile = $null
 $EFLOWUserConfig = $null
@@ -88,7 +88,7 @@ function Test-EFLOWUserConfigNetwork {
             return $false
         }
         else {
-            Write-Host "* Clienk SKU : No Network configuration specified. Default Switch will be used." -ForegroundColor Green
+            Write-Host "* Client SKU : No Network configuration specified. Default Switch will be used." -ForegroundColor Green
             return $true
         }
     }
@@ -98,7 +98,7 @@ function Test-EFLOWUserConfigNetwork {
             Write-Host "Error: Server SKU, a virutal switch is needed - For more information about EFLOW virutal switch creation, see https://aka.ms/AzEFLOW-vSwitch" -ForegroundColor Red
             $errCnt += 1
         }
-        else { Write-Host "* Clienk SKU : No virtual switch specified - Default Switch will be used." -ForegroundColor Green }
+        else { Write-Host "* Client SKU : No virtual switch specified - Default Switch will be used." -ForegroundColor Green }
     }
     else { Write-Host "* Using virtual switch $($nwCfg.vswitchName)" -ForegroundColor Green }
     # Check if the virtual switch type and associated properties
@@ -825,4 +825,10 @@ function Start-EflowDeployment {
 # If autodeploy switch is specified, start eflow deployment with the default json file path (.\eflow-userconfig.json)
 if ($AutoDeploy) {
     Start-EflowDeployment
+} else {
+    Get-HostPCInfo
+    $eflowjson = "$PSScriptRoot\eflow-userconfig.json"
+    if (Test-Path -Path "$eflowjson" -PathType Leaf) {
+        Set-EFLOWUserConfig $eflowjson
+    }
 }
