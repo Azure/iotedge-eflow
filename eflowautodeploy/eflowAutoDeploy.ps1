@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-$eflowAutoDeployVersion = "1.0.220426.0900"
+$eflowAutoDeployVersion = "1.0.220428.1300"
 $isServerSKU = $false
 $EFLOWUserConfigFile = $null
 $EFLOWUserConfig = $null
@@ -460,7 +460,22 @@ function Invoke-EFLOWInstall {
         Write-Host "Installing $reqProduct from $url"
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
-        Start-Process msiexec.exe -Wait -ArgumentList '/I AzureIoTEdge.msi /qn'
+        $argList = '/I AzureIoTEdge.msi /qn '
+        if ($eflowConfig.installOptions){
+            $installPath = $eflowConfig.installOptions.installPath
+            if (-not [string]::IsNullOrEmpty($installPath) -and
+                (Test-Path -Path $installPath -IsValid)) {
+                $argList = $argList + "INSTALLDIR=""$($installPath)"" "
+            }
+            $vhdxPath = $eflowConfig.installOptions.vhdxPath
+            if (-not [string]::IsNullOrEmpty($vhdxPath) -and
+                (Test-Path -Path $vhdxPath -IsValid)) {
+
+                $argList = $argList + "VHDXDIR=""$($vhdxPath)"" "
+            }
+        }
+        Write-Host $argList
+        Start-Process msiexec.exe -Wait -ArgumentList $argList
         Remove-Item .\AzureIoTEdge.msi
         $ProgressPreference = 'Continue'
         Write-Host "$reqProduct successfully installed"

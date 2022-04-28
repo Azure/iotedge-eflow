@@ -3,6 +3,10 @@
     "version":"1.0",
     "eflowProduct" : "Azure IoT Edge LTS",
     "eflowProductUrl" : "",
+    "installOptions":{
+        "installPath":"",
+        "vhdxPath":""
+    },
     "enduser":{
         "acceptEula" : "Yes",
         "acceptOptionalTelemetry" : ""
