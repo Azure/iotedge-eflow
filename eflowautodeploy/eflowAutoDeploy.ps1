@@ -139,65 +139,64 @@ function Test-EFLOWUserConfigNetwork {
         [string]::IsNullOrEmpty($nwCfg.ip4GatewayAddress) -and
         [string]::IsNullOrEmpty($nwCfg.ip4PrefixLength)) {
         Write-Host "* No static IP address provided - DHCP allocation or auto-static ip(internal switch) will be used" -ForegroundColor Green
-    }
-    # Three parameters must be provided in order to static IP to work
-    if ([string]::IsNullOrEmpty($nwCfg.ip4Address) -or
-        [string]::IsNullOrEmpty($nwCfg.ip4GatewayAddress) -or
-        [string]::IsNullOrEmpty($nwCfg.ip4PrefixLength)) {
-        Write-Host "Error: IP4Address, IP4GatewayAddress and IP4PrefixLength parameters are needed" -ForegroundColor Red
-        $errCnt += 1
-    }
-    $ipconfigstatus = $true
-    if (-not ($nwCfg.ip4Address -as [IPAddress] -as [Bool])) {
-        Write-Host "Error: Invalid IP4Address $($nwCfg.ip4Address)" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    else {
-        #Ping IP to ensure it is free
-        $status = Test-Connection $nwCfg.ip4Address -Count 1 -Quiet
-        if ($status) {
-            Write-Host "Error: ip4Address $($nwCfg.ip4Address) in use" -ForegroundColor Red
+    } elseif ([string]::IsNullOrEmpty($nwCfg.ip4Address) -or
+              [string]::IsNullOrEmpty($nwCfg.ip4GatewayAddress) -or
+              [string]::IsNullOrEmpty($nwCfg.ip4PrefixLength)) {
+                Write-Host "Error: IP4Address, IP4GatewayAddress and IP4PrefixLength parameters are needed" -ForegroundColor Red
+                $errCnt += 1
+    } else {
+        $ipconfigstatus = $true
+        if (-not ($nwCfg.ip4Address -as [IPAddress] -as [Bool])) {
+            Write-Host "Error: Invalid IP4Address $($nwCfg.ip4Address)" -ForegroundColor Red
             $errCnt += 1
             $ipconfigstatus = $false
         }
-    }
+        else {
+            #Ping IP to ensure it is free
+            $status = Test-Connection $nwCfg.ip4Address -Count 1 -Quiet
+            if ($status) {
+                Write-Host "Error: ip4Address $($nwCfg.ip4Address) in use" -ForegroundColor Red
+                $errCnt += 1
+                $ipconfigstatus = $false
+            }
+        }
 
-    if (-not ($nwCfg.ip4GatewayAddress -as [IPAddress] -as [Bool])) {
-        Write-Host "Error: Invalid IP4GatewayAddress $($nwCfg.ip4GatewayAddress)" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    else {
-        $status = Test-Connection $nwCfg.ip4GatewayAddress -Count 1 -Quiet
-        if (($status) -and ($nwCfg.vSwitchType -ieq "Internal")) {
-            Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) in use. Should be free for Internal switch" -ForegroundColor Red;
+        if (-not ($nwCfg.ip4GatewayAddress -as [IPAddress] -as [Bool])) {
+            Write-Host "Error: Invalid IP4GatewayAddress $($nwCfg.ip4GatewayAddress)" -ForegroundColor Red
             $errCnt += 1
             $ipconfigstatus = $false
         }
-        if ((-not $status) -and ($nwCfg.vSwitchType -ieq "External")) {
-            Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) is not reachable. Required for external switch" -ForegroundColor Red;
-            $errCnt += 1
-            $ipconfigstatus = $false
+        else {
+            $status = Test-Connection $nwCfg.ip4GatewayAddress -Count 1 -Quiet
+            if (($status) -and ($nwCfg.vSwitchType -ieq "Internal")) {
+                Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) in use. Should be free for Internal switch" -ForegroundColor Red;
+                $errCnt += 1
+                $ipconfigstatus = $false
+            }
+            if ((-not $status) -and ($nwCfg.vSwitchType -ieq "External")) {
+                Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) is not reachable. Required for external switch" -ForegroundColor Red;
+                $errCnt += 1
+                $ipconfigstatus = $false
+            }
         }
-    }
 
-    [IPAddress]$mask="255.255.255.0"
-    if ( (([IPAddress]$nwCfg.ip4GatewayAddress).Address -band $mask.Address ) -ne (([IPAddress]$nwCfg.ip4Address).Address -band $mask.Address))
-    {
-        Write-Host "Error: ip4GatewayAddress and ip4Address are not in the same subnet" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    if ($nwCfg.ip4PrefixLength -as [int] -lt 0 -and $nwCfg.ip4PrefixLength -as [int] -ge 32) {
-        Write-Host "Error: Invalid IP4PrefixLength $($nwCfg.ip4PrefixLength). Should be an integer between 0 and 32" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    if ($ipconfigstatus) {
-        Write-Host "* Using virtual switch with IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
-        Write-Host "                     ip4GatewayAddress: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
-        Write-Host "                          PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
+        [IPAddress]$mask="255.255.255.0"
+        if ( (([IPAddress]$nwCfg.ip4GatewayAddress).Address -band $mask.Address ) -ne (([IPAddress]$nwCfg.ip4Address).Address -band $mask.Address))
+        {
+            Write-Host "Error: ip4GatewayAddress and ip4Address are not in the same subnet" -ForegroundColor Red
+            $errCnt += 1
+            $ipconfigstatus = $false
+        }
+        if ($nwCfg.ip4PrefixLength -as [int] -lt 0 -and $nwCfg.ip4PrefixLength -as [int] -ge 32) {
+            Write-Host "Error: Invalid IP4PrefixLength $($nwCfg.ip4PrefixLength). Should be an integer between 0 and 32" -ForegroundColor Red
+            $errCnt += 1
+            $ipconfigstatus = $false
+        }
+        if ($ipconfigstatus) {
+            Write-Host "* Using virtual switch with IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
+            Write-Host "                     ip4GatewayAddress: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
+            Write-Host "                          PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
+        }
     }
     #TODO : Ping dnsServers for reachability. No Tests for http proxies
     $retval = $true
@@ -859,16 +858,20 @@ function Start-EflowDeployment {
     if (!(Test-AdminRole)) { return }
     # Check PC prequisites (Hyper-V, EFLOW and CLI)
     if (!(Test-HyperVStatus)) { return } # TODO Enable Hyper-V, register task to resume after reboot
-    Test-EFLOWInstall -Install
-    Test-EFLOWVMSwitch -Create #create switch if specified
+
+    $retval = Test-EFLOWInstall -Install
+    if (-not $retval) { return }
+    $retval = Test-EFLOWVMSwitch -Create #create switch if specified
+    if (-not $retval) { return }
     # We are here.. all is good so far. Validate and deploy eflow
-    if (!(Invoke-EFLOWDeploy)) {
+    if (-not (Invoke-EFLOWDeploy)) {
         #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
         Remove-EFLOWVMSwitch
+        return
     }
 
-    Invoke-EFLOWProvision
-
+    $retval = Invoke-EFLOWProvision
+    if (-not $retval) { return }
     if (Verify-EflowVm) {
         Write-Host "** EFLOW VM deployment successful." -ForegroundColor Green
     }
