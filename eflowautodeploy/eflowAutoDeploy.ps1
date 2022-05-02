@@ -210,6 +210,59 @@ function Test-EFLOWUserConfigNetwork {
     }
     return $retval
 }
+
+function Test-EFLOWUserConfigInstall {
+    $errCnt = 0
+    $eflowConfig = Get-EFLOWUserConfig
+    Write-Host "`n--- Verifying EFLOW Install Configuration..."
+    # 0) Check if EFLOW is already installed
+    $version = Get-EFLOWInstalledVersion
+
+    # 1) Check the product requested is valid
+    if ($Script:eflowProducts.ContainsKey($eflowConfig.eflowProduct)) {
+        Write-Host "* $($eflowConfig.eflowProduct)" -ForegroundColor Green
+        if ($version) { #if already installed, check if they match
+            $product = $version.Split(",")
+            if ($product[0] -ne $eflowConfig.eflowProduct) {
+                Write-Host "Error: Installed product does not match requested product." -ForegroundColor Red
+                $errCnt += 1
+            }
+        }
+    }
+    else {
+        Write-Host "Error: Incorrect eflowProduct." -ForegroundColor Red
+        Write-Host "Supported products: [$($Script:eflowProducts.Keys -join ',' )]"
+        $errCnt += 1
+    }
+    # 2) Check if ProductUrl is valid if specified
+    if (-not [string]::IsNullOrEmpty($eflowConfig.eflowProductUrl) -and
+    (-not ([system.uri]::IsWellFormedUriString($eflowConfig.eflowProductUrl,[System.UriKind]::Absolute)))) {
+        Write-Host "Error: eflowProductUrl is incorrect. $($eflowConfig.eflowProductUrl)." -ForegroundColor Red
+        $errCnt += 1
+    }
+    # 3) Check if the install options are proper
+    $installOptions = $eflowConfig.installOptions
+    if ($installOptions) {
+        $installOptItems = @("installPath","vhdxPath")
+        foreach ($item in $installOptItems) {
+            $path = $installOptions[$item]
+            if (-not [string]::IsNullOrEmpty($path) -and
+            (-not (Test-Path -Path $path -IsValid))) {
+                Write-Host "Error: Incorrect item. : $path" -ForegroundColor Red
+                $errCnt += 1
+            }
+        }
+    }
+    $retval = $true
+    if ($errCnt) {
+        Write-Host "$errCnt errors found in the Install Configuration. Fix errors before Install" -ForegroundColor Red
+        $retval = $false
+    }
+    else {
+        Write-Host "*** No errors found in the Install Configuration." -ForegroundColor Green
+    }
+    return $retval
+}
 function Test-EFLOWUserConfigDeploy {
     <#
     .DESCRIPTION
@@ -220,15 +273,6 @@ function Test-EFLOWUserConfigDeploy {
     $eflowConfig = Get-EFLOWUserConfig
     $euCfg = $eflowConfig.enduser
     Write-Host "`n--- Verifying EFLOW VM Deployment Configuration..."
-    # 0) Check the product requested
-    if ($Script:eflowProducts.ContainsKey($eflowConfig.eflowProduct)) {
-        Write-Host "* $($eflowConfig.eflowProduct)" -ForegroundColor Green
-    }
-    else {
-        Write-Host "Error: Incorrect eflowProduct." -ForegroundColor Red
-        Write-Host "Supported products: [$($Script:eflowProducts.Keys -join ',' )]"
-        $errCnt += 1
-    }
     # 1) Check Mandatory configuration EULA
     Write-Host "--- Verifying EULA and telemetry..."
     if (($euCfg.acceptEula) -and ($euCfg.acceptEula -eq "Yes")) {
@@ -389,10 +433,11 @@ function Test-EFLOWUserConfigProvision {
 }
 function Test-EFLOWUserConfig {
 
+    $installResult = Test-EFLOWUserConfigInstall
     $deployResult = Test-EFLOWUserConfigDeploy
     $provResult = Test-EFLOWUserConfigProvision
 
-    return ($deployResult -and $provResult)
+    return ($installResult -and $deployResult -and $provResult)
 
 }
 function Test-EFLOWInstall {
@@ -444,44 +489,38 @@ function Invoke-EFLOWInstall {
     #>
     #TODO : Add Force flag to uninstall and install req product
     $version = Get-EFLOWInstalledVersion
-    $retval = $false
     if ($version) {
         Write-Host "$version is already installed"
+        return $true
     }
-    else {
-        $eflowConfig = Get-EFLOWUserConfig
-        if ($null -eq $eflowConfig) { return $retval }
-        $reqProduct = $eflowConfig.eflowProduct
-        $url = $Script:eflowProducts[$reqProduct]
-        if (-not [string]::IsNullOrEmpty($eflowConfig.eflowProductUrl) -and
-            ([system.uri]::IsWellFormedUriString($eflowConfig.eflowProductUrl,[System.UriKind]::Absolute))) {
-            $url = $eflowConfig.eflowProductUrl
-        }
-        Write-Host "Installing $reqProduct from $url"
-        $ProgressPreference = 'SilentlyContinue'
-        Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
-        $argList = '/I AzureIoTEdge.msi /qn '
-        if ($eflowConfig.installOptions){
-            $installPath = $eflowConfig.installOptions.installPath
-            if (-not [string]::IsNullOrEmpty($installPath) -and
-                (Test-Path -Path $installPath -IsValid)) {
-                $argList = $argList + "INSTALLDIR=""$($installPath)"" "
-            }
-            $vhdxPath = $eflowConfig.installOptions.vhdxPath
-            if (-not [string]::IsNullOrEmpty($vhdxPath) -and
-                (Test-Path -Path $vhdxPath -IsValid)) {
-
-                $argList = $argList + "VHDXDIR=""$($vhdxPath)"" "
-            }
-        }
-        Write-Host $argList
-        Start-Process msiexec.exe -Wait -ArgumentList $argList
-        Remove-Item .\AzureIoTEdge.msi
-        $ProgressPreference = 'Continue'
-        Write-Host "$reqProduct successfully installed"
-        $retval = $true
+    $eflowConfig = Get-EFLOWUserConfig
+    if ($null -eq $eflowConfig) { return $retval }
+    if (-not (Test-EFLOWUserConfigInstall)) { return $false } # bail if the validation failed
+    $reqProduct = $eflowConfig.eflowProduct
+    $url = $Script:eflowProducts[$reqProduct]
+    if ($eflowConfig.eflowProductUrl) {
+        $url = $eflowConfig.eflowProductUrl
     }
-    return $retval
+    Write-Host "Installing $reqProduct from $url"
+    $ProgressPreference = 'SilentlyContinue'
+    Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
+    $argList = '/I AzureIoTEdge.msi /qn '
+    if ($eflowConfig.installOptions){
+        $installPath = $eflowConfig.installOptions.installPath
+        if ($installPath) {
+            $argList = $argList + "INSTALLDIR=""$($installPath)"" "
+        }
+        $vhdxPath = $eflowConfig.installOptions.vhdxPath
+        if ($vhdxPath) {
+            $argList = $argList + "VHDXDIR=""$($vhdxPath)"" "
+        }
+    }
+    Write-Host $argList
+    Start-Process msiexec.exe -Wait -ArgumentList $argList
+    Remove-Item .\AzureIoTEdge.msi
+    $ProgressPreference = 'Continue'
+    Write-Host "$reqProduct successfully installed"
+    return $true
 }
 function Remove-EFLOWInstall {
     <#
