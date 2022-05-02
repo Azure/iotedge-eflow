@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-$eflowAutoDeployVersion = "1.0.220428.1300"
+$eflowAutoDeployVersion = "1.0.220502.1700"
 $isServerSKU = $false
 $EFLOWUserConfigFile = $null
 $EFLOWUserConfig = $null
@@ -169,12 +169,13 @@ function Test-EFLOWUserConfigNetwork {
         else {
             $status = Test-Connection $nwCfg.ip4GatewayAddress -Count 1 -Quiet
             if (($status) -and ($nwCfg.vSwitchType -ieq "Internal")) {
-                Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) in use. Should be free for Internal switch" -ForegroundColor Red;
-                $errCnt += 1
-                $ipconfigstatus = $false
+                # flagging it as a warning for now. To be fixed.
+                Write-Host "Warning: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) may be in use already" -ForegroundColor Yellow
+                #$errCnt += 1
+                #$ipconfigstatus = $false
             }
             if ((-not $status) -and ($nwCfg.vSwitchType -ieq "External")) {
-                Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) is not reachable. Required for external switch" -ForegroundColor Red;
+                Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) is not reachable. Required for external switch" -ForegroundColor Red
                 $errCnt += 1
                 $ipconfigstatus = $false
             }
@@ -472,7 +473,11 @@ function Test-HyperVStatus {
         Write-Host "Hyper-V is disabled" -ForegroundColor Red
         if ($Enable) {
             Write-Host "Enabling Hyper-V"
-            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
+            if ($script:isServerSKU) {
+                Install-WindowsFeature -Name RSAT-Hyper-V-Tools -IncludeAllSubFeature
+            }
+            Write-Host "Reboot machine for enabling Hyper-V" -ForegroundColor Yellow
         }
         return $false
     }
@@ -567,7 +572,7 @@ function Invoke-EFLOWDeploy {
     $eflowConfig = Get-EFLOWUserConfig
     #Properties are validated. So just add here
     $eflowDeployParams.Add("acceptEula", "Yes")
-    if ($euCfg.acceptOptionalTelemetry -eq "Yes") {
+    if ($eflowConfig.enduser.acceptOptionalTelemetry -eq "Yes") {
         $eflowDeployParams.Add("acceptOptionalTelemetry", "Yes")
     }
 
@@ -692,7 +697,7 @@ function Test-EFLOWVMSwitch {
     )
     $usrCfg = Get-EFLOWUserConfig
     $nwCfg = $usrCfg.network
-    $retval = Test-EFLOWUserConfigNetwork
+    if (! (Test-EFLOWUserConfigNetwork)) { return $false }
 
     if ([string]::IsNullOrEmpty($nwCfg.vSwitchName)) {
         if (-not $script:isServerSKU) {
@@ -727,9 +732,9 @@ function Test-EFLOWVMSwitch {
                 Write-Host "* Internal Switch found with the ipPrefix $ipPrefix"
                 if ($null -eq $nwCfg.ip4Address) {
                     # No ip address specified. So update those fields with the generated ones.
-                    $nwCfg.ip4GatewayAddress = $switchIpAddress
-                    $nwCfg.ip4Address = "$ipPrefix.2"
-                    $nwCfg.ip4PrefixLength = 24
+                    $nwCfg | Add-Member -MemberType NoteProperty -Name ip4GatewayAddress -Value $switchIpAddress
+                    $nwCfg | Add-Member -MemberType NoteProperty -Name ip4Address -Value "$ipPrefix.2"
+                    $nwCfg | Add-Member -MemberType NoteProperty -Name ip4PrefixLength -Value 24
                     Write-Host "Using EFLOW static IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
                     Write-Host "           Gateway IP4Address: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
                     Write-Host "                 PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
@@ -785,17 +790,17 @@ function New-EFLOWVMSwitch {
                 return $false
             }
             $ipPrefix = ($switchIpAddress.Split('.')[0..2]) -join '.'
-            $nwCfg.ip4GatewayAddress = "$ipPrefix.1"
-            $nwCfg.ip4Address = "$ipPrefix.2"
-            $nwCfg.ip4PrefixLength = 24
+            $nwCfg | Add-Member -MemberType NoteProperty -Name ip4GatewayAddress -Value "$ipPrefix.1"
+            $nwCfg | Add-Member -MemberType NoteProperty -Name ip4Address -Value "$ipPrefix.2"
+            $nwCfg | Add-Member -MemberType NoteProperty -Name ip4PrefixLength -Value 24
         }
 
         $ipPrefix = ($nwCfg.ip4GatewayAddress.Split('.')[0..2]) -join '.'
-        $natPrefix = "$ipPrefix.0/$nwCfg.ip4PrefixLength"
+        $natPrefix = "$ipPrefix.0/$($nwCfg.ip4PrefixLength)"
 
         New-NetIPAddress -IPAddress $nwCfg.ip4GatewayAddress -PrefixLength $nwCfg.ip4PrefixLength -InterfaceAlias "vEthernet ($($nwCfg.vSwitchName))" | Out-Null
         Write-Host "Using EFLOW static IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
-        Write-Host "            Gateway IP4Address: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
+        Write-Host "           Gateway IP4Address: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
         Write-Host "                 PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
 
         New-NetNat -Name "$($nwCfg.vSwitchName)-NAT" -InternalIPInterfaceAddressPrefix $natPrefix |  Out-Null
@@ -859,23 +864,21 @@ function Start-EflowDeployment {
     # Check PC prequisites (Hyper-V, EFLOW and CLI)
     if (!(Test-HyperVStatus)) { return } # TODO Enable Hyper-V, register task to resume after reboot
 
-    $retval = Test-EFLOWInstall -Install
-    if (-not $retval) { return }
-    $retval = Test-EFLOWVMSwitch -Create #create switch if specified
-    if (-not $retval) { return }
+    if (!(Test-EFLOWInstall -Install)) { return }
+
+    if (!(Test-EFLOWVMSwitch -Create)) { return } #create switch if specified
+
     # We are here.. all is good so far. Validate and deploy eflow
-    if (-not (Invoke-EFLOWDeploy)) {
+    if (!(Invoke-EFLOWDeploy)) {
         #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
         Remove-EFLOWVMSwitch
         return
     }
 
-    $retval = Invoke-EFLOWProvision
-    if (-not $retval) { return }
+    if (!(Invoke-EFLOWProvision)) { return }
     if (Verify-EflowVm) {
         Write-Host "** EFLOW VM deployment successful." -ForegroundColor Green
     }
-
 }
 
 ### MAIN ###
