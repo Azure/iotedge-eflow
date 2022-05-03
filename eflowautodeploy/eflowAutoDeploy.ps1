@@ -6,19 +6,23 @@ param(
     [switch] $AutoDeploy
 )
 
-$eflowAutoDeployVersion = "1.0.220502.1700"
-$isServerSKU = $false
-$EFLOWUserConfigFile = $null
-$EFLOWUserConfig = $null
-$EFLOWInstalledVersion = $null
-$EFLOWInstalledProduct = $null
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220505.0900" -Option Constant -ErrorAction SilentlyContinue
+#Hashtable to store session information
+$eadSession = @{
+    "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
+    "HostOS" = @{"Name" = $null; "Version" = $null;"IsServerSKU" = $false;}
+    "EFLOW" = @{"Product" = $null; "Version" = $null}
+    "UserConfig" = $null
+    "UserConfigFile" = $null
+}
 
-$eflowProducts = @{
+New-Variable -Option Constant -ErrorAction SilentlyContinue -Name eflowProducts -Value @{
     "Azure IoT Edge LTS"      = "https://aka.ms/AzEflowMSI"
     "Azure IoT Edge CR X64"   = "https://aka.ms/AzEFLOWMSI-CR-X64"
     "Azure IoT Edge CR ARM64" = "https://aka.ms/AzEFLOWMSI-CR-ARM64"
 }
-$eflowProvisioningProperties = @{
+
+New-Variable -Option Constant -ErrorAction SilentlyContinue -Name eflowProvisioningProperties -Value @{
     "ManualConnectionString" = @("devConnString")
     "ManualX509"             = @("iotHubHostname", "deviceId", "identityCertPath", "identityPrivKeyPath")
     "DpsTPM"                 = @("scopeId")
@@ -37,20 +41,34 @@ function Test-AdminRole {
 function Get-HostPCInfo {
     Write-Host "Running eflowAutoDeploy version $eflowAutoDeployVersion"
     $pOS = Get-CimInstance Win32_OperatingSystem
-    Write-Host "HostOS Info : $($pOS.Caption)($($pOS.OperatingSystemSKU)) - $($pOS.Version) - $($pOS.MUILanguages) - $($pOS.CSName)"
+    $UBR= (Get-ItemPropertyValue "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name UBR)
+    $eadSession.HostOS.Name = $pOS.Caption
+    $eadSession.HostOS.Version = "$($pOS.Version).$UBR"
+    Write-Host "HostOS`t: $($pOS.Caption)($($pOS.OperatingSystemSKU)) `nVersion`t: $($eadSession.HostOS.Version) `nLang`t: $($pOS.MUILanguages) `nName`t: $($pOS.CSName)"
     #ProductTypeDomainController -Value 2 , #ProductTypeServer -Value 3
-    $script:isServerSKU = ($pOS.ProductType -eq 2 -or $pOS.ProductType -eq 3)
+    $eadSession.HostPC.Name = $pOS.CSName
+    $eadSession.HostOS.IsServerSKU = ($pOS.ProductType -eq 2 -or $pOS.ProductType -eq 3)
+    $eadSession.HostPC.FreeMem = [Math]::Round($pOS.FreePhysicalMemory / 1MB) # convert kilo bytes to GB
+    $pCS = Get-WmiObject -Class Win32_ComputerSystem
+    $eadSession.HostPC.TotalMem = [Math]::Round($pCS.TotalPhysicalMemory / 1GB)
+    $eadSession.HostPC.TotalCPU = $pCS.numberoflogicalprocessors
+    Write-Host "Total CPUs`t`t: $($eadSession.HostPC.TotalCPU)"
+    Write-Host "Free RAM / Total RAM`t: $($eadSession.HostPC.FreeMem) GB / $($eadSession.HostPC.TotalMem) GB"
+    $pCDrive = (Get-WmiObject Win32_LogicalDisk ) | Where-Object { $_.DeviceID -eq 'C:' } #Get the C device size
+    $eadSession.HostPC.FreeDisk = [Math]::Round($pCDrive.Freespace / 1GB) # convert bytes into GB
+    $eadSession.HostPC.TotalDisk = [Math]::Round($pCDrive.Size / 1GB) # convert bytes into GB
+    Write-Host "Free Disk / Total Disk`t: $($eadSession.HostPC.FreeDisk) GB / $($eadSession.HostPC.TotalDisk) GB"
     Get-EFLOWInstalledVersion | Out-Null
 }
 function Get-EFLOWUserConfig {
-    if ($null -eq $Script:EFLOWUserConfig){
+    if ($null -eq $eadSession.UserConfig){
         Write-Host "Error: EFLOW UserConfig is not set." -ForegroundColor Red
     }
-    return $Script:EFLOWUserConfig
+    return $eadSession.UserConfig
 }
 function Read-EFLOWUserConfig {
-    if ($EFLOWUserConfigFile) {
-        $Script:EFLOWUserConfig = Get-Content "$EFLOWUserConfigFile" | ConvertFrom-Json
+    if ($eadSession.UserConfigFile) {
+        $eadSession.UserConfig = Get-Content "$($eadSession.UserConfigFile)" | ConvertFrom-Json
     }
     else { Write-Host "Error: EFLOWUserConfigFile not configured" -ForegroundColor Red }
 }
@@ -72,7 +90,7 @@ function Set-EFLOWUserConfig {
         return
     }
     Write-Host "Loading $eflowjson.."
-    $Script:EFLOWUserConfigFile = "$eflowjson"
+    $eadSession.UserConfigFile = "$eflowjson"
     Read-EFLOWUserConfig
 }
 function Test-EFLOWUserConfigNetwork {
@@ -87,7 +105,7 @@ function Test-EFLOWUserConfigNetwork {
     # 1) Check the virtual switch name
     $nwCfg = $eflowConfig.network
     if ($null -eq $nwCfg) {
-        if ($script:isServerSKU) {
+        if ($eadSession.HostOS.IsServerSKU) {
             Write-Host "Error: Server SKU, requires Network configuration, see https://aka.ms/AzEFLOW-vSwitch" -ForegroundColor Red
             return $false
         }
@@ -98,7 +116,7 @@ function Test-EFLOWUserConfigNetwork {
     }
 
     if ([string]::IsNullOrEmpty($nwCfg.vswitchName)) {
-        if ($script:isServerSKU) {
+        if ($eadSession.HostOS.IsServerSKU) {
             Write-Host "Error: Server SKU, a virutal switch is needed - For more information about EFLOW virutal switch creation, see https://aka.ms/AzEFLOW-vSwitch" -ForegroundColor Red
             $errCnt += 1
         }
@@ -108,7 +126,7 @@ function Test-EFLOWUserConfigNetwork {
     # Check if the virtual switch type and associated properties
     switch ($nwCfg.vSwitchType) {
         "Internal" {
-            if (-not $script:isServerSKU ) {
+            if (-not $eadSession.HostOS.IsServerSKU ) {
                 Write-Host "Error: vSwitchType is incorrect. Supported types : External (Client and Server) and Internal (Server)" -ForegroundColor Red
                 $errCnt += 1
             }
@@ -129,7 +147,7 @@ function Test-EFLOWUserConfigNetwork {
             }
         }
         default {
-            if ($script:isServerSKU ) {
+            if ($eadSession.HostOS.IsServerSKU ) {
                 Write-Host "Error: vSwitchType is incorrect. Supported types : External (Client and Server) and Internal (Server)" -ForegroundColor Red
                 $errCnt += 1
             }
@@ -222,9 +240,9 @@ function Test-EFLOWUserConfigInstall {
 
     # 1) Check the product requested is valid
     if ($Script:eflowProducts.ContainsKey($eflowConfig.eflowProduct)) {
-        if ($script:EFLOWInstalledProduct) { #if already installed, check if they match
-            if ($script:EFLOWInstalledProduct -ne $eflowConfig.eflowProduct) {
-                Write-Host "Error: Installed product $($script:EFLOWInstalledProduct) does not match requested product $($eflowConfig.eflowProduct)." -ForegroundColor Red
+        if ($eadSession.EFLOW.Product) { #if already installed, check if they match
+            if ($eadSession.EFLOW.Product -ne $eflowConfig.eflowProduct) {
+                Write-Host "Error: Installed product $($eadSession.EFLOW.Product) does not match requested product $($eflowConfig.eflowProduct)." -ForegroundColor Red
                 $errCnt += 1
             } else { Write-Host "* $($eflowConfig.eflowProduct) is installed" -ForegroundColor Green }
         } else { Write-Host "* $($eflowConfig.eflowProduct) to be installed" -ForegroundColor Green }
@@ -288,6 +306,7 @@ function Test-EFLOWUserConfigDeploy {
     }
     else {
         Write-Host "- Optional telemetry not accepted. Basic telemetry will be sent." -ForegroundColor Yellow
+        if ($euCfg) { $euCfg.PSObject.properties.remove('acceptOptionalTelemetry') }
     }
 
     # 2) Check the virtual switch specified
@@ -305,6 +324,7 @@ function Test-EFLOWUserConfigDeploy {
     }
     else {
         Write-Host "* No custom vCPUs used - Using default configuration, virtual machine will be created with 1 vCPUs."
+        if ($vmCfg) { $vmCfg.PSObject.properties.remove('cpuCount') }
     }
 
     if ($vmCfg.memoryInMB -gt 0) {
@@ -312,6 +332,7 @@ function Test-EFLOWUserConfigDeploy {
     }
     else {
         Write-Host "* No custom memory used - Using default configuration, virtual machine will be created with 1024 MB of memory."
+        if ($vmCfg) { $vmCfg.PSObject.properties.remove('memoryInMB') }
     }
 
     if ($vmCfg.vmDiskSize) {
@@ -324,6 +345,7 @@ function Test-EFLOWUserConfigDeploy {
     }
     else {
         Write-Host "* No custom disk size used - Using default configuration, virtual machine VHDX will be created with 29 GB of disk size."
+        if ($vmCfg) { $vmCfg.PSObject.properties.remove('vmDiskSize') }
     }
     if ($vmCfg.vmDataSize) {
         if (($vmCfg.vmDataSize -ge 2)  -and ($vmCfg.vmDataSize -le 2000)) { #Between 2 GB and 2 TB
@@ -335,6 +357,7 @@ function Test-EFLOWUserConfigDeploy {
     }
     else {
         Write-Host "* No custom data size used - Using default configuration, virtual machine VHDX will be created with 10 GB of data size."
+        if ($vmCfg) { $vmCfg.PSObject.properties.remove('vmDataSize') }
     }
     if (($eflowConfig.eflowProduct -ieq "Azure IoT Edge LTS") -and ($vmCfg.vmDataSize -gt 0)) {
         Write-Host "Error: vmDataSize is not supported in Azure IoT Edge LTS" -ForegroundColor Red
@@ -348,6 +371,11 @@ function Test-EFLOWUserConfigDeploy {
     Write-Host "--- Verifying GPU passthrough configuration..."
     if ([string]::IsNullOrEmpty($vmCfg.gpuPassthroughType)) {
         Write-Host "* No GPU passthrough being used - CPU only allocation"
+        if ($vmCfg) {
+            $vmCfg.PSObject.properties.remove('gpuPassthroughType')
+            $vmCfg.PSObject.properties.remove('gpuName')
+            $vmCfg.PSObject.properties.remove('gpuCount')
+        }
     }
     else {
         if ($vmCfg.gpuPassthroughType -ne 'DirectDeviceAssignment' -and $vmCfg.gpuPassthroughType -ne 'ParaVirtualization') {
@@ -360,6 +388,9 @@ function Test-EFLOWUserConfigDeploy {
             Write-Host "Error: GpuName must be provided" -ForegroundColor Red
             $errCnt += 1
         }
+    }
+    if ($vmCfg -and $null -eq $vmCfg.PSObject.properties.Name) {
+        $eflowConfig.PSObject.properties.remove('vmConfig')
     }
     $retval = $true
     if ($errCnt) {
@@ -402,7 +433,7 @@ function Test-EFLOWUserConfigProvision {
         #if we have valid parameter array
         foreach ($setting in $reqSettings) {
             #verify if the parameters are specified
-            $value = ($provCfg.PSObject.Properties | Where-Object { $_.Name -ieq $setting }).Value
+            $value = $provCfg.$setting
             if ($value) {
                 # Not writing out the value as it may have credentials that we dont want in logs
                 Write-Host "* $setting Ok" -ForegroundColor Green
@@ -474,8 +505,9 @@ function Test-HyperVStatus {
         if ($Enable) {
             Write-Host "Enabling Hyper-V"
             Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
-            if ($script:isServerSKU) {
-                Install-WindowsFeature -Name RSAT-Hyper-V-Tools -IncludeAllSubFeature
+            if ($eadSession.HostOS.IsServerSKU) {
+                Enable-WindowsOptionalFeature -Online -FeatureName 'Microsoft-Hyper-V-Management-PowerShell'
+                #Install-WindowsFeature -Name RSAT-Hyper-V-Tools -IncludeAllSubFeature
             }
             Write-Host "Reboot machine for enabling Hyper-V" -ForegroundColor Yellow
         }
@@ -492,8 +524,8 @@ function Invoke-EFLOWInstall {
         Checks if EFLOW MSI is installed, and installs it if not
     #>
     #TODO : Add Force flag to uninstall and install req product
-    if ($script:EFLOWInstalledVersion) {
-        Write-Host "$($script:EFLOWInstalledProduct)-$($script:EFLOWInstalledVersion) is already installed"
+    if ($eadSession.EFLOW.Version) {
+        Write-Host "$($eadSession.EFLOW.Product)-$($eadSession.EFLOW.Version) is already installed"
         return $true
     }
     $eflowConfig = Get-EFLOWUserConfig
@@ -556,8 +588,8 @@ function Get-EFLOWInstalledVersion {
     }
     else {
         $retval = "$($eflowInfo.DisplayName),$($eflowInfo.DisplayVersion)"
-        $script:EFLOWInstalledVersion = $eflowInfo.DisplayVersion
-        $script:EFLOWInstalledProduct = $eflowInfo.DisplayName
+        $eadSession.EFLOW.Version = $eflowInfo.DisplayVersion
+        $eadSession.EFLOW.Product = $eflowInfo.DisplayName
         Write-Host "$retval is installed."
     }
     return $retval
@@ -567,8 +599,11 @@ function Invoke-EFLOWDeploy {
     .DESCRIPTION
         Loads the configuration and tries to deploy the EFLOW VM
     #>
-    $retval = Test-EFLOWUserConfigDeploy
-    if (-not $retval) { return $false }
+    if (Verify-EflowVm) {
+        Write-Host "Error: Eflow VM already deployed" -Foreground red
+        return $false
+    }
+    if (-not (Test-EFLOWUserConfigDeploy)) { return $false }
     $eflowDeployParams = @{}
     $eflowConfig = Get-EFLOWUserConfig
     #Properties are validated. So just add here
@@ -578,22 +613,16 @@ function Invoke-EFLOWDeploy {
     }
 
     if ($eflowConfig.network){ #network params are optional for Client using default switch
+        $reqProperties = @("vswitchName", "vswitchType", "ip4Address", "ip4GatewayAddress","ip4PrefixLength")
         foreach ($property in $($eflowConfig.network).PSObject.Properties) {
-            $reqProperties = @("vswitchName", "vswitchType", "ip4Address", "ip4GatewayAddress","ip4PrefixLength")
             if ($reqProperties -contains $property.Name) {
-                if (($property.Value.GetType().Name -eq "String" -and -not [string]::IsNullOrEmpty($property.Value)) -or
-                    ($property.Value.GetType().Name -eq "Int32" -and $property.Value -gt 0)) {
-                    $eflowDeployParams.Add($property.Name, $property.Value)
-                }
+                $eflowDeployParams.Add($property.Name, $property.Value)
             }
         }
     }
     if ($eflowConfig.vmConfig) { #vmConfig params are optional
         foreach ($property in $($eflowConfig.vmConfig).PSObject.Properties) {
-            if (($property.Value.GetType().Name -eq "String" -and -not [string]::IsNullOrEmpty($property.Value)) -or
-                ($property.Value.GetType().Name -eq "Int32" -and $property.Value -gt 0)) {
-                $eflowDeployParams.Add($property.Name, $property.Value)
-            }
+            $eflowDeployParams.Add($property.Name, $property.Value)
         }
     }
 
@@ -668,8 +697,7 @@ function Invoke-EFLOWProvision {
         #if we have valid parameter array
         foreach ($setting in $reqSettings) {
             #get values for each required setting. No validation here as its done earlier
-            $value = ($provCfg.PSObject.Properties | Where-Object { $_.Name -ieq $setting }).Value
-            $eflowProvisionParams.Add($setting, $value)
+            $eflowProvisionParams.Add($setting,$provCfg.$setting)
         }
     }
     if ($provCfg.globalEndpoint) {
@@ -701,7 +729,7 @@ function Test-EFLOWVMSwitch {
     if (! (Test-EFLOWUserConfigNetwork)) { return $false }
 
     if ([string]::IsNullOrEmpty($nwCfg.vSwitchName)) {
-        if (-not $script:isServerSKU) {
+        if (-not $eadSession.HostOS.IsServerSKU) {
             Write-Host "vSwitchName not specified. Checking Default switch."
             $defaultSwitch = Get-VMSwitch -Name 'Default Switch' -ErrorAction SilentlyContinue
             if ($defaultSwitch) {
@@ -867,18 +895,32 @@ function Start-EflowDeployment {
 
     if (!(Test-EFLOWInstall -Install)) { return }
 
-    if (!(Test-EFLOWVMSwitch -Create)) { return } #create switch if specified
+    # Check if EFLOW is deployed already and bail out
+    if (Verify-EflowVm) {
+        Write-Host "EFLOW VM is already deployed." -ForegroundColor Yellow
+    } else {
+        if (!(Test-EFLOWVMSwitch -Create)) { return } #create switch if specified
 
-    # We are here.. all is good so far. Validate and deploy eflow
-    if (!(Invoke-EFLOWDeploy)) {
-        #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
-        Remove-EFLOWVMSwitch
-        return
+        # We are here.. all is good so far. Validate and deploy eflow
+        if (!(Invoke-EFLOWDeploy)) {
+            #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
+            Remove-EFLOWVMSwitch
+            return
+        }
+
+        if (!(Invoke-EFLOWProvision)) { return }
+        if (Verify-EflowVm) {
+            Write-Host "** EFLOW VM deployment successful." -ForegroundColor Green
+        }
     }
 
-    if (!(Invoke-EFLOWProvision)) { return }
     if (Verify-EflowVm) {
-        Write-Host "** EFLOW VM deployment successful." -ForegroundColor Green
+        $eflowVM = Get-EflowVM
+        Write-Host "$($eflowVM.VmConfiguration.name) $($eflowVM.VmPowerState)"
+        Write-Host "IoTEdge Info:"
+        $eflowVM.EdgeRuntimeVersion | Out-String
+        Write-Host "EFLOW VM Info:"
+        $eflowVM.SystemStatistics | Out-String
     }
 }
 
