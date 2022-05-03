@@ -29,6 +29,10 @@ jsonDiagram {
     "version":"1.0",
     "eflowProduct" :["Azure IoT Edge LTS", "Azure IoT Edge CR X64","Azure IoT Edge CR ARM64"],
     "eflowProductUrl" : "URL",
+    "installOptions":{
+        "installPath":"String",
+        "vhdxPath":"String"
+    },
     "enduser":{
         "acceptEula" : ["Yes","No"],
         "acceptOptionalTelemetry" : ["Yes","No"]

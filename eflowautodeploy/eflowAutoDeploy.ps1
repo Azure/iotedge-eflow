@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-$eflowAutoDeployVersion = "1.0.220426.0900"
+$eflowAutoDeployVersion = "1.0.220502.1700"
 $isServerSKU = $false
 $EFLOWUserConfigFile = $null
 $EFLOWUserConfig = $null
@@ -139,65 +139,65 @@ function Test-EFLOWUserConfigNetwork {
         [string]::IsNullOrEmpty($nwCfg.ip4GatewayAddress) -and
         [string]::IsNullOrEmpty($nwCfg.ip4PrefixLength)) {
         Write-Host "* No static IP address provided - DHCP allocation or auto-static ip(internal switch) will be used" -ForegroundColor Green
-    }
-    # Three parameters must be provided in order to static IP to work
-    if ([string]::IsNullOrEmpty($nwCfg.ip4Address) -or
-        [string]::IsNullOrEmpty($nwCfg.ip4GatewayAddress) -or
-        [string]::IsNullOrEmpty($nwCfg.ip4PrefixLength)) {
-        Write-Host "Error: IP4Address, IP4GatewayAddress and IP4PrefixLength parameters are needed" -ForegroundColor Red
-        $errCnt += 1
-    }
-    $ipconfigstatus = $true
-    if (-not ($nwCfg.ip4Address -as [IPAddress] -as [Bool])) {
-        Write-Host "Error: Invalid IP4Address $($nwCfg.ip4Address)" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    else {
-        #Ping IP to ensure it is free
-        $status = Test-Connection $nwCfg.ip4Address -Count 1 -Quiet
-        if ($status) {
-            Write-Host "Error: ip4Address $($nwCfg.ip4Address) in use" -ForegroundColor Red
+    } elseif ([string]::IsNullOrEmpty($nwCfg.ip4Address) -or
+              [string]::IsNullOrEmpty($nwCfg.ip4GatewayAddress) -or
+              [string]::IsNullOrEmpty($nwCfg.ip4PrefixLength)) {
+                Write-Host "Error: IP4Address, IP4GatewayAddress and IP4PrefixLength parameters are needed" -ForegroundColor Red
+                $errCnt += 1
+    } else {
+        $ipconfigstatus = $true
+        if (-not ($nwCfg.ip4Address -as [IPAddress] -as [Bool])) {
+            Write-Host "Error: Invalid IP4Address $($nwCfg.ip4Address)" -ForegroundColor Red
             $errCnt += 1
             $ipconfigstatus = $false
         }
-    }
+        else {
+            #Ping IP to ensure it is free
+            $status = Test-Connection $nwCfg.ip4Address -Count 1 -Quiet
+            if ($status) {
+                Write-Host "Error: ip4Address $($nwCfg.ip4Address) in use" -ForegroundColor Red
+                $errCnt += 1
+                $ipconfigstatus = $false
+            }
+        }
 
-    if (-not ($nwCfg.ip4GatewayAddress -as [IPAddress] -as [Bool])) {
-        Write-Host "Error: Invalid IP4GatewayAddress $($nwCfg.ip4GatewayAddress)" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    else {
-        $status = Test-Connection $nwCfg.ip4GatewayAddress -Count 1 -Quiet
-        if (($status) -and ($nwCfg.vSwitchType -ieq "Internal")) {
-            Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) in use. Should be free for Internal switch" -ForegroundColor Red;
+        if (-not ($nwCfg.ip4GatewayAddress -as [IPAddress] -as [Bool])) {
+            Write-Host "Error: Invalid IP4GatewayAddress $($nwCfg.ip4GatewayAddress)" -ForegroundColor Red
             $errCnt += 1
             $ipconfigstatus = $false
         }
-        if ((-not $status) -and ($nwCfg.vSwitchType -ieq "External")) {
-            Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) is not reachable. Required for external switch" -ForegroundColor Red;
-            $errCnt += 1
-            $ipconfigstatus = $false
+        else {
+            $status = Test-Connection $nwCfg.ip4GatewayAddress -Count 1 -Quiet
+            if (($status) -and ($nwCfg.vSwitchType -ieq "Internal")) {
+                # flagging it as a warning for now. To be fixed.
+                Write-Host "Warning: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) may be in use already" -ForegroundColor Yellow
+                #$errCnt += 1
+                #$ipconfigstatus = $false
+            }
+            if ((-not $status) -and ($nwCfg.vSwitchType -ieq "External")) {
+                Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) is not reachable. Required for external switch" -ForegroundColor Red
+                $errCnt += 1
+                $ipconfigstatus = $false
+            }
         }
-    }
 
-    [IPAddress]$mask="255.255.255.0"
-    if ( (([IPAddress]$nwCfg.ip4GatewayAddress).Address -band $mask.Address ) -ne (([IPAddress]$nwCfg.ip4Address).Address -band $mask.Address))
-    {
-        Write-Host "Error: ip4GatewayAddress and ip4Address are not in the same subnet" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    if ($nwCfg.ip4PrefixLength -as [int] -lt 0 -and $nwCfg.ip4PrefixLength -as [int] -ge 32) {
-        Write-Host "Error: Invalid IP4PrefixLength $($nwCfg.ip4PrefixLength). Should be an integer between 0 and 32" -ForegroundColor Red
-        $errCnt += 1
-        $ipconfigstatus = $false
-    }
-    if ($ipconfigstatus) {
-        Write-Host "* Using virtual switch with IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
-        Write-Host "                     ip4GatewayAddress: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
-        Write-Host "                          PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
+        [IPAddress]$mask="255.255.255.0"
+        if ( (([IPAddress]$nwCfg.ip4GatewayAddress).Address -band $mask.Address ) -ne (([IPAddress]$nwCfg.ip4Address).Address -band $mask.Address))
+        {
+            Write-Host "Error: ip4GatewayAddress and ip4Address are not in the same subnet" -ForegroundColor Red
+            $errCnt += 1
+            $ipconfigstatus = $false
+        }
+        if ($nwCfg.ip4PrefixLength -as [int] -lt 0 -and $nwCfg.ip4PrefixLength -as [int] -ge 32) {
+            Write-Host "Error: Invalid IP4PrefixLength $($nwCfg.ip4PrefixLength). Should be an integer between 0 and 32" -ForegroundColor Red
+            $errCnt += 1
+            $ipconfigstatus = $false
+        }
+        if ($ipconfigstatus) {
+            Write-Host "* Using virtual switch with IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
+            Write-Host "                     ip4GatewayAddress: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
+            Write-Host "                          PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
+        }
     }
     #TODO : Ping dnsServers for reachability. No Tests for http proxies
     $retval = $true
@@ -207,6 +207,59 @@ function Test-EFLOWUserConfigNetwork {
     }
     else {
         Write-Host "*** No errors found in the Network Configuration." -ForegroundColor Green
+    }
+    return $retval
+}
+
+function Test-EFLOWUserConfigInstall {
+    $errCnt = 0
+    $eflowConfig = Get-EFLOWUserConfig
+    Write-Host "`n--- Verifying EFLOW Install Configuration..."
+    # 0) Check if EFLOW is already installed
+    $version = Get-EFLOWInstalledVersion
+
+    # 1) Check the product requested is valid
+    if ($Script:eflowProducts.ContainsKey($eflowConfig.eflowProduct)) {
+        Write-Host "* $($eflowConfig.eflowProduct)" -ForegroundColor Green
+        if ($version) { #if already installed, check if they match
+            $product = $version.Split(",")
+            if ($product[0] -ne $eflowConfig.eflowProduct) {
+                Write-Host "Error: Installed product does not match requested product." -ForegroundColor Red
+                $errCnt += 1
+            }
+        }
+    }
+    else {
+        Write-Host "Error: Incorrect eflowProduct." -ForegroundColor Red
+        Write-Host "Supported products: [$($Script:eflowProducts.Keys -join ',' )]"
+        $errCnt += 1
+    }
+    # 2) Check if ProductUrl is valid if specified
+    if (-not [string]::IsNullOrEmpty($eflowConfig.eflowProductUrl) -and
+    (-not ([system.uri]::IsWellFormedUriString($eflowConfig.eflowProductUrl,[System.UriKind]::Absolute)))) {
+        Write-Host "Error: eflowProductUrl is incorrect. $($eflowConfig.eflowProductUrl)." -ForegroundColor Red
+        $errCnt += 1
+    }
+    # 3) Check if the install options are proper
+    $installOptions = $eflowConfig.installOptions
+    if ($installOptions) {
+        $installOptItems = @("installPath","vhdxPath")
+        foreach ($item in $installOptItems) {
+            $path = $installOptions[$item]
+            if (-not [string]::IsNullOrEmpty($path) -and
+            (-not (Test-Path -Path $path -IsValid))) {
+                Write-Host "Error: Incorrect item. : $path" -ForegroundColor Red
+                $errCnt += 1
+            }
+        }
+    }
+    $retval = $true
+    if ($errCnt) {
+        Write-Host "$errCnt errors found in the Install Configuration. Fix errors before Install" -ForegroundColor Red
+        $retval = $false
+    }
+    else {
+        Write-Host "*** No errors found in the Install Configuration." -ForegroundColor Green
     }
     return $retval
 }
@@ -220,15 +273,6 @@ function Test-EFLOWUserConfigDeploy {
     $eflowConfig = Get-EFLOWUserConfig
     $euCfg = $eflowConfig.enduser
     Write-Host "`n--- Verifying EFLOW VM Deployment Configuration..."
-    # 0) Check the product requested
-    if ($Script:eflowProducts.ContainsKey($eflowConfig.eflowProduct)) {
-        Write-Host "* $($eflowConfig.eflowProduct)" -ForegroundColor Green
-    }
-    else {
-        Write-Host "Error: Incorrect eflowProduct." -ForegroundColor Red
-        Write-Host "Supported products: [$($Script:eflowProducts.Keys -join ',' )]"
-        $errCnt += 1
-    }
     # 1) Check Mandatory configuration EULA
     Write-Host "--- Verifying EULA and telemetry..."
     if (($euCfg.acceptEula) -and ($euCfg.acceptEula -eq "Yes")) {
@@ -389,10 +433,11 @@ function Test-EFLOWUserConfigProvision {
 }
 function Test-EFLOWUserConfig {
 
+    $installResult = Test-EFLOWUserConfigInstall
     $deployResult = Test-EFLOWUserConfigDeploy
     $provResult = Test-EFLOWUserConfigProvision
 
-    return ($deployResult -and $provResult)
+    return ($installResult -and $deployResult -and $provResult)
 
 }
 function Test-EFLOWInstall {
@@ -428,7 +473,11 @@ function Test-HyperVStatus {
         Write-Host "Hyper-V is disabled" -ForegroundColor Red
         if ($Enable) {
             Write-Host "Enabling Hyper-V"
-            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
+            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
+            if ($script:isServerSKU) {
+                Install-WindowsFeature -Name RSAT-Hyper-V-Tools -IncludeAllSubFeature
+            }
+            Write-Host "Reboot machine for enabling Hyper-V" -ForegroundColor Yellow
         }
         return $false
     }
@@ -444,29 +493,38 @@ function Invoke-EFLOWInstall {
     #>
     #TODO : Add Force flag to uninstall and install req product
     $version = Get-EFLOWInstalledVersion
-    $retval = $false
     if ($version) {
         Write-Host "$version is already installed"
+        return $true
     }
-    else {
-        $eflowConfig = Get-EFLOWUserConfig
-        if ($null -eq $eflowConfig) { return $retval }
-        $reqProduct = $eflowConfig.eflowProduct
-        $url = $Script:eflowProducts[$reqProduct]
-        if (-not [string]::IsNullOrEmpty($eflowConfig.eflowProductUrl) -and
-            ([system.uri]::IsWellFormedUriString($eflowConfig.eflowProductUrl,[System.UriKind]::Absolute))) {
-            $url = $eflowConfig.eflowProductUrl
+    $eflowConfig = Get-EFLOWUserConfig
+    if ($null -eq $eflowConfig) { return $retval }
+    if (-not (Test-EFLOWUserConfigInstall)) { return $false } # bail if the validation failed
+    $reqProduct = $eflowConfig.eflowProduct
+    $url = $Script:eflowProducts[$reqProduct]
+    if ($eflowConfig.eflowProductUrl) {
+        $url = $eflowConfig.eflowProductUrl
+    }
+    Write-Host "Installing $reqProduct from $url"
+    $ProgressPreference = 'SilentlyContinue'
+    Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
+    $argList = '/I AzureIoTEdge.msi /qn '
+    if ($eflowConfig.installOptions){
+        $installPath = $eflowConfig.installOptions.installPath
+        if ($installPath) {
+            $argList = $argList + "INSTALLDIR=""$($installPath)"" "
         }
-        Write-Host "Installing $reqProduct from $url"
-        $ProgressPreference = 'SilentlyContinue'
-        Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
-        Start-Process msiexec.exe -Wait -ArgumentList '/I AzureIoTEdge.msi /qn'
-        Remove-Item .\AzureIoTEdge.msi
-        $ProgressPreference = 'Continue'
-        Write-Host "$reqProduct successfully installed"
-        $retval = $true
+        $vhdxPath = $eflowConfig.installOptions.vhdxPath
+        if ($vhdxPath) {
+            $argList = $argList + "VHDXDIR=""$($vhdxPath)"" "
+        }
     }
-    return $retval
+    Write-Host $argList
+    Start-Process msiexec.exe -Wait -ArgumentList $argList
+    Remove-Item .\AzureIoTEdge.msi
+    $ProgressPreference = 'Continue'
+    Write-Host "$reqProduct successfully installed"
+    return $true
 }
 function Remove-EFLOWInstall {
     <#
@@ -514,7 +572,7 @@ function Invoke-EFLOWDeploy {
     $eflowConfig = Get-EFLOWUserConfig
     #Properties are validated. So just add here
     $eflowDeployParams.Add("acceptEula", "Yes")
-    if ($euCfg.acceptOptionalTelemetry -eq "Yes") {
+    if ($eflowConfig.enduser.acceptOptionalTelemetry -eq "Yes") {
         $eflowDeployParams.Add("acceptOptionalTelemetry", "Yes")
     }
 
@@ -639,7 +697,7 @@ function Test-EFLOWVMSwitch {
     )
     $usrCfg = Get-EFLOWUserConfig
     $nwCfg = $usrCfg.network
-    $retval = Test-EFLOWUserConfigNetwork
+    if (! (Test-EFLOWUserConfigNetwork)) { return $false }
 
     if ([string]::IsNullOrEmpty($nwCfg.vSwitchName)) {
         if (-not $script:isServerSKU) {
@@ -674,9 +732,9 @@ function Test-EFLOWVMSwitch {
                 Write-Host "* Internal Switch found with the ipPrefix $ipPrefix"
                 if ($null -eq $nwCfg.ip4Address) {
                     # No ip address specified. So update those fields with the generated ones.
-                    $nwCfg.ip4GatewayAddress = $switchIpAddress
-                    $nwCfg.ip4Address = "$ipPrefix.2"
-                    $nwCfg.ip4PrefixLength = 24
+                    $nwCfg | Add-Member -MemberType NoteProperty -Name ip4GatewayAddress -Value $switchIpAddress
+                    $nwCfg | Add-Member -MemberType NoteProperty -Name ip4Address -Value "$ipPrefix.2"
+                    $nwCfg | Add-Member -MemberType NoteProperty -Name ip4PrefixLength -Value 24
                     Write-Host "Using EFLOW static IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
                     Write-Host "           Gateway IP4Address: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
                     Write-Host "                 PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
@@ -732,17 +790,17 @@ function New-EFLOWVMSwitch {
                 return $false
             }
             $ipPrefix = ($switchIpAddress.Split('.')[0..2]) -join '.'
-            $nwCfg.ip4GatewayAddress = "$ipPrefix.1"
-            $nwCfg.ip4Address = "$ipPrefix.2"
-            $nwCfg.ip4PrefixLength = 24
+            $nwCfg | Add-Member -MemberType NoteProperty -Name ip4GatewayAddress -Value "$ipPrefix.1"
+            $nwCfg | Add-Member -MemberType NoteProperty -Name ip4Address -Value "$ipPrefix.2"
+            $nwCfg | Add-Member -MemberType NoteProperty -Name ip4PrefixLength -Value 24
         }
 
         $ipPrefix = ($nwCfg.ip4GatewayAddress.Split('.')[0..2]) -join '.'
-        $natPrefix = "$ipPrefix.0/$nwCfg.ip4PrefixLength"
+        $natPrefix = "$ipPrefix.0/$($nwCfg.ip4PrefixLength)"
 
         New-NetIPAddress -IPAddress $nwCfg.ip4GatewayAddress -PrefixLength $nwCfg.ip4PrefixLength -InterfaceAlias "vEthernet ($($nwCfg.vSwitchName))" | Out-Null
         Write-Host "Using EFLOW static IP4Address: $($nwCfg.ip4Address)" -ForegroundColor Green
-        Write-Host "            Gateway IP4Address: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
+        Write-Host "           Gateway IP4Address: $($nwCfg.ip4GatewayAddress)" -ForegroundColor Green
         Write-Host "                 PrefixLength: $($nwCfg.ip4PrefixLength)" -ForegroundColor Green
 
         New-NetNat -Name "$($nwCfg.vSwitchName)-NAT" -InternalIPInterfaceAddressPrefix $natPrefix |  Out-Null
@@ -805,20 +863,22 @@ function Start-EflowDeployment {
     if (!(Test-AdminRole)) { return }
     # Check PC prequisites (Hyper-V, EFLOW and CLI)
     if (!(Test-HyperVStatus)) { return } # TODO Enable Hyper-V, register task to resume after reboot
-    Test-EFLOWInstall -Install
-    Test-EFLOWVMSwitch -Create #create switch if specified
+
+    if (!(Test-EFLOWInstall -Install)) { return }
+
+    if (!(Test-EFLOWVMSwitch -Create)) { return } #create switch if specified
+
     # We are here.. all is good so far. Validate and deploy eflow
     if (!(Invoke-EFLOWDeploy)) {
         #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
         Remove-EFLOWVMSwitch
+        return
     }
 
-    Invoke-EFLOWProvision
-
+    if (!(Invoke-EFLOWProvision)) { return }
     if (Verify-EflowVm) {
         Write-Host "** EFLOW VM deployment successful." -ForegroundColor Green
     }
-
 }
 
 ### MAIN ###

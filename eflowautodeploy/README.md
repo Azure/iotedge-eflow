@@ -92,6 +92,7 @@ The below table provides the details of the supported parameters in the json fil
 |`Read-EFLOWUserConfig`| Reads the json file into the cache |
 | **Test Functions** |  |
 |`Test-EFLOWUserConfig`| Tests the User Config json for parameter correctness |
+|`Test-EFLOWUserConfigInstall`| Tests the Install specific parameters |
 |`Test-EFLOWUserConfigDeploy`| Tests the deployment specific parameters |
 |`Test-EFLOWUserConfigProvision`| Tests the provisioning specific parameters|
 |`Test-EFLOWUserConfigNetwork`| Tests the network specific parameters|
