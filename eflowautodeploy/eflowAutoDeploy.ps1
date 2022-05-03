@@ -10,6 +10,9 @@ $eflowAutoDeployVersion = "1.0.220502.1700"
 $isServerSKU = $false
 $EFLOWUserConfigFile = $null
 $EFLOWUserConfig = $null
+$EFLOWInstalledVersion = $null
+$EFLOWInstalledProduct = $null
+
 $eflowProducts = @{
     "Azure IoT Edge LTS"      = "https://aka.ms/AzEflowMSI"
     "Azure IoT Edge CR X64"   = "https://aka.ms/AzEFLOWMSI-CR-X64"
@@ -37,6 +40,7 @@ function Get-HostPCInfo {
     Write-Host "HostOS Info : $($pOS.Caption)($($pOS.OperatingSystemSKU)) - $($pOS.Version) - $($pOS.MUILanguages) - $($pOS.CSName)"
     #ProductTypeDomainController -Value 2 , #ProductTypeServer -Value 3
     $script:isServerSKU = ($pOS.ProductType -eq 2 -or $pOS.ProductType -eq 3)
+    Get-EFLOWInstalledVersion | Out-Null
 }
 function Get-EFLOWUserConfig {
     if ($null -eq $Script:EFLOWUserConfig){
@@ -215,19 +219,15 @@ function Test-EFLOWUserConfigInstall {
     $errCnt = 0
     $eflowConfig = Get-EFLOWUserConfig
     Write-Host "`n--- Verifying EFLOW Install Configuration..."
-    # 0) Check if EFLOW is already installed
-    $version = Get-EFLOWInstalledVersion
 
     # 1) Check the product requested is valid
     if ($Script:eflowProducts.ContainsKey($eflowConfig.eflowProduct)) {
-        Write-Host "* $($eflowConfig.eflowProduct)" -ForegroundColor Green
-        if ($version) { #if already installed, check if they match
-            $product = $version.Split(",")
-            if ($product[0] -ne $eflowConfig.eflowProduct) {
-                Write-Host "Error: Installed product does not match requested product." -ForegroundColor Red
+        if ($script:EFLOWInstalledProduct) { #if already installed, check if they match
+            if ($script:EFLOWInstalledProduct -ne $eflowConfig.eflowProduct) {
+                Write-Host "Error: Installed product $($script:EFLOWInstalledProduct) does not match requested product $($eflowConfig.eflowProduct)." -ForegroundColor Red
                 $errCnt += 1
-            }
-        }
+            } else { Write-Host "* $($eflowConfig.eflowProduct) is installed" -ForegroundColor Green }
+        } else { Write-Host "* $($eflowConfig.eflowProduct) to be installed" -ForegroundColor Green }
     }
     else {
         Write-Host "Error: Incorrect eflowProduct." -ForegroundColor Red
@@ -492,9 +492,8 @@ function Invoke-EFLOWInstall {
         Checks if EFLOW MSI is installed, and installs it if not
     #>
     #TODO : Add Force flag to uninstall and install req product
-    $version = Get-EFLOWInstalledVersion
-    if ($version) {
-        Write-Host "$version is already installed"
+    if ($script:EFLOWInstalledVersion) {
+        Write-Host "$($script:EFLOWInstalledProduct)-$($script:EFLOWInstalledVersion) is already installed"
         return $true
     }
     $eflowConfig = Get-EFLOWUserConfig
@@ -557,6 +556,8 @@ function Get-EFLOWInstalledVersion {
     }
     else {
         $retval = "$($eflowInfo.DisplayName),$($eflowInfo.DisplayVersion)"
+        $script:EFLOWInstalledVersion = $eflowInfo.DisplayVersion
+        $script:EFLOWInstalledProduct = $eflowInfo.DisplayName
         Write-Host "$retval is installed."
     }
     return $retval
