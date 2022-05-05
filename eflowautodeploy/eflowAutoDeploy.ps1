@@ -58,21 +58,21 @@ function Get-HostPCInfo {
     $eadSession.HostPC.FreeDisk = [Math]::Round($pCDrive.Freespace / 1GB) # convert bytes into GB
     $eadSession.HostPC.TotalDisk = [Math]::Round($pCDrive.Size / 1GB) # convert bytes into GB
     Write-Host "Free Disk / Total Disk`t: $($eadSession.HostPC.FreeDisk) GB / $($eadSession.HostPC.TotalDisk) GB"
-    Get-EFLOWInstalledVersion | Out-Null
+    Get-EadEflowInstalledVersion | Out-Null
 }
-function Get-EFLOWUserConfig {
+function Get-EadUserConfig {
     if ($null -eq $eadSession.UserConfig){
         Write-Host "Error: EFLOW UserConfig is not set." -ForegroundColor Red
     }
     return $eadSession.UserConfig
 }
-function Read-EFLOWUserConfig {
+function Read-EadUserConfig {
     if ($eadSession.UserConfigFile) {
         $eadSession.UserConfig = Get-Content "$($eadSession.UserConfigFile)" | ConvertFrom-Json
     }
     else { Write-Host "Error: EFLOWUserConfigFile not configured" -ForegroundColor Red }
 }
-function Set-EFLOWUserConfig {
+function Set-EadUserConfig {
     <#
     .DESCRIPTION
         Check if there is a configuration file, and loads the JSON configuration
@@ -91,15 +91,15 @@ function Set-EFLOWUserConfig {
     }
     Write-Host "Loading $eflowjson.."
     $eadSession.UserConfigFile = "$eflowjson"
-    Read-EFLOWUserConfig
+    Read-EadUserConfig
 }
-function Test-EFLOWUserConfigNetwork {
+function Test-EadUserConfigNetwork {
     <#
     .DESCRIPTION
         Checks the EFLOW user configuration needed for EFLOW Network setup
     #>
     $errCnt = 0
-    $eflowConfig = Get-EFLOWUserConfig
+    $eflowConfig = Get-EadUserConfig
     # 0) Check Hyper-V status
     Test-HyperVStatus | Out-Null
     # 1) Check the virtual switch name
@@ -233,9 +233,9 @@ function Test-EFLOWUserConfigNetwork {
     return $retval
 }
 
-function Test-EFLOWUserConfigInstall {
+function Test-EadUserConfigInstall {
     $errCnt = 0
-    $eflowConfig = Get-EFLOWUserConfig
+    $eflowConfig = Get-EadUserConfig
     Write-Host "`n--- Verifying EFLOW Install Configuration..."
 
     # 1) Check the product requested is valid
@@ -281,14 +281,14 @@ function Test-EFLOWUserConfigInstall {
     }
     return $retval
 }
-function Test-EFLOWUserConfigDeploy {
+function Test-EadUserConfigDeploy {
     <#
     .DESCRIPTION
         Checks the EFLOW user configuration needed for EFLOW VM deployment
         Return $true if no blocking errors are found, and $false otherwise
     #>
     $errCnt = 0
-    $eflowConfig = Get-EFLOWUserConfig
+    $eflowConfig = Get-EadUserConfig
     $euCfg = $eflowConfig.enduser
     Write-Host "`n--- Verifying EFLOW VM Deployment Configuration..."
     # 1) Check Mandatory configuration EULA
@@ -311,7 +311,7 @@ function Test-EFLOWUserConfigDeploy {
 
     # 2) Check the virtual switch specified
     Write-Host "--- Verifying virtual switch..."
-    if (-not (Test-EFLOWVMSwitch)) {
+    if (-not (Test-EadEflowVMSwitch)) {
         $errCnt += 1
     }
 
@@ -402,13 +402,13 @@ function Test-EFLOWUserConfigDeploy {
     }
     return $retval
 }
-function Test-EFLOWUserConfigProvision {
+function Test-EadUserConfigProvision {
     <#
     .DESCRIPTION
         Checks the EFLOW user configuration needed for EFLOW provisioning
     #>
     $errCnt = 0
-    $eflowConfig = Get-EFLOWUserConfig
+    $eflowConfig = Get-EadUserConfig
     $provCfg = $eflowConfig.eflowProvisioning
     if ($null -eq $provCfg) {
         Write-Host "- Provisioning Configuration not specified." -ForegroundColor Yellow
@@ -462,26 +462,26 @@ function Test-EFLOWUserConfigProvision {
     }
     return $retval
 }
-function Test-EFLOWUserConfig {
+function Test-EadUserConfig {
 
-    $installResult = Test-EFLOWUserConfigInstall
-    $deployResult = Test-EFLOWUserConfigDeploy
-    $provResult = Test-EFLOWUserConfigProvision
+    $installResult = Test-EadUserConfigInstall
+    $deployResult = Test-EadUserConfigDeploy
+    $provResult = Test-EadUserConfigProvision
 
     return ($installResult -and $deployResult -and $provResult)
 
 }
-function Test-EFLOWInstall {
+function Test-EadEflowInstall {
     Param
     (
         [Switch] $Install
     )
 
-    $eflowVersion = Get-EFLOWInstalledVersion
+    $eflowVersion = Get-EadEflowInstalledVersion
 
     if ($null -eq $eflowVersion) {
         if (!$Install) { return $false }
-        if (-not (Invoke-EFLOWInstall)){ return $false }
+        if (-not (Invoke-EadEflowInstall)){ return $false }
     }
     $mod = Get-Module -Name AzureEFLOW
     #check if module is loaded
@@ -518,7 +518,7 @@ function Test-HyperVStatus {
     }
     return $true
 }
-function Invoke-EFLOWInstall {
+function Invoke-EadEflowInstall {
     <#
     .DESCRIPTION
         Checks if EFLOW MSI is installed, and installs it if not
@@ -528,9 +528,9 @@ function Invoke-EFLOWInstall {
         Write-Host "$($eadSession.EFLOW.Product)-$($eadSession.EFLOW.Version) is already installed"
         return $true
     }
-    $eflowConfig = Get-EFLOWUserConfig
+    $eflowConfig = Get-EadUserConfig
     if ($null -eq $eflowConfig) { return $retval }
-    if (-not (Test-EFLOWUserConfigInstall)) { return $false } # bail if the validation failed
+    if (-not (Test-EadUserConfigInstall)) { return $false } # bail if the validation failed
     $reqProduct = $eflowConfig.eflowProduct
     $url = $Script:eflowProducts[$reqProduct]
     if ($eflowConfig.eflowProductUrl) {
@@ -557,7 +557,7 @@ function Invoke-EFLOWInstall {
     Write-Host "$reqProduct successfully installed"
     return $true
 }
-function Remove-EFLOWInstall {
+function Remove-EadEflowInstall {
     <#
    .DESCRIPTION
        Checks if EFLOW MSI is installed, and removes it if installed
@@ -576,7 +576,7 @@ function Remove-EFLOWInstall {
         Write-Host "$($eflowInfo.DisplayName) successfully removed."
     }
 }
-function Get-EFLOWInstalledVersion {
+function Get-EadEflowInstalledVersion {
     <#
    .DESCRIPTION
        Gets EFLOW version if installed
@@ -594,7 +594,7 @@ function Get-EFLOWInstalledVersion {
     }
     return $retval
 }
-function Invoke-EFLOWDeploy {
+function Invoke-EadEflowDeploy {
     <#
     .DESCRIPTION
         Loads the configuration and tries to deploy the EFLOW VM
@@ -603,9 +603,9 @@ function Invoke-EFLOWDeploy {
         Write-Host "Error: Eflow VM already deployed" -Foreground red
         return $false
     }
-    if (-not (Test-EFLOWUserConfigDeploy)) { return $false }
+    if (-not (Test-EadUserConfigDeploy)) { return $false }
     $eflowDeployParams = @{}
-    $eflowConfig = Get-EFLOWUserConfig
+    $eflowConfig = Get-EadUserConfig
     #Properties are validated. So just add here
     $eflowDeployParams.Add("acceptEula", "Yes")
     if ($eflowConfig.enduser.acceptOptionalTelemetry -eq "Yes") {
@@ -680,14 +680,14 @@ function Invoke-EFLOWDeploy {
     }
     return $true
 }
-function Invoke-EFLOWProvision {
+function Invoke-EadEflowProvision {
     <#
     .DESCRIPTION
         Loads the configuration and tries to provision the EFLOW VM
     #>
-    $retval = Test-EFLOWUserConfigProvision
+    $retval = Test-EadUserConfigProvision
     if (-not $retval) { return $false }
-    $eflowConfig = Get-EFLOWUserConfig
+    $eflowConfig = Get-EadUserConfig
     $provCfg = $eflowConfig.eflowProvisioning
     $eflowProvisionParams = @{
         "provisioningType" = $provCfg.provisioningType
@@ -719,14 +719,14 @@ function Invoke-EFLOWProvision {
     }
     return $true
 }
-function Test-EFLOWVMSwitch {
+function Test-EadEflowVMSwitch {
     Param
     (
         [Switch] $Create
     )
-    $usrCfg = Get-EFLOWUserConfig
+    $usrCfg = Get-EadUserConfig
     $nwCfg = $usrCfg.network
-    if (! (Test-EFLOWUserConfigNetwork)) { return $false }
+    if (! (Test-EadUserConfigNetwork)) { return $false }
 
     if ([string]::IsNullOrEmpty($nwCfg.vSwitchName)) {
         if (-not $eadSession.HostOS.IsServerSKU) {
@@ -781,15 +781,15 @@ function Test-EFLOWVMSwitch {
     else {
         # no switch found. Create if requested
         if ($Create) {
-            return New-EFLOWVMSwitch
+            return New-EadEflowVMSwitch
         }
         Write-Host "Error: VMSwitch $($nwCfg.vSwitchName) not found." -ForegroundColor Red
         return $false
     }
     return $true
 }
-function New-EFLOWVMSwitch {
-    $usrCfg = Get-EFLOWUserConfig
+function New-EadEflowVMSwitch {
+    $usrCfg = Get-EadUserConfig
     $nwCfg = $usrCfg.network
 
     $eflowSwitch = Get-VMSwitch -Name $nwCfg.vSwitchName -ErrorAction SilentlyContinue
@@ -852,8 +852,8 @@ function New-EFLOWVMSwitch {
     return $true
 }
 
-function Remove-EFLOWVMSwitch {
-    $usrCfg = Get-EFLOWUserConfig
+function Remove-EadEflowVMSwitch {
+    $usrCfg = Get-EadUserConfig
     $switchName = $($usrCfg.network.vswitchName)
     $eflowSwitch = Get-VMSwitch -Name $switchName -ErrorAction SilentlyContinue
     if ($eflowSwitch) {
@@ -870,7 +870,7 @@ function Remove-EFLOWVMSwitch {
 }
 
 # Main function for full functional path
-function Start-EflowDeployment {
+function Start-EadWorkflow {
     Param
     (
         [String]$eflowjson
@@ -887,28 +887,28 @@ function Start-EflowDeployment {
         return
     }
     $eflowjson = (Resolve-Path -Path $eflowjson).Path
-    Set-EFLOWUserConfig $eflowjson # validate later after creating the switch
+    Set-EadUserConfig $eflowjson # validate later after creating the switch
     # Check admin role
     if (!(Test-AdminRole)) { return }
     # Check PC prequisites (Hyper-V, EFLOW and CLI)
     if (!(Test-HyperVStatus)) { return } # TODO Enable Hyper-V, register task to resume after reboot
 
-    if (!(Test-EFLOWInstall -Install)) { return }
+    if (!(Test-EadEflowInstall -Install)) { return }
 
     # Check if EFLOW is deployed already and bail out
     if (Verify-EflowVm) {
         Write-Host "EFLOW VM is already deployed." -ForegroundColor Yellow
     } else {
-        if (!(Test-EFLOWVMSwitch -Create)) { return } #create switch if specified
+        if (!(Test-EadEflowVMSwitch -Create)) { return } #create switch if specified
 
         # We are here.. all is good so far. Validate and deploy eflow
-        if (!(Invoke-EFLOWDeploy)) {
+        if (!(Invoke-EadEflowDeploy)) {
             #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
-            Remove-EFLOWVMSwitch
+            Remove-EadEflowVMSwitch
             return
         }
 
-        if (!(Invoke-EFLOWProvision)) { return }
+        if (!(Invoke-EadEflowProvision)) { return }
         if (Verify-EflowVm) {
             Write-Host "** EFLOW VM deployment successful." -ForegroundColor Green
         }
@@ -927,11 +927,11 @@ function Start-EflowDeployment {
 ### MAIN ###
 # If autodeploy switch is specified, start eflow deployment with the default json file path (.\eflow-userconfig.json)
 if ($AutoDeploy) {
-    Start-EflowDeployment
+    Start-EadWorkflow
 } else {
     Get-HostPCInfo
     $eflowjson = "$PSScriptRoot\eflow-userconfig.json"
     if (Test-Path -Path "$eflowjson" -PathType Leaf) {
-        Set-EFLOWUserConfig $eflowjson
+        Set-EadUserConfig $eflowjson
     }
 }

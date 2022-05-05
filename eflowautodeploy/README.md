@@ -27,11 +27,11 @@ The script does the following:
 Alternatively, you can *dot source* the script and invoke functions individually.
 
 1. Populate the *eflow-userconfig.json* with the desired parameters and values.
-2. *dot source* the script and call `Start-EflowDeployment` with the json file as input. This will perform the full deployment.
+2. *dot source* the script and call `Start-EadWorkflow` with the json file as input. This will perform the full deployment.
 
 ```powershell
 . .\eflowAutoDeploy.ps1
-Start-EflowDeployment 'C:\MyConfigs\eflow-userconfig.json'
+Start-EadWorkflow 'C:\MyConfigs\eflow-userconfig.json'
 ```
 ## JSON schema
 
@@ -85,29 +85,29 @@ The below table provides the details of the supported parameters in the json fil
 
 | Functions |   Description |
 |:------------ |:-----------|
-|`Start-EflowDeployment`| Main funtion that validates the user config, installs eflow, creates switch, deploys and provisions VM |
+|`Start-EadWorkflow`| Main funtion that validates the user config, installs eflow, creates switch, deploys and provisions VM |
 | **Config Functions** |  |
-|`Get-EFLOWUserConfig`| Returns the json object that is cached |
-|`Set-EFLOWUserConfig`| Sets the user config and reads the config into the cache |
-|`Read-EFLOWUserConfig`| Reads the json file into the cache |
+|`Get-EadUserConfig`| Returns the json object that is cached |
+|`Set-EadUserConfig`| Sets the user config and reads the config into the cache |
+|`Read-EadUserConfig`| Reads the json file into the cache |
 | **Test Functions** |  |
-|`Test-EFLOWUserConfig`| Tests the User Config json for parameter correctness |
-|`Test-EFLOWUserConfigInstall`| Tests the Install specific parameters |
-|`Test-EFLOWUserConfigDeploy`| Tests the deployment specific parameters |
-|`Test-EFLOWUserConfigProvision`| Tests the provisioning specific parameters|
-|`Test-EFLOWUserConfigNetwork`| Tests the network specific parameters|
+|`Test-EadUserConfig`| Tests the User Config json for parameter correctness |
+|`Test-EadUserConfigInstall`| Tests the Install specific parameters |
+|`Test-EadUserConfigDeploy`| Tests the deployment specific parameters |
+|`Test-EadUserConfigProvision`| Tests the provisioning specific parameters|
+|`Test-EadUserConfigNetwork`| Tests the network specific parameters|
 |**VM Switch Functions** ||
-|`New-EFLOWVMSwitch`| Creates an new VM switch based on user config. If Internal switch is specified, it also assigns a static ip address (no DHCP used) |
-|`Test-EFLOWVMSwitch -Create`| Tests if the VM switch is present, `Create` flag invokes New-EFLOWVMSwitch if switch is not present |
-|`Remove-EFLOWVMSwitch`| Removes the VM switch if present. Also removes the Nat if created (for internal switch) |
+|`New-EadEflowVMSwitch`| Creates an new VM switch based on user config. If Internal switch is specified, it also assigns a static ip address (no DHCP used) |
+|`Test-EadEflowVMSwitch -Create`| Tests if the VM switch is present, `Create` flag invokes New-EadEflowVMSwitch if switch is not present |
+|`Remove-EadEflowVMSwitch`| Removes the VM switch if present. Also removes the Nat if created (for internal switch) |
 |**Deployment functions**||
-|`Invoke-EFLOWDeploy`| Validates the deployment parameters in user json and deploys EFLOW VM|
-|`Invoke-EFLOWProvision`| Validates the provisioning parameters in user json and provisions EFLOW VM|
+|`Invoke-EadEflowDeploy`| Validates the deployment parameters in user json and deploys EFLOW VM|
+|`Invoke-EadEflowProvision`| Validates the provisioning parameters in user json and provisions EFLOW VM|
 |**Install functions**||
-|`Get-EFLOWInstalledVersion`| Returns the installed product name and version (comma separated) or Null if none found|
-|`Invoke-EFLOWInstall`| Installs the requested product from the eflowProductUrl if specified, otherwise it installs the latest (default)|
-|`Test-EFLOWInstall -Install`| Tests if EFLOW is installed and `Install` switch is specified, it installs when not found|
-|`Remove-EFLOWInstall`| Removes the installed EFLOW product|
+|`Get-EadEflowInstalledVersion`| Returns the installed product name and version (comma separated) or Null if none found|
+|`Invoke-EadEflowInstall`| Installs the requested product from the eflowProductUrl if specified, otherwise it installs the latest (default)|
+|`Test-EadEflowInstall -Install`| Tests if EFLOW is installed and `Install` switch is specified, it installs when not found|
+|`Remove-EadEflowInstall`| Removes the installed EFLOW product|
 |**Helper functions**||
 |`Get-HostPCInfo`| Gets the PC information such as OS version etc|
 |`Test-AdminRole`| Checks if the Powershell session is in Admin mode|
