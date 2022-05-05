@@ -865,7 +865,7 @@ function Remove-EadEflowVMSwitch {
             $eflowNat = Get-NetNat -Name "$switchName-NAT"
             if ($eflowNat) {
                 Write-Host "Removing $switchName-NAT"
-                Remove-NetNAt -Name "$switchName-NAT"
+                Remove-NetNat -Name "$switchName-NAT"
             }
         }
     }
@@ -906,7 +906,7 @@ function Start-EadWorkflow {
         # We are here.. all is good so far. Validate and deploy eflow
         if (!(Invoke-EadEflowDeploy)) {
             #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
-            Remove-EadEflowVMSwitch
+            #Remove-EadEflowVMSwitch
             return
         }
 
