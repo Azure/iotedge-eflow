@@ -573,6 +573,8 @@ function Remove-EadEflowInstall {
         if (Get-Module -Name AzureEFLOW) {
             Remove-Module -Name AzureEFLOW -Force
         }
+        $eadSession.EFLOW.Product = $null
+        $eadSession.EFLOW.Version = $null
         Write-Host "$($eflowInfo.DisplayName) successfully removed."
     }
 }
