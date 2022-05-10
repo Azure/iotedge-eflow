@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220505.0900" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220510.0900" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
@@ -491,12 +491,13 @@ function Test-EadEflowInstall {
     }
     $version = (Get-Module -Name AzureEFLOW).Version.ToString()
     Write-Host "AzureEFLOW Module:$version"
-     # Enable and start the wssdagent service
-     Set-Service -Name wssdagent -StartupType Automatic
-     Start-Service -Name wssdagent
-     # Ensure wssdagent service is up
-     $svc = Get-Service wssdagent
-     $svc.WaitForStatus('Running','00:00:15')
+    $svc = Get-Service wssdagent
+    if ($svc.Status -ne 'Running') {
+        Start-Service -Name wssdagent
+        # Ensure wssdagent service is up
+        $svc = Get-Service wssdagent
+        $svc.WaitForStatus('Running','00:00:15')
+    }
     return $true
 }
 function Test-HyperVStatus {
@@ -891,8 +892,6 @@ function Start-EadWorkflow {
     (
         [String]$eflowjson
     )
-    # Get Host Information first
-    Get-HostPCInfo
     # Validate input parameter. Use default json in the same path if not specified
     if ([string]::IsNullOrEmpty($eflowjson)) {
         $eflowjson = "$PSScriptRoot\eflow-userconfig.json"
@@ -934,6 +933,8 @@ function Start-EadWorkflow {
 }
 
 ### MAIN ###
+# Get Host PC information on loading of this script
+Get-HostPCInfo
 # If autodeploy switch is specified, start eflow deployment with the default json file path (.\eflow-userconfig.json)
 if ($AutoDeploy) {
     if (Start-EadWorkflow) {
@@ -942,7 +943,6 @@ if ($AutoDeploy) {
         Write-Error -Message "Deployment failed" -Category OperationStopped
     }
 } else {
-    Get-HostPCInfo
     $eflowjson = "$PSScriptRoot\eflow-userconfig.json"
     if (Test-Path -Path "$eflowjson" -PathType Leaf) {
         Set-EadUserConfig $eflowjson
