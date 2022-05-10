@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220505.0900" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220510.0900" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
@@ -491,6 +491,13 @@ function Test-EadEflowInstall {
     }
     $version = (Get-Module -Name AzureEFLOW).Version.ToString()
     Write-Host "AzureEFLOW Module:$version"
+    $svc = Get-Service wssdagent
+    if ($svc.Status -ne 'Running') {
+        Start-Service -Name wssdagent
+        # Ensure wssdagent service is up
+        $svc = Get-Service wssdagent
+        $svc.WaitForStatus('Running','00:00:15')
+    }
     return $true
 }
 function Test-HyperVStatus {
@@ -498,9 +505,11 @@ function Test-HyperVStatus {
     (
         [Switch] $Enable
     )
+    $retval = $true
     #Enable HyperV
     $feature = Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V
     if ($feature.State -ne "Enabled") {
+        $retval = $false
         Write-Host "Hyper-V is disabled" -ForegroundColor Red
         if ($Enable) {
             Write-Host "Enabling Hyper-V"
@@ -509,14 +518,14 @@ function Test-HyperVStatus {
                 Enable-WindowsOptionalFeature -Online -FeatureName 'Microsoft-Hyper-V-Management-PowerShell'
                 #Install-WindowsFeature -Name RSAT-Hyper-V-Tools -IncludeAllSubFeature
             }
-            Write-Host "Reboot machine for enabling Hyper-V" -ForegroundColor Yellow
+            Write-Host "Rebooting machine for enabling Hyper-V" -ForegroundColor Yellow
+            Restart-Computer -Force -ErrorAction SilentlyContinue
         }
-        return $false
     }
     else {
         Write-Host "Hyper-V is enabled" -ForegroundColor Green
     }
-    return $true
+    return $retval
 }
 function Invoke-EadEflowInstall {
     <#
@@ -687,6 +696,11 @@ function Invoke-EadEflowProvision {
     .DESCRIPTION
         Loads the configuration and tries to provision the EFLOW VM
     #>
+    if (-not (Verify-EflowVm)) {
+        Write-Host "Error: Eflow VM is not found" -ForegroundColor Red
+        return $false
+    }
+
     $retval = Test-EadUserConfigProvision
     if (-not $retval) { return $false }
     $eflowConfig = Get-EadUserConfig
@@ -714,6 +728,7 @@ function Invoke-EadEflowProvision {
     $retval = Provision-EflowVm @eflowProvisionParams
     if ($retval -ieq "OK") {
         Write-Host "* EFLOW provisioning successfull." -ForegroundColor Green
+        Start-Sleep 60 #wait a minute to allow iotedge initialize
     } else {
         Write-Host "Error: EFLOW provisioning failed with the below error message." -ForegroundColor Red
         Write-Host "Error message : $retval." -ForegroundColor Red
@@ -877,8 +892,6 @@ function Start-EadWorkflow {
     (
         [String]$eflowjson
     )
-    # Get Host Information first
-    Get-HostPCInfo
     # Validate input parameter. Use default json in the same path if not specified
     if ([string]::IsNullOrEmpty($eflowjson)) {
         $eflowjson = "$PSScriptRoot\eflow-userconfig.json"
@@ -886,34 +899,26 @@ function Start-EadWorkflow {
 
     if (!(Test-Path -Path "$eflowjson" -PathType Leaf)) {
         Write-Host "Error: $eflowjson not found" -ForegroundColor Red
-        return
+         return $false
     }
     $eflowjson = (Resolve-Path -Path $eflowjson).Path
     Set-EadUserConfig $eflowjson # validate later after creating the switch
     # Check admin role
-    if (!(Test-AdminRole)) { return }
+    if (!(Test-AdminRole)) { return $false }
     # Check PC prequisites (Hyper-V, EFLOW and CLI)
-    if (!(Test-HyperVStatus)) { return } # TODO Enable Hyper-V, register task to resume after reboot
+    if (!(Test-HyperVStatus -Enable)) { return $false } # todo resume after reboot. Intune will retry. Arc to be checked
 
-    if (!(Test-EadEflowInstall -Install)) { return }
+    if (!(Test-EadEflowInstall -Install)) { return $false }
 
     # Check if EFLOW is deployed already and bail out
     if (Verify-EflowVm) {
         Write-Host "EFLOW VM is already deployed." -ForegroundColor Yellow
     } else {
-        if (!(Test-EadEflowVMSwitch -Create)) { return } #create switch if specified
-
+        if (!(Test-EadEflowVMSwitch -Create)) { return $false } #create switch if specified
         # We are here.. all is good so far. Validate and deploy eflow
-        if (!(Invoke-EadEflowDeploy)) {
-            #deployment failed. We should atleast remove the switch and NAT we created. Other installs are harmless.
-            #Remove-EadEflowVMSwitch
-            return
-        }
-
-        if (!(Invoke-EadEflowProvision)) { return }
-        if (Verify-EflowVm) {
-            Write-Host "** EFLOW VM deployment successful." -ForegroundColor Green
-        }
+        if (!(Invoke-EadEflowDeploy)) { return $false }
+        # Validate and provision eflow
+        if (!(Invoke-EadEflowProvision)) { return $false}
     }
 
     if (Verify-EflowVm) {
@@ -924,14 +929,20 @@ function Start-EadWorkflow {
         Write-Host "EFLOW VM Info:"
         $eflowVM.SystemStatistics | Out-String
     }
+    return $true
 }
 
 ### MAIN ###
+# Get Host PC information on loading of this script
+Get-HostPCInfo
 # If autodeploy switch is specified, start eflow deployment with the default json file path (.\eflow-userconfig.json)
 if ($AutoDeploy) {
-    Start-EadWorkflow
+    if (Start-EadWorkflow) {
+        Write-Host "Deployment Successful"
+    } else {
+        Write-Error -Message "Deployment failed" -Category OperationStopped
+    }
 } else {
-    Get-HostPCInfo
     $eflowjson = "$PSScriptRoot\eflow-userconfig.json"
     if (Test-Path -Path "$eflowjson" -PathType Leaf) {
         Set-EadUserConfig $eflowjson
