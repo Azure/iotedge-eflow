@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220510.0900" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220511.0900" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
@@ -493,6 +493,7 @@ function Test-EadEflowInstall {
     Write-Host "AzureEFLOW Module:$version"
     $svc = Get-Service wssdagent
     if ($svc.Status -ne 'Running') {
+        Set-Service -Name wssdagent -StartupType Automatic
         Start-Service -Name wssdagent
         # Ensure wssdagent service is up
         $svc = Get-Service wssdagent
@@ -524,6 +525,22 @@ function Test-HyperVStatus {
     }
     else {
         Write-Host "Hyper-V is enabled" -ForegroundColor Green
+    }
+    return $retval
+}
+function Test-EadEflowVMProvision {
+    <#
+    .DESCRIPTION
+        Checks if the EFLOW VM is provisioned
+    #>
+    $retval = $false
+    if (Verify-EflowVm) {
+        $command = "if [[ `$(sudo sha256sum /etc/iotedge/config.yaml  | cut -f1 -d' ') == `$(sudo sha256sum /var/.eflow/config/config.yaml  | cut -f1 -d' ') ]]; then echo clean; fi"
+        $ret = Invoke-EflowVmCommand -command $command
+        if ($ret -like "clean")
+        {
+            $retval = $true
+        }
     }
     return $retval
 }
@@ -725,7 +742,7 @@ function Invoke-EadEflowProvision {
     Write-Verbose ($eflowProvisionParams | Out-String)
 
     Write-Host "Starting EFLOW VM provisioning..."
-    $retval = Provision-EflowVm @eflowProvisionParams
+    $retval = Provision-EflowVm @eflowProvisionParams -headless
     if ($retval -ieq "OK") {
         Write-Host "* EFLOW provisioning successfull." -ForegroundColor Green
         Start-Sleep 60 #wait a minute to allow iotedge initialize
@@ -917,6 +934,10 @@ function Start-EadWorkflow {
         if (!(Test-EadEflowVMSwitch -Create)) { return $false } #create switch if specified
         # We are here.. all is good so far. Validate and deploy eflow
         if (!(Invoke-EadEflowDeploy)) { return $false }
+    }
+    if (Test-EadEflowVMProvision) {
+        Write-Host "EFLOW VM is already provisioned." -ForegroundColor Yellow
+    } else {
         # Validate and provision eflow
         if (!(Invoke-EadEflowProvision)) { return $false}
     }
