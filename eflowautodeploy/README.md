@@ -96,6 +96,7 @@ The below table provides the details of the supported parameters in the json fil
 |`Test-EadUserConfigDeploy`| Tests the deployment specific parameters |
 |`Test-EadUserConfigProvision`| Tests the provisioning specific parameters|
 |`Test-EadUserConfigNetwork`| Tests the network specific parameters|
+|`Test-EadEflowVMDeploy`| Tests if the EFLOW VM is deployed (present) |
 |`Test-EadEflowVMProvision`| Tests if the EFLOW VM is provisioned |
 |**VM Switch Functions** ||
 |`New-EadEflowVMSwitch`| Creates an new VM switch based on user config. If Internal switch is specified, it also assigns a static ip address (no DHCP used) |

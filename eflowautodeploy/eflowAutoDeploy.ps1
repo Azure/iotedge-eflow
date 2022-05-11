@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220511.0900" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220511.1400" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
@@ -491,14 +491,6 @@ function Test-EadEflowInstall {
     }
     $version = (Get-Module -Name AzureEFLOW).Version.ToString()
     Write-Host "AzureEFLOW Module:$version"
-    $svc = Get-Service wssdagent
-    if ($svc.Status -ne 'Running') {
-        Set-Service -Name wssdagent -StartupType Automatic
-        Start-Service -Name wssdagent
-        # Ensure wssdagent service is up
-        $svc = Get-Service wssdagent
-        $svc.WaitForStatus('Running','00:00:15')
-    }
     return $true
 }
 function Test-HyperVStatus {
@@ -533,15 +525,37 @@ function Test-EadEflowVMProvision {
     .DESCRIPTION
         Checks if the EFLOW VM is provisioned
     #>
-    $retval = $false
-    if (Verify-EflowVm) {
+    $retval = $true
+    if (Test-EadEflowVMDeploy) {
         $command = "if [[ `$(sudo sha256sum /etc/iotedge/config.yaml  | cut -f1 -d' ') == `$(sudo sha256sum /var/.eflow/config/config.yaml  | cut -f1 -d' ') ]]; then echo clean; fi"
         $ret = Invoke-EflowVmCommand -command $command
         if ($ret -like "clean")
         {
-            $retval = $true
+            $retval = $false
         }
     }
+    return $retval
+}
+
+function Test-EadEflowVMDeploy {
+    <#
+    .DESCRIPTION
+        Checks if the EFLOW VM is deployed
+    #>
+    $retval = $false
+    if ($eadSession.HostOS.IsServerSKU) {
+        $vm = Get-VM | Where-Object { $_.Name -like '*EFLOW'}
+        if ($vm) { $retval = $true }
+
+    } else {
+        $found = (hcsdiag list) | Select-String -Pattern 'wssdagent'
+        <# hcsdiag list -raw supported only in later versions
+        $pVMList = (hcsdiag list -raw) | ConvertTo-Json -ErrorAction SilentlyContinue
+        $found = $pVMList | Where-Object { $_.Owner -like 'wssdagent'}
+        #>
+        if ($found) { $retval = $true }
+    }
+
     return $retval
 }
 function Invoke-EadEflowInstall {
@@ -596,9 +610,7 @@ function Remove-EadEflowInstall {
         Write-Host "$($eflowInfo.DisplayName) version $($eflowInfo.DisplayVersion) is installed. Removing..."
         Start-Process msiexec.exe -Wait -ArgumentList "/x $($eflowInfo.PSChildName) /quiet /noreboot"
         # Remove the module from Powershell session as well
-        if (Get-Module -Name AzureEFLOW) {
-            Remove-Module -Name AzureEFLOW -Force
-        }
+        Remove-Module -Name AzureEFLOW -Force
         $eadSession.EFLOW.Product = $null
         $eadSession.EFLOW.Version = $null
         Write-Host "$($eflowInfo.DisplayName) successfully removed."
@@ -627,7 +639,7 @@ function Invoke-EadEflowDeploy {
     .DESCRIPTION
         Loads the configuration and tries to deploy the EFLOW VM
     #>
-    if (Verify-EflowVm) {
+    if (Test-EadEflowVMDeploy) {
         Write-Host "Error: Eflow VM already deployed" -Foreground red
         return $false
     }
@@ -713,7 +725,7 @@ function Invoke-EadEflowProvision {
     .DESCRIPTION
         Loads the configuration and tries to provision the EFLOW VM
     #>
-    if (-not (Verify-EflowVm)) {
+    if (-not (Test-EadEflowVMDeploy)) {
         Write-Host "Error: Eflow VM is not found" -ForegroundColor Red
         return $false
     }
@@ -928,7 +940,7 @@ function Start-EadWorkflow {
     if (!(Test-EadEflowInstall -Install)) { return $false }
 
     # Check if EFLOW is deployed already and bail out
-    if (Verify-EflowVm) {
+    if (Test-EadEflowVMDeploy) {
         Write-Host "EFLOW VM is already deployed." -ForegroundColor Yellow
     } else {
         if (!(Test-EadEflowVMSwitch -Create)) { return $false } #create switch if specified
@@ -936,7 +948,7 @@ function Start-EadWorkflow {
         if (!(Invoke-EadEflowDeploy)) { return $false }
     }
     if (Test-EadEflowVMProvision) {
-        Write-Host "EFLOW VM is already provisioned." -ForegroundColor Yellow
+        Write-Host "config.yaml is not default. EFLOW VM maybe provisioned earlier." -ForegroundColor Yellow
     } else {
         # Validate and provision eflow
         if (!(Invoke-EadEflowProvision)) { return $false}
