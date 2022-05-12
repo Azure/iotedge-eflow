@@ -96,13 +96,13 @@ The below table provides the details of the supported parameters in the json fil
 |`Test-EadUserConfigDeploy`| Tests the deployment specific parameters |
 |`Test-EadUserConfigProvision`| Tests the provisioning specific parameters|
 |`Test-EadUserConfigNetwork`| Tests the network specific parameters|
-|`Test-EadEflowVhdx`| Tests if the EFLOW vhdx is present in the machine |
-|`Test-EadEflowVMDeploy`| Tests if the EFLOW VM is deployed (present) |
-|`Test-EadEflowVMProvision`| Tests if the EFLOW VM is provisioned |
+|`Test-EadEflowVmDeploy`| Tests if the EFLOW VM is deployed (present) |
+|`Test-EadEflowVmProvision`| Tests if the EFLOW VM is provisioned |
+|`Test-EadEflowVmRun`| Tests if the EFLOW VM is running in the machine |
 |**VM Switch Functions** ||
-|`New-EadEflowVMSwitch`| Creates an new VM switch based on user config. If Internal switch is specified, it also assigns a static ip address (no DHCP used) |
-|`Test-EadEflowVMSwitch -Create`| Tests if the VM switch is present, `Create` flag invokes New-EadEflowVMSwitch if switch is not present |
-|`Remove-EadEflowVMSwitch`| Removes the VM switch if present. Also removes the Nat if created (for internal switch) |
+|`New-EadEflowVmSwitch`| Creates an new VM switch based on user config. If Internal switch is specified, it also assigns a static ip address (no DHCP used) |
+|`Test-EadEflowVmSwitch -Create`| Tests if the VM switch is present, `Create` flag invokes New-EadEflowVmSwitch if switch is not present |
+|`Remove-EadEflowVmSwitch`| Removes the VM switch if present. Also removes the Nat if created (for internal switch) |
 |**Deployment functions**||
 |`Invoke-EadEflowDeploy`| Validates the deployment parameters in user json and deploys EFLOW VM|
 |`Invoke-EadEflowProvision`| Validates the provisioning parameters in user json and provisions EFLOW VM|
@@ -112,6 +112,6 @@ The below table provides the details of the supported parameters in the json fil
 |`Test-EadEflowInstall -Install`| Tests if EFLOW is installed and `Install` switch is specified, it installs when not found|
 |`Remove-EadEflowInstall`| Removes the installed EFLOW product|
 |**Helper functions**||
-|`Get-HostPCInfo`| Gets the PC information such as OS version etc|
+|`Get-HostPcInfo`| Gets the PC information such as OS version etc|
 |`Test-AdminRole`| Checks if the Powershell session is in Admin mode|
 |`Test-HyperVStatus -Install`| Checks if Hyper-V is installed and if `Install` switch is specified, it installs Hyper-V feature. *Requires reboot*.|
