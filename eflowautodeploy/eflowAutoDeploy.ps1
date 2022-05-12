@@ -555,6 +555,24 @@ function Test-EadEflowVMDeploy {
         #>
         if ($found) { $retval = $true }
     }
+    if (! $retval) {
+        # Check if the vhdx is present, this is to address the scenarios when Stop-EflowVM is called.
+        $retval = Test-EadEflowVhdx
+    }
+
+    return $retval
+}
+function Test-EadEflowVhdx {
+    <#
+    .DESCRIPTION
+        Checks if the EFLOW vhdx is present
+    #>
+    $vhdxPath = "C:\\Program Files\\Azure IoT Edge"
+    $eflowConfig = Get-EadUserConfig
+    if ($eflowConfig.installOptions.vhdxPath) {
+        $vhdxPath = $eflowConfig.installOptions.vhdxPath
+    }
+    $retval = Test-Path -Path $vhdxPath -Filter '*EFLOW.vhdx'
 
     return $retval
 }

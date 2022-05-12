@@ -96,6 +96,7 @@ The below table provides the details of the supported parameters in the json fil
 |`Test-EadUserConfigDeploy`| Tests the deployment specific parameters |
 |`Test-EadUserConfigProvision`| Tests the provisioning specific parameters|
 |`Test-EadUserConfigNetwork`| Tests the network specific parameters|
+|`Test-EadEflowVhdx`| Tests if the EFLOW vhdx is present in the machine |
 |`Test-EadEflowVMDeploy`| Tests if the EFLOW VM is deployed (present) |
 |`Test-EadEflowVMProvision`| Tests if the EFLOW VM is provisioned |
 |**VM Switch Functions** ||
