@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220510.0900" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220512.1200" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
@@ -38,7 +38,7 @@ function Test-AdminRole {
     }
     return $true
 }
-function Get-HostPCInfo {
+function Get-HostPcInfo {
     Write-Host "Running eflowAutoDeploy version $eflowAutoDeployVersion"
     $pOS = Get-CimInstance Win32_OperatingSystem
     $UBR= (Get-ItemPropertyValue "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name UBR)
@@ -311,7 +311,7 @@ function Test-EadUserConfigDeploy {
 
     # 2) Check the virtual switch specified
     Write-Host "--- Verifying virtual switch..."
-    if (-not (Test-EadEflowVMSwitch)) {
+    if (-not (Test-EadEflowVmSwitch)) {
         $errCnt += 1
     }
 
@@ -491,13 +491,6 @@ function Test-EadEflowInstall {
     }
     $version = (Get-Module -Name AzureEFLOW).Version.ToString()
     Write-Host "AzureEFLOW Module:$version"
-    $svc = Get-Service wssdagent
-    if ($svc.Status -ne 'Running') {
-        Start-Service -Name wssdagent
-        # Ensure wssdagent service is up
-        $svc = Get-Service wssdagent
-        $svc.WaitForStatus('Running','00:00:15')
-    }
     return $true
 }
 function Test-HyperVStatus {
@@ -525,6 +518,60 @@ function Test-HyperVStatus {
     else {
         Write-Host "Hyper-V is enabled" -ForegroundColor Green
     }
+    return $retval
+}
+function Test-EadEflowVmProvision {
+    <#
+    .DESCRIPTION
+        Checks if the EFLOW VM is provisioned
+    #>
+    $retval = $true
+    if (Test-EadEflowVmRun) {
+        $command = "if [[ `$(sudo sha256sum /etc/iotedge/config.yaml  | cut -f1 -d' ') == `$(sudo sha256sum /var/.eflow/config/config.yaml  | cut -f1 -d' ') ]]; then echo clean; fi"
+        $ret = Invoke-EflowVmCommand -command $command
+        if ($ret -like "clean") { $retval = $false }
+        else {
+            Write-Host "config.yaml is not default. EFLOW VM maybe provisioned earlier." -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "Error: Eflow VM is not running. Cannot determine provisioning status." -ForegroundColor Red
+    }
+    return $retval
+}
+
+function Test-EadEflowVmRun {
+    <#
+    .DESCRIPTION
+        Checks if the EFLOW VM is running
+    #>
+    $retval = $false
+    if ($eadSession.HostOS.IsServerSKU) {
+        $vm = Get-VM | Where-Object { $_.Name -like '*EFLOW'}
+        if ($vm -and ($vm.State -ieq 'Running')) { $retval = $true }
+
+    } else {
+        $found = (hcsdiag list) | Select-String -Pattern 'wssdagent'
+        <# hcsdiag list -raw supported only in later windows versions
+        $pVMList = (hcsdiag list -raw) | ConvertTo-Json -ErrorAction SilentlyContinue
+        $found = $pVMList | Where-Object { $_.Owner -like 'wssdagent'}
+        #>
+        if ($found) { $retval = $true }
+    }
+    return $retval
+}
+
+function Test-EadEflowVmDeploy {
+    <#
+    .DESCRIPTION
+        Checks if the EFLOW VM is deployed (checking vhdx is present)
+    #>
+    $vhdxPath = "C:\\Program Files\\Azure IoT Edge"
+    $eflowConfig = Get-EadUserConfig
+    if ($eflowConfig.installOptions.vhdxPath) {
+        $vhdxPath = $eflowConfig.installOptions.vhdxPath
+    }
+    $retval = Test-Path -Path $vhdxPath -Filter '*EFLOW.vhdx'
+
     return $retval
 }
 function Invoke-EadEflowInstall {
@@ -579,9 +626,7 @@ function Remove-EadEflowInstall {
         Write-Host "$($eflowInfo.DisplayName) version $($eflowInfo.DisplayVersion) is installed. Removing..."
         Start-Process msiexec.exe -Wait -ArgumentList "/x $($eflowInfo.PSChildName) /quiet /noreboot"
         # Remove the module from Powershell session as well
-        if (Get-Module -Name AzureEFLOW) {
-            Remove-Module -Name AzureEFLOW -Force
-        }
+        Remove-Module -Name AzureEFLOW -Force
         $eadSession.EFLOW.Product = $null
         $eadSession.EFLOW.Version = $null
         Write-Host "$($eflowInfo.DisplayName) successfully removed."
@@ -610,7 +655,7 @@ function Invoke-EadEflowDeploy {
     .DESCRIPTION
         Loads the configuration and tries to deploy the EFLOW VM
     #>
-    if (Verify-EflowVm) {
+    if (Test-EadEflowVmDeploy) {
         Write-Host "Error: Eflow VM already deployed" -Foreground red
         return $false
     }
@@ -696,7 +741,7 @@ function Invoke-EadEflowProvision {
     .DESCRIPTION
         Loads the configuration and tries to provision the EFLOW VM
     #>
-    if (-not (Verify-EflowVm)) {
+    if (-not (Test-EadEflowVmRun)) {
         Write-Host "Error: Eflow VM is not found" -ForegroundColor Red
         return $false
     }
@@ -725,7 +770,7 @@ function Invoke-EadEflowProvision {
     Write-Verbose ($eflowProvisionParams | Out-String)
 
     Write-Host "Starting EFLOW VM provisioning..."
-    $retval = Provision-EflowVm @eflowProvisionParams
+    $retval = Provision-EflowVm @eflowProvisionParams -headless
     if ($retval -ieq "OK") {
         Write-Host "* EFLOW provisioning successfull." -ForegroundColor Green
         Start-Sleep 60 #wait a minute to allow iotedge initialize
@@ -736,7 +781,7 @@ function Invoke-EadEflowProvision {
     }
     return $true
 }
-function Test-EadEflowVMSwitch {
+function Test-EadEflowVmSwitch {
     Param
     (
         [Switch] $Create
@@ -798,14 +843,14 @@ function Test-EadEflowVMSwitch {
     else {
         # no switch found. Create if requested
         if ($Create) {
-            return New-EadEflowVMSwitch
+            return New-EadEflowVmSwitch
         }
         Write-Host "Error: VMSwitch $($nwCfg.vSwitchName) not found." -ForegroundColor Red
         return $false
     }
     return $true
 }
-function New-EadEflowVMSwitch {
+function New-EadEflowVmSwitch {
     $usrCfg = Get-EadUserConfig
     $nwCfg = $usrCfg.network
 
@@ -869,7 +914,7 @@ function New-EadEflowVMSwitch {
     return $true
 }
 
-function Remove-EadEflowVMSwitch {
+function Remove-EadEflowVmSwitch {
     $usrCfg = Get-EadUserConfig
     $switchName = $($usrCfg.network.vswitchName)
     $eflowSwitch = Get-VMSwitch -Name $switchName -ErrorAction SilentlyContinue
@@ -911,12 +956,14 @@ function Start-EadWorkflow {
     if (!(Test-EadEflowInstall -Install)) { return $false }
 
     # Check if EFLOW is deployed already and bail out
-    if (Verify-EflowVm) {
+    if (Test-EadEflowVmDeploy) {
         Write-Host "EFLOW VM is already deployed." -ForegroundColor Yellow
     } else {
-        if (!(Test-EadEflowVMSwitch -Create)) { return $false } #create switch if specified
+        if (!(Test-EadEflowVmSwitch -Create)) { return $false } #create switch if specified
         # We are here.. all is good so far. Validate and deploy eflow
         if (!(Invoke-EadEflowDeploy)) { return $false }
+    }
+    if (! (Test-EadEflowVmProvision)) {
         # Validate and provision eflow
         if (!(Invoke-EadEflowProvision)) { return $false}
     }
@@ -934,7 +981,7 @@ function Start-EadWorkflow {
 
 ### MAIN ###
 # Get Host PC information on loading of this script
-Get-HostPCInfo
+Get-HostPcInfo
 # If autodeploy switch is specified, start eflow deployment with the default json file path (.\eflow-userconfig.json)
 if ($AutoDeploy) {
     if (Start-EadWorkflow) {
