@@ -25,6 +25,7 @@ Azure IoT Edge for Linux on Windows supports the following versions:
 - [Learn More](https://aka.ms/AzEflow-docs)
 - [Sample Codes](./samples)
 - [EFLOW Auto Deploy sample](./eflowautodeploy/)
+- [EFLOW Remote Deploy sample (Azure Arc/ Microsoft Intune)](./eflowremotedeploy/)
 - [Build & Debug IoT Edge Linux modules using EFLOW](https://docs.microsoft.com/azure/iot-edge/tutorial-develop-for-linux-on-windows?view=iotedge-2018-06)
 
 ## Issues
