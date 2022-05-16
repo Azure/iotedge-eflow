@@ -1,0 +1,25 @@
+# Copyright (C) 2021 scalers.ai
+
+FROM aler9/rtsp-simple-server AS rtsp
+
+FROM ubuntu:20.04
+ENV DEBIAN_FRONTEND noninteractive
+
+LABEL Description="This is the base image for rtsp simulator"
+LABEL Vendor="scalers.ai"
+
+RUN apt-get update && \
+    apt-get install -y -q --no-install-recommends python3 \
+    python3-opencv ffmpeg
+
+COPY --from=rtsp /rtsp-simple-server /
+COPY --from=rtsp /rtsp-simple-server.yml /
+
+WORKDIR /
+COPY src/streamer.py /
+COPY src/run.sh /
+COPY input/ /input
+
+EXPOSE 8554
+
+ENTRYPOINT [ "sh", "run.sh" ]

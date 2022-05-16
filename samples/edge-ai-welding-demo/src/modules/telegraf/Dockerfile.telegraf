@@ -1,0 +1,25 @@
+# Copyright (C) 2021 scalers.ai
+# Dockerfile for custom telegraf image
+
+FROM telegraf:1.20.3
+
+LABEL Description="This is the base image for weld porosity recognition telegraf"
+LABEL Vendor="scalers.ai"
+
+ENV DEBIAN_FRONTEND noninteractive
+USER root
+
+RUN apt-get update && \
+    apt-get install -y -q --no-install-recommends python3 \
+    python3-pip python3-setuptools python3-opencv
+
+WORKDIR /app
+
+COPY src/ /app/
+COPY src/telegraf.conf /etc/telegraf/
+
+RUN pip3 install -r requirements.txt
+
+EXPOSE 5100/tcp
+
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh", "telegraf"]

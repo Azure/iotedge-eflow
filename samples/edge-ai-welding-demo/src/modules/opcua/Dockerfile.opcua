@@ -1,0 +1,15 @@
+# Copyright (C) 2021 scalers.ai
+
+FROM python:3.8-slim-buster
+
+LABEL Description="This is the base image for python based opcua server"
+LABEL Vendor="scalers.ai"
+
+WORKDIR /src
+RUN pip3 install asyncua
+
+COPY src/server.py /src/server.py
+
+EXPOSE 4840
+
+CMD ["python3", "server.py"]
