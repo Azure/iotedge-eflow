@@ -24,12 +24,13 @@ Additionally, to stay on top of the latest updates to Windows and the developmen
 ## Azure IoT Edge Samples
 
 
-#### Interop
+#### Interop - Edge AI
 
 _:warning: **WARNING**: Enabling a communication channel between the Windows host and the EFLOW VM may increase security risks._
 
 | Name           | Description      |  
 |----------------|------------------|  
+| [edge-ai-welding-demo](./edge-ai-welding-demo/) | Edge AI sample demonstrating computer vision, AI weld porosity inferencing and OPC UA messaging using a Windows host OS and edge modules running inside the EFLOW VM. | 
 | [interop-textmsg-consoleapp](./interop-textmsg-consoleapp) | Basic interop sample demonstrating text messaging between a Windows console app and an Edge module running inside the EFLOW VM. | 
 | [interop-customvision-textmsg-uwpapp](./interop-customvision-textmsg-uwpapp) | <p>Two more advanced interop samples which demonstrate bidirectional communication between a Windows application and an Edge module running inside the EFLOW VM. </p><ul><li>Text messaging between a UWP application and an Edge module. </li><li>A 'Custom vision' machine learning interop sample with a fruit classifier which uses a Windows UWP app to send camera frames to an Edge module for identification.</li></ul>|  
 
