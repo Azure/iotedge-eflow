@@ -1,0 +1,8 @@
+{
+    "name":"InfluxDB",
+    "type":"influxdb",
+    "url":"http://<eflowIP>:8086",
+    "access":"proxy",
+    "isDefault":true,
+    "database":"telegraf"
+  }

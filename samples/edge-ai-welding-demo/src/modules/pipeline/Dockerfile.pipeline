@@ -1,0 +1,24 @@
+# Copyright (C) 2021 scalers.ai
+
+FROM openvino/ubuntu20_data_runtime:2021.4
+
+LABEL Description="This is the base image for weld porosity recognition"
+LABEL Vendor="scalers.ai"
+
+USER root
+
+RUN apt-get update
+
+RUN chmod +x /opt/intel/openvino_2021/install_dependencies/install_openvino_dependencies.sh && \
+    cd /opt/intel/openvino_2021/install_dependencies/ && ./install_openvino_dependencies.sh -y
+
+RUN pip3 install numpy opcua
+
+COPY src /src
+COPY models /models
+
+WORKDIR /src
+
+RUN chmod +x run.sh
+
+CMD source /opt/intel/openvino_2021/bin/setupvars.sh && ./run.sh

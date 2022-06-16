@@ -1,0 +1,151 @@
+{
+    "$schema-template": "4.0.0",
+      "modulesContent": {
+          "$edgeAgent": {
+              "properties.desired": {
+                  "modules": {
+                      "MQTTBroker": {
+                          "settings": {
+                              "image": "eclipse-mosquitto:1.6",
+                              "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"1883/tcp\":[{\"HostPort\":\"1883\"}]}}}"
+                          },
+                          "type": "docker",
+                          "version": "1.0",
+                          "status": "running",
+                          "restartPolicy": "always",
+                          "startupOrder": 1
+                      },
+                      "rtspsim": {
+                          "settings": {
+                              "image": "${MODULES.rtspsim}",
+                              "createOptions": ""
+                          },
+                          "type": "docker",
+                          "version": "1.0",
+                          "status": "running",
+                          "restartPolicy": "always",
+                          "startupOrder": 2
+                      },
+                      "influxdb": {
+                          "settings": {
+                              "image": "influxdb:1.8.10",
+                              "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"8086/tcp\":[{\"HostPort\":\"8086\"}]}}}"
+                          },
+                          "type": "docker",
+                          "version": "1.0",
+                          "status": "running",
+                          "restartPolicy": "always",
+                          "startupOrder": 3
+                      },
+                      "pipeline": {
+                          "settings": {
+                              "image": "${MODULES.pipeline}",
+                              "createOptions": ""
+                          },
+                          "type": "docker",
+                          "version": "1.0",
+                          "env": {
+                              "DEVICE": {
+                                  "value": "$TARGET_HARDWARE"
+                              },
+                              "INPUT": {
+                                "value": "$INPUT"
+                            }
+                          },
+                          "status": "running",
+                          "restartPolicy": "always",
+                          "startupOrder": 5
+                      },
+                      "opcua": {
+                          "settings": {
+                              "image": "${MODULES.opcua}",
+                              "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"4840/tcp\":[{\"HostPort\":\"4840\"}]}}}"
+                          },
+                          "type": "docker",
+                          "version": "1.0",
+                          "status": "running",
+                          "restartPolicy": "always",
+                          "startupOrder": 4
+                      },
+                      "telegraf": {
+                          "settings": {
+                              "image": "${MODULES.telegraf}",
+                              "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"5100/tcp\":[{\"HostPort\":\"5100\"}]}}}"
+                          },
+                          "type": "docker",
+                          "version": "1.0",
+                          "env": {
+                              "MQTT_IP": {
+                                  "value": "MQTTBroker"
+                              }
+                          },
+                          "status": "running",
+                          "restartPolicy": "always",
+                          "startupOrder": 6
+                      }
+                  },
+                  "runtime": {
+                      "settings": {
+                          "minDockerVersion": "v1.25",
+                          "registryCredentials": {
+                              "weld": {
+                                "username": "$CONTAINER_REGISTRY_USERNAME",
+                                "password": "$CONTAINER_REGISTRY_PASSWORD",
+                                "address": "$CONTAINER_REGISTRY_USERNAME.azurecr.io"
+                              }
+                          }
+                      },
+                      "type": "docker"
+                  },
+                  "schemaVersion": "1.1",
+                  "systemModules": {
+                      "edgeAgent": {
+                          "settings": {
+                              "image": "mcr.microsoft.com/azureiotedge-agent:1.1",
+                              "createOptions": ""
+                          },
+                          "type": "docker"
+                      },
+                      "edgeHub": {
+                          "settings": {
+                              "image": "mcr.microsoft.com/azureiotedge-hub:1.1",
+                              "createOptions": "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}"
+                          },
+                          "type": "docker",
+                          "status": "running",
+                          "restartPolicy": "always"
+                      }
+                  }
+              }
+          },
+          "$edgeHub": {
+              "properties.desired": {
+                  "routes": {
+                      "route": "FROM /messages/* INTO $upstream"
+                  },
+                  "schemaVersion": "1.1",
+                  "storeAndForwardConfiguration": {
+                      "timeToLiveSecs": 7200
+                  }
+              }
+          },
+          "MQTTBroker": {
+              "properties.desired": {}
+          },
+          "rtspsim": {
+              "properties.desired": {}
+          },
+          "influxdb": {
+              "properties.desired": {}
+          },
+          "pipeline": {
+              "properties.desired": {}
+          },
+          "opcua": {
+              "properties.desired": {}
+          },
+          "telegraf": {
+              "properties.desired": {}
+          }
+      }
+  }
