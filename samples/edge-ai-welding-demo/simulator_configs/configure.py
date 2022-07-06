@@ -9,6 +9,7 @@ import json
 import os
 import sys
 import time
+import re
 from argparse import ArgumentParser
 
 import requests
@@ -45,11 +46,21 @@ def generate_key(grafana_ip: str) -> str:
     if 200 != resp.status_code:
         print("API key with name apiKey already exists. Delete the key "
               " with name apiKey and try again.")
-        exit(1)
 
-    api_key = json.loads(json.dumps(resp.json()))['key']
-
-    return api_key
+        config_path = "C:\Program Files\InfluxData\\telegraf"
+        telegraf_conf = os.path.join(config_path, 'telegraf.conf')
+        with open(telegraf_conf, 'r') as conf_file:
+            conf_data=conf_file.read()
+        match = re.search(r'Bearer\s[A-Za-z0-9\-\._~\+\/]+=*', conf_data)
+        if match:
+            api_key = match.group()
+            return api_key 
+        else:
+            print("No API key found - Pleae check Grafana configuration.")
+            exit(1)  
+    else:
+        api_key = json.loads(json.dumps(resp.json()))['key']
+        return api_key
 
 
 def configure_grafana(
