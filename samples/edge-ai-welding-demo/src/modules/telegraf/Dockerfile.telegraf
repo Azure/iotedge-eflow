@@ -1,7 +1,7 @@
 # Copyright (C) 2021 scalers.ai
 # Dockerfile for custom telegraf image
 
-FROM telegraf:1.20.3
+FROM telegraf:1.22.3
 
 LABEL Description="This is the base image for weld porosity recognition telegraf"
 LABEL Vendor="scalers.ai"
