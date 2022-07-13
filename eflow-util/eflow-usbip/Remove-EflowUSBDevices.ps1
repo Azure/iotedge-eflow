@@ -38,6 +38,23 @@
               return
         }
 
+        [String]$eflowVersion = (Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\' | Get-ItemProperty |  Where-Object {$_.DisplayName -eq 'Azure IoT Edge LTS' -or $_.DisplayName -eq 'Azure IoT Edge'}).DisplayVersion
+        if ([string]::IsNullOrEmpty($eflowVersion))
+        {
+            Write-Host "Error - EFLOW it's no installed in the Windows host OS"  -ForegroundColor "Red"
+            return
+        }
+        elseif([int]$eflowVersion.Split(".")[1] -eq 2 -and [int]$eflowVersion.Split(".")[2] -lt 10)
+        {
+            Write-Host "Error - EFLOW version $eflowVersion it's not supported"  -ForegroundColor "Red"
+            return
+        }
+        elseif([int]$eflowVersion.Split(".")[1] -eq 1 -and [int]$eflowVersion.Split(".")[2] -lt 2207)
+        {
+            Write-Host "Error - EFLOW version $eflowVersion it's not supported"  -ForegroundColor "Red"
+            return
+        }
+
         Write-Host "Detaching the USB device inside the EFLOW VM"
         Invoke-EflowVmCommand "sudo usbip detach --remote=$hostIp --busid=$busId"
 
