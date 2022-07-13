@@ -13,5 +13,5 @@ If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Import-Module AzureEflow
 
 # Source all the powershell scripts for the functions
-. $PSScriptRoot\EflowUtil-GetEdgeCertificates.ps1
-. $PSScriptRoot\EflowUtil-SetEdgeCertificates.ps1
+. $PSScriptRoot\Get-EdgeCertificates.ps1
+. $PSScriptRoot\Set-EdgeCertificates.ps1

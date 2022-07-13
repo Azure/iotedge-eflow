@@ -13,5 +13,5 @@ If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Import-Module AzureEflow
 
 # Source all the powershell scripts for the functions
-. $PSScriptRoot\EflowUtil-GetFirewallRules.ps1
-. $PSScriptRoot\EflowUtil-SetFirewallRules.ps1
+. $PSScriptRoot\Get-FirewallRules.ps1
+. $PSScriptRoot\Set-FirewallRules.ps1

@@ -5,9 +5,9 @@ Understand EFLOW-Util PowerShell functions that provide extra mechanisms to conn
 ### :warning: Important
 _The following functions are samples codes that are not meant to be used in production deployments. Furthermore, functions are subject to change and deletion. Make sure you create your own functions based on these samples._.
 
-## List-EflowUSBDevices
+## Get-EflowUSBDevices
 
-The [**List-EflowUSBDevices**](./List-EflowUSBDevices.ps1) lists all of the USB devices connected to Windows that could be attached to the EFLOW virtual machine.
+The [**Get-EflowUSBDevices**](./Get-EflowUSBDevices.ps1) lists all of the USB devices connected to Windows that could be attached to the EFLOW virtual machine.
 This command takes no parameters. It prints out a table that contains four properties:
 
 - BUSID

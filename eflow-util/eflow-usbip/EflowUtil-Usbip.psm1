@@ -13,6 +13,6 @@ If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
 Import-Module AzureEflow
 
 # Source all the powershell scripts for the functions
-. $PSScriptRoot\EflowUtil-List-EflowUSBDevices.ps1
-. $PSScriptRoot\EflowUtil-Add-EflowUSBDevices.ps1
-. $PSScriptRoot\EflowUtil-Remove-EflowUSBDevices.ps1
+. $PSScriptRoot\Get-EflowUSBDevices.ps1
+. $PSScriptRoot\Add-EflowUSBDevices.ps1
+. $PSScriptRoot\Remove-EflowUSBDevices.ps1

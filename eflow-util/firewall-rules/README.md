@@ -7,7 +7,7 @@ _The following functions are samples codes that are not meant to be used in prod
 
 ## Get-EflowVmFirewallRules
 
-The [**Get-EflowVmFirewallRules**](./EflowUtil-GetFirewallRules.ps1) command checks the CBL-Mariner firewall rules. 
+The [**Get-EflowVmFirewallRules**](./Get-FirewallRules.ps1) command checks the CBL-Mariner firewall rules. 
 The command returns the list of all firewall rules configured. Use the optional parameters to define a table or chain.
 
 The EFLOW VM uses CBL-Mariner, which includes an iptables based firewall. For more information about iptables, visit [iptables page](https://linux.die.net/man/8/iptables).
@@ -19,7 +19,7 @@ The EFLOW VM uses CBL-Mariner, which includes an iptables based firewall. For mo
 
 ## Set-EflowVmFirewallRules
 
-The [**Set-EflowVmFirewallRules**](./EflowUtil-GetFirewallRules.ps1) command adds the specified rule to CBL-Mariner firewall. 
+The [**Set-EflowVmFirewallRules**](./Set-FirewallRules.ps1) command adds the specified rule to CBL-Mariner firewall. 
 Use the optional parameters to define a custom rule. For a more specific rule, use the _customRule_ parameter.
 
 The EFLOW VM uses CBL-Mariner, which includes an iptables based firewall. For more information about iptables, visit [iptables page](https://linux.die.net/man/8/iptables).

@@ -1,4 +1,4 @@
-﻿ function List-EflowUSBDevices
+﻿ function Get-EflowUSBDevices
  {
     <#
     .DESCRIPTION
