@@ -56,7 +56,22 @@
         }
 
         Write-Host "Detaching the USB device inside the EFLOW VM"
-        Invoke-EflowVmCommand "sudo usbip detach --remote=$hostIp --busid=$busId"
+
+        $portCommand = "sudo usbip port | grep $hostIp" + ":3240/$busId -B 2"
+        $portResult = Invoke-EflowVmCommand "$portCommand"
+        $regexMatch = [regex]::match($portResult, "Port\s*(\d*)")
+
+        if($regexMatch.Success)
+        {
+            $port = $regexMatch.Groups[1].Value
+            Write-Host "Ok - Device with busId=$busId attached to port=$port"
+            Invoke-EflowVmCommand "sudo usbip detach -p $port"
+        }
+        else
+        {
+            Write-Host "Error - Couldn't find a device with the busId=$busId"  -ForegroundColor "Red"
+            return
+        }
 
         Write-Host "Stopping sharing the USB device to the EFLOW VM"
         usbipd unbind --busid=$busId
@@ -67,5 +82,6 @@
         # An exception was thrown, write it out and exit
         Write-Host "Exception caught!!!"  -ForegroundColor "Red"
         Write-Host $_.Exception.Message.ToString()  -ForegroundColor "Red" 
+        return
     }
 }

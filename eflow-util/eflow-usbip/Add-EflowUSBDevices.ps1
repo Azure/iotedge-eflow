@@ -30,12 +30,12 @@
         $usbipd = Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\' | Get-ItemProperty |  Where-Object {$_.DisplayName -eq 'usbipd-win'}
         if($usbipd)
         {
-             Write-Host "Ok - USBIP-Win is installed on the Windows host OS"
+            Write-Host "Ok - USBIP-Win is installed on the Windows host OS"
         }
         else
         {
-              Write-Host "Error - USBIP-Win it's not installed"  -ForegroundColor "Red"
-              return
+            Write-Host "Error - USBIP-Win it's not installed"  -ForegroundColor "Red"
+            return
         }
 
         [String]$eflowVersion = (Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\' | Get-ItemProperty |  Where-Object {$_.DisplayName -eq 'Azure IoT Edge LTS' -or $_.DisplayName -eq 'Azure IoT Edge'}).DisplayVersion
@@ -55,18 +55,23 @@
             return
         }
 
-
         Write-Host "Starting sharing the USB device to the EFLOW VM"
         usbipd bind --busid=$busId
 
         Write-Host "Attaching the USB device inside the EFLOW VM"
+
+        Invoke-EflowVmCommand "sudo modprobe vhci-hcd"
+        Invoke-EflowVmCommand "sudo modprobe usbip-host"
+        Invoke-EflowVmCommand "sudo modprobe usbip-core"
         Invoke-EflowVmCommand "sudo usbip attach --remote=$hostIp --busid=$busId"
 
+        Write-Host "USB $busId was correctly connected to the EFLOW VM"
     }
     catch [Exception]
     {
         # An exception was thrown, write it out and exit
         Write-Host "Exception caught!!!"  -ForegroundColor "Red"
-        Write-Host $_.Exception.Message.ToString()  -ForegroundColor "Red" 
+        Write-Host $_.Exception.Message.ToString()  -ForegroundColor "Red"
+        return 
     }
 }
