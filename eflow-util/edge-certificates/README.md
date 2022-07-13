@@ -5,7 +5,6 @@ Understand EFLOW-Util EdgeCertificates PowerShell functions that provide extra m
 ### :warning: Important
 _The following functions are samples codes that are not meant to be used in production deployments. Furthermore, functions are subject to change and deletion. Make sure you create your own functions based on these samples._.
 
-
 ## Get-EflowVmEdgeCertificates
 
 The [**Get-EflowVmEdgeCertificates**](./EflowUtil-GetEdgeCertificates.ps1) command checks if IoT Edge is configured to use certificates. If so, it will display the path of the certificates. 
