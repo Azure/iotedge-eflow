@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220512.1200" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220713.1600" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
@@ -363,7 +363,7 @@ function Test-EadUserConfigDeploy {
         Write-Host "Error: vmDataSize is not supported in Azure IoT Edge LTS" -ForegroundColor Red
         $errCnt += 1
     }
-    if ($vmCfg.vmDiskSize -and $vmCfg.vmDiskSize) {
+    if ($vmCfg.vmDataSize -and $vmCfg.vmDiskSize) {
         Write-Host "Error: Both vmDataSize and vmDiskSize specified. Specify one." -ForegroundColor Red
         $errCnt += 1
     }
@@ -570,7 +570,7 @@ function Test-EadEflowVmDeploy {
     if ($eflowConfig.installOptions.vhdxPath) {
         $vhdxPath = $eflowConfig.installOptions.vhdxPath
     }
-    $retval = Test-Path -Path $vhdxPath -Filter '*EFLOW.vhdx'
+    $retval = Test-Path -Path $vhdxPath\*EFLOW.vhdx
 
     return $retval
 }
