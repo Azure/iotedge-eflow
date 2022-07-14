@@ -3,7 +3,7 @@
 Understand EFLOW-Util PowerShell functions that provide extra mechanisms to connect and disconnect USB devices to the EFLOW VM.
 
 ### :warning: Important
-_The following functions are samples codes that are not meant to be used in production deployments. Furthermore, functions are subject to change and deletion. Make sure you create your own functions based on these samples._.
+_The following functions are sample codes that are not meant to be used in production deployments. For production use, ensure you validate the functionality and create your own functions based on these samples. Furthermore, functions are subject to change and deletion._
 
 ## Get-EflowUSBDevices
 
