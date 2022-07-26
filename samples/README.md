@@ -77,7 +77,7 @@ _:warning: **WARNING**:  Enabling TPM passthrough to the virtual machine may inc
 
 | Name           | Description      |  
 |----------------|------------------|  
-| [Read-Only TPM](./tpm-read-nv) | <p> This is a sample modified from the [TSS.MSR](https://github.com/microsoft/TSS.MSR) libraries to enable reading from the TPM NV Memory via the TPM2 linux access broker. The following sample allows the underlying EFLOW VM to read from a previously initialized and written NV index.  </li></ul>|  
+| [Read-Only TPM](https://aka.ms/AzEFLOW-TPM-Sample) | <p> This is a sample modified from the [TSS.MSR](https://github.com/microsoft/TSS.MSR) libraries to enable reading from the TPM NV Memory via the TPM2 linux access broker. The following sample allows the underlying EFLOW VM to read from a previously initialized and written NV index.  </li></ul>|  
 
 <br/>
 
