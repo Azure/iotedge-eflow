@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220713.1600" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220722.1100" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
@@ -336,10 +336,12 @@ function Test-EadUserConfigDeploy {
     }
 
     if ($vmCfg.vmDiskSize) {
-        if (($vmCfg.vmDiskSize -ge 21)  -and ($vmCfg.vmDiskSize -le 2000)) { #Between 21 GB and 2 TB
+        $lowerLimit = 21
+        if ($eflowConfig.eflowProduct -ieq "Azure IoT Edge LTS") { $lowerLimit = 8 }
+        if (($vmCfg.vmDiskSize -ge $lowerLimit)  -and ($vmCfg.vmDiskSize -le 2000)) { #Between $lowerLimit GB and 2 TB
             Write-Host "* Virtual machine VHDX will be created with $($vmCfg.vmDiskSize) GB disk size."
         } else {
-            Write-Host "Error: vmDiskSize should be between 21 GB and 2000 GB(2TB)" -ForegroundColor Red
+            Write-Host "Error: vmDiskSize should be between $lowerLimit GB and 2000 GB(2TB)" -ForegroundColor Red
             $errCnt += 1
         }
     }
@@ -347,26 +349,30 @@ function Test-EadUserConfigDeploy {
         Write-Host "* No custom disk size used - Using default configuration, virtual machine VHDX will be created with 29 GB of disk size."
         if ($vmCfg) { $vmCfg.PSObject.properties.remove('vmDiskSize') }
     }
-    if ($vmCfg.vmDataSize) {
-        if (($vmCfg.vmDataSize -ge 2)  -and ($vmCfg.vmDataSize -le 2000)) { #Between 2 GB and 2 TB
-            Write-Host "* Virtual machine VHDX will be created with $($vmCfg.vmDataSize) GB of data size."
-        } else {
-            Write-Host "Error: vmDataSize should be between 2 GB and 2000 GB(2TB)" -ForegroundColor Red
+    if ($eflowConfig.eflowProduct -ieq "Azure IoT Edge LTS") {
+        if ($vmCfg.vmDataSize -gt 0) {
+            Write-Host "Error: vmDataSize is not supported in Azure IoT Edge LTS" -ForegroundColor Red
             $errCnt += 1
         }
-    }
-    else {
-        Write-Host "* No custom data size used - Using default configuration, virtual machine VHDX will be created with 10 GB of data size."
-        if ($vmCfg) { $vmCfg.PSObject.properties.remove('vmDataSize') }
-    }
-    if (($eflowConfig.eflowProduct -ieq "Azure IoT Edge LTS") -and ($vmCfg.vmDataSize -gt 0)) {
-        Write-Host "Error: vmDataSize is not supported in Azure IoT Edge LTS" -ForegroundColor Red
-        $errCnt += 1
+    } else {
+        if ($vmCfg.vmDataSize) {
+            if (($vmCfg.vmDataSize -ge 2)  -and ($vmCfg.vmDataSize -le 2000)) { #Between 2 GB and 2 TB
+                Write-Host "* Virtual machine VHDX will be created with $($vmCfg.vmDataSize) GB of data size."
+            } else {
+                Write-Host "Error: vmDataSize should be between 2 GB and 2000 GB(2TB)" -ForegroundColor Red
+                $errCnt += 1
+            }
+        }
+        else {
+            Write-Host "* No custom data size used - Using default configuration, virtual machine VHDX will be created with 10 GB of data size."
+            if ($vmCfg) { $vmCfg.PSObject.properties.remove('vmDataSize') }
+        }
     }
     if ($vmCfg.vmDataSize -and $vmCfg.vmDiskSize) {
         Write-Host "Error: Both vmDataSize and vmDiskSize specified. Specify one." -ForegroundColor Red
         $errCnt += 1
     }
+
     # 4) Check GPU passthrough configuration
     Write-Host "--- Verifying GPU passthrough configuration..."
     if ([string]::IsNullOrEmpty($vmCfg.gpuPassthroughType)) {
