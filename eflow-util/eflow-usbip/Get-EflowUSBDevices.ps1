@@ -42,7 +42,7 @@
    catch [Exception]
    {
        # An exception was thrown, write it out and exit
-       Write-Host "Exception caught!!!"  -ForegroundColor "Red"
+       Write-Host "Exception caught"  -ForegroundColor "Red"
        Write-Host $_.Exception.Message.ToString()  -ForegroundColor "Red" 
        return
    }
