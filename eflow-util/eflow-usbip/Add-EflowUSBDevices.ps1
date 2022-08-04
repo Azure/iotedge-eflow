@@ -58,6 +58,13 @@
         Write-Host "Starting sharing the USB device to the EFLOW VM"
         usbipd bind --busid=$busId
 
+        Write-Host "Checking the USB device is reachable from the EFLOW VM"
+        $checkResult = Invoke-EflowVmCommand "sudo usbip list --remote=$hostIp | grep $busId" -ignoreError
+        if([string]::IsNullOrEmpty($checkResult)){
+            Write-Host "Error - The USB device with BusId=$busId could not be reached from the EFLOW VM"  -ForegroundColor "Red"
+            return
+        }
+
         Write-Host "Attaching the USB device inside the EFLOW VM"
 
         Invoke-EflowVmCommand "sudo modprobe vhci-hcd"
