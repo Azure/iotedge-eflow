@@ -65,7 +65,8 @@ _:warning: **WARNING**: Enabling GPU/VPU passthrough may increase security risks
 
 | Name           | Description      |  
 |----------------|------------------|  
-| [multiple-nics](https://aka.ms/AzEFLOW-MultipleNICs) | <p>Sample to configure the EFLOW VM with multiple NICs and simulate an Industrial IoT scenario using OPC Publisher module. Although this sample code is limited to Industrial OPC/UA scenarios, can be used for otehr PCI Compliance or Retail scenarios with DMZs.</li></ul>|  
+| [multiple-nics](https://aka.ms/AzEFLOW-MultipleNICs) | <p>Sample to configure the EFLOW VM with multiple NICs.</li></ul>| 
+| [dmz-configuration](https://aka.ms/AzEFLOW-IIoT-MultipleNIC) | <p>Sample to configure the EFLOW VM with multiple NICs and simulate an Industrial IoT scenario using OPC Publisher module. Although this sample code is limited to Industrial OPC/UA scenarios, can be used for otehr PCI Compliance or Retail scenarios with DMZs.</li></ul>|
 | [routing](./networking/routing) | <p>Sample to configure the EFLOW VM network routing - Configure routes and setting up a service.</li></ul>|
 
 <br/>
