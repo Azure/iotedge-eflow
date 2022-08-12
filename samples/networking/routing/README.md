@@ -25,9 +25,19 @@ EFLOW uses [route](https://man7.org/linux/man-pages/man8/route.8.html) service t
 2. Connect to the EFLOW VM using `Connect-EflowVm`
 3. Run `sudo route`
 
-![Routing Output](./../multiple-nics/Images/route-output.png)
+```bash
+iotedge-user@DESKTOP-EFLOW [ ~ ]$ sudo route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+default         DESKTOP-FCABRER 0.0.0.0         UG    1024   0        0 eth0
+10.200.1.0      0.0.0.0         255.255.255.0   U     0      0        0 v-eth1
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 br-6868c9739a37
+172.30.224.0    0.0.0.0         255.255.240.0   U     1024   0        0 eth0
+DESKTOP         0.0.0.0         255.255.255.255 UH    1024   0        0 eth0
+```
 
-_Image above shows the route command output with two NIC's assigned (eth0 and eth1). The VM will create two different _Default_ destinations rules with different Metrics (the lower the metric, the higher the priority)._
+_Image above shows the route command output with two NIC's assigned (eth0 and v-eth1). The VM will create two different _Default_ destinations rules with different Metrics (the lower the metric, the higher the priority)._
 
 
 ## Static Routes fix
