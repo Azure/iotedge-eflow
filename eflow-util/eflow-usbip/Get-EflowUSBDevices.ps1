@@ -7,11 +7,18 @@
 
    try
    {
-       
        $usbipd = Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\' | Get-ItemProperty |  Where-Object {$_.DisplayName -eq 'usbipd-win'}
        if($usbipd)
        {
             Write-Host "Ok - USBIP-Win is installed on the Windows host OS"
+            if ( [bool](Get-Command -Name 'usbipd' -ErrorAction SilentlyContinue))
+            {
+                Write-Host "Ok - USBIP-Win is loaded"
+            }
+            else
+            {
+                Write-Host "Error - USBIP-Win is not loaded - Reopen the PowerShell session or manually import the command tool" -ForegroundColor "Red"
+            }
        }
        else
        {
