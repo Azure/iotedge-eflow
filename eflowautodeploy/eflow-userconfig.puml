@@ -25,7 +25,7 @@ jsonDiagram {
 </style>
 #highlight "schemaVersion"
 {
-    "schemaVersion":"1.0",
+    "schemaVersion":"1.1",
     "version":"1.0",
     "eflowProduct" :["Azure IoT Edge LTS", "Azure IoT Edge CR X64","Azure IoT Edge CR ARM64"],
     "eflowProductUrl" : "URL",
@@ -57,8 +57,10 @@ jsonDiagram {
         "ip4Address": "IPAddress",
         "ip4GatewayAddress": "IPAddress",
         "ip4PrefixLength" : "24",
+        "useHostProxy" : "Boolean",
         "httpProxy":"URL",
         "httpsProxy":"URL",
+        "ftpProxy":"URL",
         "dnsServers":"IPAddress[]"
     },
     "eflowProvisioning":{

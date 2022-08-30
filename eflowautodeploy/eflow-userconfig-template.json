@@ -1,5 +1,5 @@
 {
-    "schemaVersion":"1.0",
+    "schemaVersion":"1.1",
     "version":"1.0",
     "eflowProduct" : "Azure IoT Edge LTS",
     "eflowProductUrl" : "",
@@ -18,8 +18,10 @@
         "ip4Address": "",
         "ip4GatewayAddress": "",
         "ip4PrefixLength" : "",
+        "useHostProxy" : false,
         "httpProxy":"",
         "httpsProxy":"",
+        "ftpProxy" :"",
         "dnsServers":""
     },
     "vmConfig":{
