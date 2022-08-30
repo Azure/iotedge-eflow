@@ -39,7 +39,7 @@ The below table provides the details of the supported parameters in the json fil
 
 | Parameter | Required | Type / Values | Comments |
 | --------- | -------- |---------------- | -------- |
-| schemaVersion | Mandatory | 1.0 | Fixed value, schema version. Reserved|
+| schemaVersion | Mandatory | 1.1 | Fixed value, schema version. Reserved. Added ftpProxy and useHostProxy |
 | Version | Mandatory | 1.0 | Fixed value, json instance version. Reserved |
 | eflowProduct | Mandatory | <ul><li>Azure IoT Edge LTS</li><li>Azure IoT Edge CR X64</li><li>Azure IoT Edge CR ARM64</li></ul>| Supported EFLOW product versions |
 | eflowProductUrl | Optional | String (url) | Download Url to install specific  Eflow versions. (Eg. https://aka.ms/AzEFLOW-1_1_2203_14042) |
@@ -52,8 +52,10 @@ The below table provides the details of the supported parameters in the json fil
 | ip4Address | Optional | IPAddress |  Static IP Address for the EFLOW VM |
 | ip4GatewayAddress | Optional | IPAddress | Static Gateway IP Address |
 | ip4PrefixLength | Optional | 24 | IP PrefixLength |
-| httpProxy | Optional | String | httpProxy link |
-| httpsProxy | Optional | String | httpsProxy link |
+| useHostProxy | Optional | Boolean |if true, the host PC proxy configuration will be applied to the VM as well |
+| httpProxy | Optional | Url | httpProxy link |
+| httpsProxy | Optional | Url | httpsProxy link |
+| ftpProxy | Optional | Url | ftpProxy link |
 | dnsServers | Optional | String[] | Array of valid dns servers for VM |
 | *vmConfig* | *Optional*|  | *VM configuration* |
 | cpuCount | Optional |0 | cpuCount|
