@@ -6,7 +6,7 @@ param(
     [switch] $AutoDeploy
 )
 
-New-Variable -Name eflowAutoDeployVersion -Value "1.0.220722.1100" -Option Constant -ErrorAction SilentlyContinue
+New-Variable -Name eflowAutoDeployVersion -Value "1.0.220829.1700" -Option Constant -ErrorAction SilentlyContinue
 #Hashtable to store session information
 $eadSession = @{
     "HostPC" = @{"FreeMem" = 0; "TotalMem" = 0; "FreeDisk" = 0; "TotalDisk" = 0; "TotalCPU" = 0;"Name" = $null}
