@@ -222,6 +222,33 @@ function Test-EadUserConfigNetwork {
         }
     }
     #TODO : Ping dnsServers for reachability. No Tests for http proxies
+    Write-Host "--- Checking proxy settings..."
+    if ($nwCfg.useHostProxy) {
+        Write-Host "useHostProxy is set, ignoring httpProxy, httpsProxy, ftpProxy settings"
+        $hostSettings = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' | Select-Object ProxyServer, ProxyEnable
+        if ($hostSettings.ProxyEnable){
+            Write-Host "Using $($hostSettings.ProxyServer) as proxy settings"
+        } else {
+            Write-Host "Warning: useHostProxy is set, but no proxy setting found in host." -ForegroundColor Yellow
+        }
+    } else {
+        if (![string]::IsNullOrEmpty($nwCfg.httpProxy) -and $nwCfg.httpProxy -NotLike "http://*")
+        {
+            Write-Host "Error: The httpProxy address $($nwCfg.httpProxy) is not valid." -ForegroundColor Red
+            $errCnt += 1
+        }
+        if (![string]::IsNullOrEmpty($nwCfg.httpsProxy) -and $nwCfg.httpsProxy -NotLike "https://*")
+        {
+            Write-Host "Error: The httpsProxy address $($nwCfg.httpsProxy) is not valid." -ForegroundColor Red
+            $errCnt += 1
+        }
+        if (![string]::IsNullOrEmpty($nwCfg.ftpProxy) -and $nwCfg.ftpProxy -NotLike "ftp://*")
+        {
+            Write-Host "Error: The ftpProxy address $($nwCfg.ftpProxy) is not valid." -ForegroundColor Red
+            $errCnt += 1
+        }
+    }
+
     $retval = $true
     if ($errCnt) {
         Write-Host "$errCnt errors found in the Network Configuration. Fix errors before deployment" -ForegroundColor Red
@@ -810,73 +837,50 @@ function Set-EflowVmProxyServers
         [string] $httpsProxy,
         [string] $ftpProxy
     )
-    try
+    if ([string]::IsNullOrEmpty($httpProxy) -and [string]::IsNullOrEmpty($httpsProxy) -and [string]::IsNullOrEmpty($ftpProxy))
     {
-        if ([string]::IsNullOrEmpty($httpProxy) -and [string]::IsNullOrEmpty($httpsProxy) -and [string]::IsNullOrEmpty($ftpProxy))
-        {
-            throw "Either -httpProxy or -httpsProxy or -ftpProxy must be provided."
-            return
-        }
-        if (![string]::IsNullOrEmpty($httpProxy) -and $httpProxy -NotLike "http://*")
-        {
-            throw "The httpProxy address $httpProxy is not valid."
-            return
-        }
-        if (![string]::IsNullOrEmpty($httpsProxy) -and $httpsProxy -NotLike "https://*")
-        {
-            throw "The httpsProxy address $httpsProxy is not valid."
-            return
-        }
-        if (![string]::IsNullOrEmpty($ftpProxy) -and $ftpProxy -NotLike "ftp://*")
-        {
-            throw "The ftpProxy address $ftpProxy is not valid."
-            return
-        }
-        if (![string]::IsNullOrEmpty($httpProxy) -or ![string]::IsNullOrEmpty($httpsProxy))
-        {
-            # Create the ovverride conf files
-            Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/aziot-edged.service.d/ && sudo touch /etc/systemd/system/aziot-edged.service.d/override.conf && printf '[Service]' | sudo tee /etc/systemd/system/aziot-edged.service.d/override.conf >/dev/null"
-            Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/aziot-identityd.service.d/ && sudo touch /etc/systemd/system/aziot-identityd.service.d/override.conf && printf '[Service]' | sudo tee /etc/systemd/system/aziot-identityd.service.d/override.conf >/dev/null"
-            Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/docker.service.d/ && sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf && printf '[Service]' | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf >/dev/null"
-        }
-        if (![string]::IsNullOrEmpty($httpProxy))
-        {
-            Write-Host "Setting httpProxy configuration"
-            # Define the http_proxy environment variable
-            Invoke-EflowVmCommand "sudo sed -i '/^export http_proxy/s.^.#.' /etc/bash.bashrc && echo export http_proxy=$httpProxy | sudo tee -a /etc/bash.bashrc >/dev/null && export http_proxy=$httpProxy"
-            # Create overrride conf for the different aziot-edged service
-            Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/aziot-edged.service.d/override.conf >/dev/null"
-            Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/aziot-identityd.service.d/override.conf >/dev/null"
-            Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/docker.service.d/http-proxy.conf >/dev/null"
-        }
-        if (![string]::IsNullOrEmpty($httpsProxy))
-        {
-            Write-Host "Setting httpsProxy configuration"
-            # Define the http_proxy environment variable
-            Invoke-EflowVmCommand "sudo sed -i '/^export https_proxy/s.^.#.' /etc/bash.bashrc && echo export https_proxy=$httpsProxy | sudo tee -a /etc/bash.bashrc >/dev/null && export https_proxy=$httpsProxy"
-            # Create overrride conf for the different aziot-edged service
-            Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/aziot-edged.service.d/override.conf >/dev/null"
-            Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/aziot-identityd.service.d/override.conf >/dev/null"
-            Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/docker.service.d/http-proxy.conf >/dev/null"
-        }
-        if (![string]::IsNullOrEmpty($ftpProxy))
-        {
-            Write-Host "Setting ftpProxy configuration"
-            # Define the http_proxy environment variable
-            Invoke-EflowVmCommand "sudo sed -i '/^export ftp_proxy/s.^.#.' /etc/bash.bashrc && echo export ftp_proxy=$ftpProxy | sudo tee -a /etc/bash.bashrc >/dev/null && export ftp_proxy=$ftpProxy"
-        }
-        if (![string]::IsNullOrEmpty($httpProxy) -or ![string]::IsNullOrEmpty($httpsProxy))
-        {
-            Write-Host "Restarting IoT Edge services"
-            Invoke-EflowVmCommand "sudo systemctl daemon-reload && sudo iotedge system restart"
-        }
+        Write-Host "Either -httpProxy or -httpsProxy or -ftpProxy must be provided." -ForegroundColor Red
+        return
     }
-    catch [Exception]
+    $restartIotEdge = $false
+    if (![string]::IsNullOrEmpty($httpProxy) -or ![string]::IsNullOrEmpty($httpsProxy))
     {
-        # An exception was thrown, write it out and exit
-        Write-Host "Exception caught"  -ForegroundColor "Red"
-        Write-Host $_.Exception.Message.ToString()  -ForegroundColor "Red"
-        return 
+        # Create the ovverride conf files
+        Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/aziot-edged.service.d/ && sudo touch /etc/systemd/system/aziot-edged.service.d/override.conf && printf '[Service]' | sudo tee /etc/systemd/system/aziot-edged.service.d/override.conf >/dev/null"
+        Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/aziot-identityd.service.d/ && sudo touch /etc/systemd/system/aziot-identityd.service.d/override.conf && printf '[Service]' | sudo tee /etc/systemd/system/aziot-identityd.service.d/override.conf >/dev/null"
+        Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/docker.service.d/ && sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf && printf '[Service]' | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf >/dev/null"
+        $restartIotEdge = $true
+    }
+    if (![string]::IsNullOrEmpty($httpProxy))
+    {
+        Write-Host "Setting httpProxy configuration : $httpProxy"
+        # Define the http_proxy environment variable
+        Invoke-EflowVmCommand "sudo sed -i '/^export http_proxy/s.^.#.' /etc/bash.bashrc && echo export http_proxy=$httpProxy | sudo tee -a /etc/bash.bashrc >/dev/null && export http_proxy=$httpProxy"
+        # Create overrride conf for the different aziot-edged service
+        Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/aziot-edged.service.d/override.conf >/dev/null"
+        Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/aziot-identityd.service.d/override.conf >/dev/null"
+        Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/docker.service.d/http-proxy.conf >/dev/null"
+    }
+    if (![string]::IsNullOrEmpty($httpsProxy))
+    {
+        Write-Host "Setting httpsProxy configuration : $httpsProxy"
+        # Define the http_proxy environment variable
+        Invoke-EflowVmCommand "sudo sed -i '/^export https_proxy/s.^.#.' /etc/bash.bashrc && echo export https_proxy=$httpsProxy | sudo tee -a /etc/bash.bashrc >/dev/null && export https_proxy=$httpsProxy"
+        # Create overrride conf for the different aziot-edged service
+        Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/aziot-edged.service.d/override.conf >/dev/null"
+        Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/aziot-identityd.service.d/override.conf >/dev/null"
+        Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/docker.service.d/http-proxy.conf >/dev/null"
+    }
+    if (![string]::IsNullOrEmpty($ftpProxy))
+    {
+        Write-Host "Setting ftpProxy configuration : $ftpProxy"
+        # Define the http_proxy environment variable
+        Invoke-EflowVmCommand "sudo sed -i '/^export ftp_proxy/s.^.#.' /etc/bash.bashrc && echo export ftp_proxy=$ftpProxy | sudo tee -a /etc/bash.bashrc >/dev/null && export ftp_proxy=$ftpProxy"
+    }
+    if ($restartIotEdge)
+    {
+        Write-Host "Restarting IoT Edge services"
+        Invoke-EflowVmCommand "sudo systemctl daemon-reload && sudo iotedge system restart"
     }
 }
 
