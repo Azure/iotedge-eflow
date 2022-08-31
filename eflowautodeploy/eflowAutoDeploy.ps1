@@ -750,7 +750,7 @@ function Invoke-EadEflowDeploy {
             $proxyParams.Add("ftpProxy", "$($eflowConfig.network.ftpProxy)")
         }
     }
-    if ($proxyParams) {
+    if ($proxyParams.Count) {
         Set-EflowVmProxyServers @proxyParams
     }
     #Set-EflowVmFeature
