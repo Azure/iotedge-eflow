@@ -533,7 +533,6 @@ function Test-HyperVStatus {
             else {
                 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
             }
-
             Write-Host "Rebooting machine for enabling Hyper-V" -ForegroundColor Yellow
             Restart-Computer -Force -ErrorAction SilentlyContinue
         }
