@@ -527,10 +527,11 @@ function Test-HyperVStatus {
         Write-Host "Hyper-V is disabled" -ForegroundColor Red
         if ($Enable) {
             Write-Host "Enabling Hyper-V"
-            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
             if ($eadSession.HostOS.IsServerSKU) {
-                Enable-WindowsOptionalFeature -Online -FeatureName 'Microsoft-Hyper-V-Management-PowerShell'
-                #Install-WindowsFeature -Name RSAT-Hyper-V-Tools -IncludeAllSubFeature
+                Install-WindowsFeature -Name Hyper-V -IncludeAllSubFeature -IncludeManagementTools
+            }
+            else {
+                Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All -NoRestart
             }
             Write-Host "Rebooting machine for enabling Hyper-V" -ForegroundColor Yellow
             Restart-Computer -Force -ErrorAction SilentlyContinue
