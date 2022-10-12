@@ -38,6 +38,7 @@ function Test-AdminRole {
     }
     return $true
 }
+
 function Get-HostPcInfo {
     Write-Host "Running eflowAutoDeploy version $eflowAutoDeployVersion"
     $pOS = Get-CimInstance Win32_OperatingSystem
@@ -74,17 +75,20 @@ function Get-HostPcInfo {
     }
     Get-EadEflowInstalledVersion | Out-Null
 }
+
 function Get-EadUserConfig {
     if ($null -eq $eadSession.UserConfig) {
         Write-Host "Error: EFLOW UserConfig is not set." -ForegroundColor Red
     }
     return $eadSession.UserConfig
 }
+
 function Read-EadUserConfig {
     if ($eadSession.UserConfigFile) {
         $eadSession.UserConfig = Get-Content "$($eadSession.UserConfigFile)" | ConvertFrom-Json
     } else { Write-Host "Error: EFLOWUserConfigFile not configured" -ForegroundColor Red }
 }
+
 function Set-EadUserConfig {
     <#
     .DESCRIPTION
@@ -106,6 +110,7 @@ function Set-EadUserConfig {
     $eadSession.UserConfigFile = "$eflowjson"
     Read-EadUserConfig
 }
+
 function Test-EadUserConfigNetwork {
     <#
     .DESCRIPTION
@@ -306,6 +311,7 @@ function Test-EadUserConfigInstall {
     }
     return $retval
 }
+
 function Test-EadUserConfigDeploy {
     <#
     .DESCRIPTION
@@ -426,6 +432,7 @@ function Test-EadUserConfigDeploy {
     }
     return $retval
 }
+
 function Test-EadUserConfigProvision {
     <#
     .DESCRIPTION
@@ -483,6 +490,7 @@ function Test-EadUserConfigProvision {
     }
     return $retval
 }
+
 function Test-EadUserConfig {
 
     $installResult = Test-EadUserConfigInstall
@@ -492,6 +500,7 @@ function Test-EadUserConfig {
     return ($installResult -and $deployResult -and $provResult)
 
 }
+
 function Test-EadEflowInstall {
     Param
     (
@@ -514,6 +523,7 @@ function Test-EadEflowInstall {
     Write-Host "AzureEFLOW Module:$version"
     return $true
 }
+
 function Test-HyperVStatus {
     Param
     (
@@ -541,6 +551,7 @@ function Test-HyperVStatus {
     }
     return $retval
 }
+
 function Test-EadEflowVmProvision {
     <#
     .DESCRIPTION
@@ -595,6 +606,7 @@ function Test-EadEflowVmDeploy {
 
     return $retval
 }
+
 function Invoke-EadEflowInstall {
     <#
     .DESCRIPTION
@@ -634,6 +646,7 @@ function Invoke-EadEflowInstall {
     Write-Host "$reqProduct successfully installed"
     return $true
 }
+
 function Remove-EadEflowInstall {
     <#
    .DESCRIPTION
@@ -652,6 +665,7 @@ function Remove-EadEflowInstall {
         Write-Host "$($eflowInfo.DisplayName) successfully removed."
     }
 }
+
 function Get-EadEflowInstalledVersion {
     <#
    .DESCRIPTION
@@ -669,6 +683,7 @@ function Get-EadEflowInstalledVersion {
     }
     return $retval
 }
+
 function Invoke-EadEflowDeploy {
     <#
     .DESCRIPTION
@@ -733,27 +748,7 @@ function Invoke-EadEflowDeploy {
         Write-Host "Setting DNS Servers to $dnsservers"
         Set-EflowVmDNSServers -dnsServers $dnsservers
     }
-    $proxyParams = @{}
-    if ($eflowConfig.network.useHostProxy) {
-        $hostSettings = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' | Select-Object ProxyServer, ProxyEnable
-        if ($hostSettings.ProxyEnable) {
-            $proxyParams.Add("httpsProxy", "$($hostSettings.ProxyServer)")
-            $proxyParams.Add("httpProxy", "$($hostSettings.ProxyServer)")
-        }
-    } else {
-        if ($eflowConfig.network.httpsProxy) {
-            $proxyParams.Add("httpsProxy", "$($eflowConfig.network.httpsProxy)")
-        }
-        if ($eflowConfig.network.httpProxy) {
-            $proxyParams.Add("httpProxy", "$($eflowConfig.network.httpProxy)")
-        }
-        if ($eflowConfig.network.ftpProxy) {
-            $proxyParams.Add("ftpProxy", "$($eflowConfig.network.ftpProxy)")
-        }
-    }
-    if ($proxyParams.Count) {
-        Set-EflowVmProxyServers @proxyParams
-    }
+
     #Set-EflowVmFeature
     if ($eflowConfig.vmFeature.DpsTpm) {
         Write-Host "Enabling vmFeature: DpsTpm"
@@ -765,6 +760,7 @@ function Invoke-EadEflowDeploy {
     }
     return $true
 }
+
 function Invoke-EadEflowProvision {
     <#
     .DESCRIPTION
@@ -811,6 +807,52 @@ function Invoke-EadEflowProvision {
     return $true
 }
 
+function Invoke-EadEflowProxyConfiguration {
+   <#
+    .DESCRIPTION
+        Loads the proxy configuration and tries to set up proxy on the VM
+    #>
+    if (-not (Test-EadEflowVmRun)) {
+        Write-Host "Error: Eflow VM is not found" -ForegroundColor Red
+        return $false
+    }
+
+    $proxyParams = @{}
+    if ($eflowConfig.network.useHostProxy) {
+        $hostSettings = Get-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' | Select-Object ProxyServer, ProxyEnable
+        if ($hostSettings.ProxyEnable) {
+            $proxyParams.Add("httpsProxy", "$($hostSettings.ProxyServer)")
+            $proxyParams.Add("httpProxy", "$($hostSettings.ProxyServer)")
+        }
+    } else {
+        if ($eflowConfig.network.httpsProxy) {
+            $proxyParams.Add("httpsProxy", "$($eflowConfig.network.httpsProxy)")
+        }
+        if ($eflowConfig.network.httpProxy) {
+            $proxyParams.Add("httpProxy", "$($eflowConfig.network.httpProxy)")
+        }
+        if ($eflowConfig.network.ftpProxy) {
+            $proxyParams.Add("ftpProxy", "$($eflowConfig.network.ftpProxy)")
+        }
+    }
+    if ($proxyParams.Count) {
+        Write-Host "Starting EFLOW VM Proxy configuration..."
+        Set-EflowVmProxyServers @proxyParams
+    }
+}
+
+function Test-EadProxyConfiguration {
+    $proxyEnv = Invoke-EflowVmCommand 'echo $http_proxy $https_proxy'
+    if ([string]::IsNullOrEmpty($proxyEnv)) {
+        Write-Host "No proxy configuration found" -ForegroundColor Green
+        $retval = $false
+    } else {
+        Write-Host "Error: Eflow VM proxy already configured - Try manual configuration" - -ForegroundColor Red
+        $retval = $true
+    }
+    return $retval
+}
+
 function Set-EflowVmProxyServers {
     # Configuration based on the following documents
     # https://learn.microsoft.com/en-us/azure/iot-edge/how-to-configure-proxy-support?view=iotedge-1.4
@@ -829,7 +871,7 @@ function Set-EflowVmProxyServers {
         Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/aziot-edged.service.d/ && sudo touch /etc/systemd/system/aziot-edged.service.d/override.conf && printf '[Service]' | sudo tee /etc/systemd/system/aziot-edged.service.d/override.conf > /dev/null"
         Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/aziot-identityd.service.d/ && sudo touch /etc/systemd/system/aziot-identityd.service.d/override.conf && printf '[Service]' | sudo tee /etc/systemd/system/aziot-identityd.service.d/override.conf > /dev/null"
         Invoke-EflowVmCommand "sudo mkdir -p /etc/systemd/system/docker.service.d/ && sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf && printf '[Service]' | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf > /dev/null"
-        Invoke-EflowVmCommand "sudo printf '[agent.env]' | sudo tee -a /etc/aziot/config.toml > /dev/null"
+        Invoke-EflowVmCommand "sudo echo -e '\n[agent]\nname = \`"edgeAgent\`"\ntype = \`"docker\`"\n\n[agent.config]\nimage = \`"mcr.microsoft.com/azureiotedge-agent:latest\`"\ncreateOptions = { HostConfig = { Binds = [\`"/iotedge/storage:/iotedge/storage\`"] } }\n\n[agent.env]' | sudo tee -a /etc/aziot/config.toml > /dev/null"
         $restartIotEdge = $true
     }
     if (![string]::IsNullOrEmpty($httpProxy)) {
@@ -840,7 +882,7 @@ function Set-EflowVmProxyServers {
         Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/aziot-edged.service.d/override.conf > /dev/null"
         Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/aziot-identityd.service.d/override.conf > /dev/null"
         Invoke-EflowVmCommand "sudo printf  '\nEnvironment=http_proxy=$httpProxy' | sudo tee -a /etc/systemd/system/docker.service.d/http-proxy.conf > /dev/null"
-        Invoke-EflowVmCommand "sudo echo -e '\n\`"http_proxy\`" = \`"$httpProxy\`"' | sudo tee -a /etc/aziot/config.toml > /dev/null"
+        Invoke-EflowVmCommand "sudo echo -e '\`"http_proxy\`" = \`"$httpProxy\`"' | sudo tee -a /etc/aziot/config.toml > /dev/null"
     }
     if (![string]::IsNullOrEmpty($httpsProxy)) {
         Write-Host "Setting httpsProxy configuration : $httpsProxy"
@@ -850,7 +892,7 @@ function Set-EflowVmProxyServers {
         Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/aziot-edged.service.d/override.conf > /dev/null"
         Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/aziot-identityd.service.d/override.conf > /dev/null"
         Invoke-EflowVmCommand "sudo printf  '\nEnvironment=https_proxy=$httpsProxy' | sudo tee -a /etc/systemd/system/docker.service.d/http-proxy.conf > /dev/null"
-        Invoke-EflowVmCommand "sudo echo -e '\n\`"https_proxy\`" = \`"$httpsProxy\`"' | sudo tee -a /etc/aziot/config.toml > /dev/null"
+        Invoke-EflowVmCommand "sudo echo -e '\`"https_proxy\`" = \`"$httpsProxy\`"' | sudo tee -a /etc/aziot/config.toml > /dev/null"
     }
     if (![string]::IsNullOrEmpty($ftpProxy)) {
         Write-Host "Setting ftpProxy configuration : $ftpProxy"
@@ -932,6 +974,7 @@ function Test-EadEflowVmSwitch {
     }
     return $true
 }
+
 function New-EadEflowVmSwitch {
     $usrCfg = Get-EadUserConfig
     $nwCfg = $usrCfg.network
@@ -1044,9 +1087,15 @@ function Start-EadWorkflow {
         # We are here.. all is good so far. Validate and deploy eflow
         if (!(Invoke-EadEflowDeploy)) { return $false }
     }
+
     if (! (Test-EadEflowVmProvision)) {
         # Validate and provision eflow
         if (!(Invoke-EadEflowProvision)) { return $false}
+    }
+
+    if (! (Test-EadProxyConfiguration)) {
+        # Validate and provision eflow
+        if (!(Invoke-EadProxyConfiguration)) { return $false}
     }
 
     if (Verify-EflowVm) {
