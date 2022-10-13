@@ -841,10 +841,10 @@ function Invoke-EadEflowProxyConfiguration {
     }
 }
 
-function Test-EadProxyConfiguration {
+function Test-EadEflowProxyConfiguration {
     $proxyEnv = Invoke-EflowVmCommand 'echo $http_proxy $https_proxy'
     if ([string]::IsNullOrEmpty($proxyEnv)) {
-        Write-Host "No proxy configuration found" -ForegroundColor Green
+        Write-Host "No VMproxy configuration already applied" -ForegroundColor Green
         $retval = $false
     } else {
         Write-Host "Error: Eflow VM proxy already configured - Try manual configuration" - -ForegroundColor Red
@@ -1093,9 +1093,9 @@ function Start-EadWorkflow {
         if (!(Invoke-EadEflowProvision)) { return $false}
     }
 
-    if (! (Test-EadProxyConfiguration)) {
+    if (! (Test-EadEflowProxyConfiguration)) {
         # Validate and provision eflow
-        if (!(Invoke-EadProxyConfiguration)) { return $false}
+        if (!(Invoke-EadEflowProxyConfiguration)) { return $false}
     }
 
     if (Verify-EflowVm) {
