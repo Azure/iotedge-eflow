@@ -844,15 +844,18 @@ function Invoke-EadEflowProxyConfiguration {
         }
     }
     if ($proxyParams.Count) {
-        Write-Host "Starting EFLOW VM Proxy configuration..."
+        Write-Host "Starting EFLOW VM Proxy configuration..." -ForegroundColor Green
         Set-EflowVmProxyServers @proxyParams
+    } else {
+        Write-Host "No proxy configuration found. Skipping EFLOW VM proxy configuration" -ForegroundColor Green
     }
+    return $true
 }
 
 function Test-EadEflowProxyConfiguration {
     $proxyEnv = Invoke-EflowVmCommand 'echo $http_proxy $https_proxy'
     if ([string]::IsNullOrEmpty($proxyEnv)) {
-        Write-Host "No VMproxy configuration already applied" -ForegroundColor Green
+        Write-Host "No EFLOW VM proxy configuration already applied" -ForegroundColor Green
         $retval = $false
     } else {
         Write-Host "Error: Eflow VM proxy already configured - Try manual configuration" - -ForegroundColor Red
