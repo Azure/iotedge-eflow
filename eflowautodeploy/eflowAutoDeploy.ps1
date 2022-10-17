@@ -86,6 +86,14 @@ function Get-EadUserConfig {
 function Read-EadUserConfig {
     if ($eadSession.UserConfigFile) {
         $eadSession.UserConfig = Get-Content "$($eadSession.UserConfigFile)" | ConvertFrom-Json
+
+        # Remove unncesary empty network parameters
+        $eadSession.UserConfig.network.PSObject.Properties | ForEach {
+            if  ($_.TypeNameOfValue -is [System.String] -and [string]::IsNullOrEmpty($_.Value))
+            {
+                $eadSession.UserConfig.network.PSObject.Properties.Remove($_.Name)
+            }
+        }
     } else { Write-Host "Error: EFLOWUserConfigFile not configured" -ForegroundColor Red }
 }
 
