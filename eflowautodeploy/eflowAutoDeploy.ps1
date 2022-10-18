@@ -343,7 +343,6 @@ function Test-EadUserConfigDeploy {
         Write-Host "* Optional telemetry accepted." -ForegroundColor Green
     } else {
         Write-Host "- Optional telemetry not accepted. Basic telemetry will be sent." -ForegroundColor Yellow
-        if ($euCfg) { $euCfg.PSObject.properties.remove('acceptOptionalTelemetry') }
     }
 
     # 2) Check the virtual switch specified
@@ -708,6 +707,9 @@ function Invoke-EadEflowDeploy {
     $eflowDeployParams.Add("acceptEula", "Yes")
     if ($eflowConfig.enduser.acceptOptionalTelemetry -eq "Yes") {
         $eflowDeployParams.Add("acceptOptionalTelemetry", "Yes")
+    } 
+    elseif ($eflowConfig.enduser.acceptOptionalTelemetry -eq "No") {
+        $eflowDeployParams.Add("acceptOptionalTelemetry", "No")
     }
 
     if ($eflowConfig.network) {
