@@ -109,8 +109,8 @@ function Set-EflowVmEdgeCertificates
         $edgeConfigurationFile = '/etc/iotedge/config.yaml'
         $iotedgeService = "iotedge"
 
-        # If IoT Edge 1.2 check for config.toml file and service is aziot-edged
-        if($iotEdgeVersion -Match "1.2")
+        # If IoT Edge = 1.2/1.3/1.4 check for config.toml file and service is aziot-edged
+        if($iotEdgeVersion -Match "1.2" -Or $iotEdgeVersion -Match "1.3" -Or $iotEdgeVersion -Match "1.4")
         {
             $edgeConfigurationFile = '/etc/aziot/config.toml'
             $iotedgeService = "aziot-edged"
