@@ -27,7 +27,7 @@ jsonDiagram {
 {
     "schemaVersion":"1.1",
     "version":"1.0",
-    "eflowProduct" :["Azure IoT Edge LTS", "Azure IoT Edge CR X64","Azure IoT Edge CR ARM64"],
+    "eflowProduct" :["Azure IoT Edge LTS", "Azure IoT Edge CR X64","Azure IoT Edge CR ARM64", "Azure IoT Edge 1.4 LTS X64", "Azure IoT Edge 1.4 LTS ARM64" ],
     "eflowProductUrl" : "URL",
     "installOptions":{
         "installPath":"String",
