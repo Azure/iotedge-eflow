@@ -2,17 +2,16 @@
 ## Progress
 
 - [x] [Introduction](../README.md)   
-- [x] [Step 1 - Setup Development Environment](./Setup%20DevVM.MD)   
-- [x] [Step 2 - Setup Azure Resources](./Setup%20Azure%20Resources.MD) 
-- [x] [Step 3 - Setup Azure IoT Edge for Linux on Windows](./Setup%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD) 
-- [ ] **Step 4 - Develop and publish the IoT Edge Linux module**  
-- [ ] [Step 5 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
-- [ ] [Step 6 - Develop the Windows C# UWP Application](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD)
-- [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
-- [ ] [Step 8 - Run samples](./Run%20samples.MD) 
+- [x] [Step 1 - Setup Azure Resources](./Setup%20Azure%20Resources.MD) 
+- [x] [Step 2 - Setup Azure IoT Edge for Linux on Windows](./Setup%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD) 
+- [ ] **Step 3 - Develop and publish the IoT Edge Linux module**  
+- [ ] [Step 4 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
+- [ ] [Step 5 - Develop the Windows C# UWP Application](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD)
+- [ ] [Step 6 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
+- [ ] [Step 7 - Run samples](./Run%20samples.MD) 
 - [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
-# Step 4: Develop and publish the IoT Edge Linux module
+# Step 3: Develop and publish the IoT Edge Linux module
 In this part, we develop and publish the Linux modules in the Windows host using Visual Studio Code.
 
 Build the sample Linux modules in VS Code and add them to your Azure Registry.

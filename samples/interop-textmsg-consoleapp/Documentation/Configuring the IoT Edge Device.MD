@@ -61,7 +61,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Provision the Azure IoT Edge for Linux configuration**  
     To edit config.yaml run the following command:
     ```bash
-    sudo nano /etc/iotedge/config.yaml
+    sudo nano /etc/aziot/config.toml
     ```    
     
     > **Note:** Skip the following step if Azure IoT Edge was deployed using EFLOW installation. Only replace the connection if it was manually provisioned.
@@ -78,9 +78,9 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
    * Set the location of the certificates that were copied ot the device earlier.
         ```yaml
         certificates:
-          device_ca_cert: "/home/efl-user/certs/new-edge-device-full-chain.cert.pem"
-          device_ca_pk: "/home/efl-user/certs/new-edge-device.key.pem"
-          trusted_ca_certs: "/home/efl-user/certs/azure-iot-test-only.root.ca.cert.pem"
+          device_ca_cert: "/home/iotedge-user/certs/new-edge-device-full-chain.cert.pem"
+          device_ca_pk: "/home/iotedge-user/certs/new-edge-device.key.pem"
+          trusted_ca_certs: "/home/iotedge-user/certs/azure-iot-test-only.root.ca.cert.pem"
         ```
         > **Note:** <Make sure there are no whitespaces before certificates paths and two spaces indenting each sub part. 
 
@@ -95,7 +95,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Restart IoT Edge**    
     Restart IoT Edge by running the following command.
     ```base
-    sudo systemctl restart iotedge
+    sudo systemctl restart aziot-*
     ```
 1. **Check the IoT Edge configuration**  
     Check that IoT Edge is configured correctly by running the below command.

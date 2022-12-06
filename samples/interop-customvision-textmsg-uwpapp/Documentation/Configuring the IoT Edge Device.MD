@@ -2,18 +2,17 @@
 ## Progress
 
 - [x] [Introduction](../README.md)  
-- [x] [Step 1 - Setup Development Environment](./Setup%20DevVM.MD)   
-- [x] [Step 2 - Setup Azure Resources](./Setup%20Azure%20Resources.MD)  
-- [x] [Step 3 - Setup Azure IoT Edge for Linux on Windows](./Setup%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)
-- [x] [Step 4 - Develop and publish the IoT Edge Linux module](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
-- [x] [Step 5 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
-- [x] [Step 6 - Develop the Windows C# UWP Application](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD)
-- [ ] **Step 7 - Configuring the IoT Edge Device**  
-- [ ] [Step 8 - Run samples](./Run%20samples.MD) 
+- [x] [Step 1 - Setup Azure Resources](./Setup%20Azure%20Resources.MD)  
+- [x] [Step 2 - Setup Azure IoT Edge for Linux on Windows](./Setup%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)
+- [x] [Step 3 - Develop and publish the IoT Edge Linux module](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
+- [x] [Step 4 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
+- [x] [Step 5 - Develop the Windows C# UWP Application](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD)
+- [ ] **Step 6 - Configuring the IoT Edge Device**  
+- [ ] [Step 7 - Run samples](./Run%20samples.MD) 
 - [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
 
-# Step 7: Configuring the IoT Edge Device.
+# Step 6: Configuring the IoT Edge Device.
 In this part we configure the Azure IoT Edge for Linux instance on the IoT edge device.
 
 
@@ -59,7 +58,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Provision the Azure IoT Edge for Linux configuration**  
     To edit config.yaml run the following command:
     ```bash
-    sudo nano /etc/iotedge/config.yaml
+    sudo nano /etc/aziot/config.toml
     ```    
     > **Note:**
     > Skip the following step if Azure IoT Edge was deployed using EFLOW installation. Only replace the connection if it was manually provisioned.
@@ -93,7 +92,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Restart IoT Edge**    
     Restart IoT Edge by running the following command.
     ```base
-    sudo systemctl restart iotedge
+    sudo systemctl restart aziot-*
     ```
 1. **Check the IoT Edge configuration**  
     Check that IoT Edge is configured correctly by running the below command.

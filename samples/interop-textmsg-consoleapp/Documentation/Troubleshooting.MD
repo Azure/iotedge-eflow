@@ -23,8 +23,8 @@ This problem is usually caused by a gateway issue. On the IoT Edge device config
 
 If the previous steps doesn't work, follow these steps:
 1. In the config.yaml, change the hostname to the IP address of the EFLOW VM. 
-2. `sudo systemctl restart iotedge` 
-3. `sudo systemctl status iotedge` - Make sure it says active (running)  
+2. `sudo systemctl restart aziot*` 
+3. `sudo systemctl status aziot*` - Make sure it says active (running)  
 4. `sudo iotedge check` 
 5. Run the c# console app using the IP address for the gateway address insted of the hostname
 <br/>
