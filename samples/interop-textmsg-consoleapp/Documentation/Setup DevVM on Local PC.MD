@@ -48,9 +48,9 @@ Where would you like to create your developer environment?
 1. In PowerShell run the scripts in the following order:
 
      ```powershell
-    Enable-HyperV.ps1
-    Install-Chocolatey.ps1
-    Install-DevMachineSoftware.ps1
+    .\Enable-HyperV.ps1
+    .\Install-Chocolatey.ps1
+    .\Install-DevMachineSoftware.ps1
     ```
 
 1. Restart the machine with the command 

@@ -293,11 +293,11 @@ This part describes how to develop the Windows console application in the develo
    ```powershell
    dotnet publish -c Release -r win10-x64 --self-contained true -p:PublishSingleFile=true -p:PublishTrimmed=true
    ```
-   It will create a single binary along with the symbols under EdgeSolution\LeafDeviceApp\bin\Release\netcoreapp3.1\win10-x64\publish\.  
+   It will create a single binary along with the symbols under EdgeSolution\LeafDeviceApp\bin\Release\\<net-core-version\>\win10-x64\publish\.  
 
 1. Copy the following build artifact folder onto the IoT device’s Windows OS:
    ```powershell
-   EdgeSolution\LeafDeviceApp\bin\Release\netcoreapp3.1\win10-x64\publish\
+   EdgeSolution\LeafDeviceApp\bin\Release\<net-core-version>\win10-x64\publish\
    ```
 
 Go to [Next Step](./Configuring%20the%20IoT%20Edge%20Device.MD)  
