@@ -58,7 +58,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Provision the Azure IoT Edge for Linux configuration**  
     To edit config.yaml run the following command:
     ```bash
-    sudo nano /etc/iotedge/config.yaml
+    sudo nano /etc/aziot/config.toml
     ```    
     > **Note:**
     > Skip the following step if Azure IoT Edge was deployed using EFLOW installation. Only replace the connection if it was manually provisioned.
@@ -92,7 +92,7 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Restart IoT Edge**    
     Restart IoT Edge by running the following command.
     ```base
-    sudo systemctl restart iotedge
+    sudo systemctl restart aziot-*
     ```
 1. **Check the IoT Edge configuration**  
     Check that IoT Edge is configured correctly by running the below command.
