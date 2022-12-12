@@ -178,6 +178,7 @@ The IoT Edge extension tries to pull your container registry credentials from Az
    ```json
    <registryname>": { "username": "$CONTAINER_REGISTRY_USERNAME_<registryname>", "password": "$CONTAINER_REGISTRY_PASSWORD_<registryname>", "address": "<registryname>.azurecr.io" }
    ```
+
 1. Save the file deployment.template.json
 
 1. In the VS Code explorer, open the **modules/SampleModule/module.json** file in your IoT Edge solution workspace.
