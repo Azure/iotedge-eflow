@@ -209,12 +209,6 @@ function Test-EadUserConfigNetwork {
             $ipconfigstatus = $false
         } else {
             $status = Test-Connection $nwCfg.ip4GatewayAddress -Count 1 -Quiet
-            if (($status) -and ($nwCfg.vSwitchType -ieq "Internal")) {
-                # flagging it as a warning for now. To be fixed.
-                Write-Host "Warning: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) may be in use already" -ForegroundColor Yellow
-                #$errCnt += 1
-                #$ipconfigstatus = $false
-            }
             if ((-not $status) -and ($nwCfg.vSwitchType -ieq "External")) {
                 Write-Host "Error: ip4GatewayAddress $($nwCfg.ip4GatewayAddress) is not reachable. Required for external switch" -ForegroundColor Red
                 $errCnt += 1
