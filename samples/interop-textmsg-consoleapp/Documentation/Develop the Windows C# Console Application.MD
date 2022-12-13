@@ -254,8 +254,8 @@ This part describes how to develop the Windows console application in the develo
 1. In the VS Code explorer, open **EdgeSolution** > **LeafDeviceApp** > **LeafDeviceApp.csproj** and add below entry inside the Project node:  
     ```
     <ItemGroup>
-        <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.41.3" />
-        <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" /> 
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.41.3" /> 
     </ItemGroup>
     ```
 
