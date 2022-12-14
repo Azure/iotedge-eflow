@@ -27,8 +27,8 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
     * Inside the EFLOW VM environment, use mkdir to create the Certificates folder  
 
         ```powershell
-        sudo mkdir /etc/certs/
-        sudo chown iotedge-user /etc/certs
+        sudo mkdir /var/certs/
+        sudo chmod 777 /var/certs/ 
         ``` 
 
 2. **Copy Certificates to EFLOW VM environment**
@@ -37,6 +37,7 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
 
         ```powershell
         Copy-EflowVmFile -fromFile .\certs\*  -toFile ~/certs/ -pushFile
+        Copy-EflowVmFile -fromFile .\private\*  -toFile ~/certs/ -pushFile
         ```
     
     
@@ -56,20 +57,21 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Read the certificates**  
     Run the following command to allow Azure IoT Edge to read the certificates.
     ```bash
-    sudo chown aziotcs:aziotcs /etc/certs
-    sudo chown -R iotedge: /etc/certs
+    sudo chown aziotcs:aziotcs /var/certs
     ```
 1. **Configure certificates**  
     To edit config.yaml run the following command:
     ```bash
     sudo nano /etc/aziot/config.toml
+    sudo chmod -R 777 /var/certs/
     ```    
     
    * Set the location of the certificates that were copied ot the device earlier.
         ```yaml
+        trust_bundle_cert = "file:///var/certs/azure-iot-test-only.root.ca.cert.pem"
         [edge_ca]
-        cert = "file:///etc/certs/new-edge-device-full-chain.cert.pem"
-        pk = "file:///etc/certsnew-edge-device.key.pem"
+        cert = "file:///var/certs/new-edge-device-full-chain.cert.pem"
+        pk = "file:///var/certs/new-edge-device.key.pem"
         ```
         > **Note:** <Make sure there are no whitespaces before certificates paths and two spaces indenting each sub part. 
 
