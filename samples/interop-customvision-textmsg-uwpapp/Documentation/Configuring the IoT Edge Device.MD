@@ -19,14 +19,15 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
 1. **Create Certificates folder inside the EFLOW VM**
     * Use SSH to log in to the EFLOW VM environment.  
 
-        ```powershell
-        Connect-EflowVm
-        ``` 
+      ```powershell
+       Connect-EflowVm
+       ``` 
 
     * Inside the EFLOW VM environment, use mkdir to create the Certificates folder  
 
         ```powershell
-        mkdir ~/certs/
+        sudo mkdir /var/certs/
+        sudo chmod 777 /var/certs/ 
         ``` 
 
 2. **Copy Certificates to EFLOW VM environment**
@@ -35,7 +36,9 @@ In this part we configure the Azure IoT Edge for Linux instance on the IoT edge 
 
         ```powershell
         Copy-EflowVmFile -fromFile .\certs\*  -toFile ~/certs/ -pushFile
+        Copy-EflowVmFile -fromFile .\private\*  -toFile ~/certs/ -pushFile
         ```
+    
     
 3. **Log in to the Linux environment**
 
@@ -53,32 +56,21 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
 1. **Read the certificates**  
     Run the following command to allow Azure IoT Edge to read the certificates.
     ```bash
-    sudo chown -R iotedge: ~/certs
+    sudo chown aziotcs:aziotcs /var/certs
     ```
-1. **Provision the Azure IoT Edge for Linux configuration**  
+1. **Configure certificates**  
     To edit config.yaml run the following command:
     ```bash
     sudo nano /etc/aziot/config.toml
+    sudo chmod -R 777 /var/certs/
     ```    
-    > **Note:**
-    > Skip the following step if Azure IoT Edge was deployed using EFLOW installation. Only replace the connection if it was manually provisioned.
     
-    * Replace `"<IoT Edge Device connection string>"` in the 'Manual provisioning configuration with the connection string that you obtained in Step 2-6.
-    
+   * Set the location of the certificates that were copied ot the device earlier.
         ```yaml
-        # Manual provisioning configuration
-        provisioning:
-          source: "manual"
-          device_connection_string: "<IoT Edge Device connection string>"
-        ```
-
-
-    * Set the location of the certificates that were copied ot the device earlier.
-        ```yaml
-        certificates:
-          device_ca_cert: "/home/efl-user/certs/new-edge-device-full-chain.cert.pem"
-          device_ca_pk: "/home/efl-user/certs/new-edge-device.key.pem"
-          trusted_ca_certs: "/home/efl-user/certs/azure-iot-test-only.root.ca.cert.pem"
+        trust_bundle_cert = "file:///var/certs/azure-iot-test-only.root.ca.cert.pem"
+        [edge_ca]
+        cert = "file:///var/certs/new-edge-device-full-chain.cert.pem"
+        pk = "file:///var/certs/new-edge-device.key.pem"
         ```
         > **Note:** <Make sure there are no whitespaces before certificates paths and two spaces indenting each sub part. 
 
@@ -87,12 +79,12 @@ As the Azure Device Client Namespace is used, we use the underlying AMQP protoco
     
       > **Note:** Skip the next step if you are on a network with dynamic DNS, then edge modules will automatically be able to resolve the VM’s IP address from its hostname. 
 
- 
     * To save the file and exit nano, press <kbd>CTRL</kbd>+<kbd>x</kbd>, confirm save and exit with <kbd>Y</kbd> and press <kbd>Enter</kbd>. This concludes the provisioning and configuration.
+
 1. **Restart IoT Edge**    
-    Restart IoT Edge by running the following command.
+    Apply the new configuration running the following command.
     ```base
-    sudo systemctl restart aziot-*
+    sudo iotedge config apply
     ```
 1. **Check the IoT Edge configuration**  
     Check that IoT Edge is configured correctly by running the below command.

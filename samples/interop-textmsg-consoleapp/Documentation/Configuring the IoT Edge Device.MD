@@ -13,7 +13,7 @@
 - [ ] [Troubleshooting](./Troubleshooting.MD)  
 ---
 
-# Step 7: Configuring the IoT Edge Device.
+# Step 6: Configuring the IoT Edge Device.
 In this part we configure the Azure IoT Edge for Linux instance on the IoT edge device.
 
 
