@@ -1,19 +1,18 @@
 # Interop Console App with Linux Edge Module
 ## Progress
 
-- [x] [Introduction](../README.md)  
-- [x] [Step 1 - Setup Development Environment](./Setup%20DevVM.MD)   
-- [x] [Step 2 - Setup Azure Resources](./Setup%20Azure%20Resources.MD)
-- [x] [Step 3 - Setup Azure IoT Edge for Linux on Windows](./Setup%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)  
-- [x] [Step 4 - Develop and publish the IoT Edge Linux module](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
-- [x] [Step 5 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
-- [ ] **Step 6 - Develop the Windows C# Console Application**  
-- [ ] [Step 7 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
-- [ ] [Step 8 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
-- [ ] [Step 9 - Run the Console Application](./Run%20the%20Console%20Application.MD)  
+- [x] [Introduction](../README.md)    
+- [x] [Step 1 - Setup Azure Resources](./Setup%20Azure%20Resources.MD)
+- [x] [Step 2 - Setup Azure IoT Edge for Linux on Windows](./Setup%20Azure%20IoT%20Edge%20for%20Linux%20on%20Windows.MD)  
+- [x] [Step 3 - Develop and publish the IoT Edge Linux module](./Develop%20and%20publish%20the%20IoT%20edge%20Linux%20module.MD)  
+- [x] [Step 4 - Create Certificates for Authentication](./Create%20Certificates%20for%20Authentication.MD)  
+- [ ] **Step 5 - Develop the Windows C# Console Application**  
+- [ ] [Step 6 - Configuring the IoT Edge Device](./Configuring%20the%20IoT%20Edge%20Device.MD)  
+- [ ] [Step 7 - Deploy the Modules onto the IoT Edge Device](./Deploy%20the%20Modules%20onto%20the%20IoT%20Edge%20Device.MD)  
+- [ ] [Step 8 - Run the Console Application](./Run%20the%20Console%20Application.MD)  
 - [ ] [Troubleshooting](./Troubleshooting.MD)  
 ---
-# Step 6: Develop the Windows C# Console Application
+# Step 5: Develop the Windows C# Console Application
 This part describes how to develop the Windows console application in the development VM.
 
 > **Note:** The C# solution created in the following steps is included in our sample repo. You can use the downloaded sample code and run it
@@ -26,7 +25,7 @@ This part describes how to develop the Windows console application in the develo
    ```powershell
    dotnet new console -n LeafDeviceApp
    ```
-1. Create the file “EdgeSolution\LeafDeviceApp\CertificateManager.cs” with the following code
+1. Create the file `EdgeSolution\LeafDeviceApp\CertificateManager.cs` with the following code
       
     ```csharp
        using System;
@@ -82,95 +81,75 @@ This part describes how to develop the Windows console application in the develo
 
 
     ```csharp
-    using System;
     using System.Text;
-    using System.Threading.Tasks;
+    using CommandLine;
     using Microsoft.Azure.Devices.Client;
-    using Microsoft.Extensions.CommandLineUtils;
     using Newtonsoft.Json;
+
 
     namespace LeafDeviceApp
     {
+        public class Options
+        {
+            [Option('x', "connection", Required = false, HelpText = "IoT Hub Connection String e.g HostName=hubname.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=xxxxxx;")]
+            public string connectionStringOption { get; set; }
+
+            [Option('c', "certificate", Required = false, HelpText = "File path to Root CA certificate in PEM format")]
+            public string certificateOption { get; set; }
+
+            [Option('g', "gateway-host-name", Required = false, HelpText = "Fully qualified domain name of the edge device acting as a gateway. e.g. iotedge-xxx.westus2.cloudapp.azure.com")]
+            public string gatewayHostNameOption { get; set; }
+
+        }
+
         class Program
         {
-            static void Main(string[] args)
-            {
-                InitializeApp();
-
-                app.OnExecute(() =>
-                {
-                    InstallCertificate();
-
-                    string iotHubConnectionString = GetConnectionString();
-                    string gatewayHost = GetGatewayHostName();
-                    string deviceConnectionString = $"{iotHubConnectionString};GatewayHostName={gatewayHost}";
-                    deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString);
-                    deviceClient.SetMethodHandlerAsync("LeafDeviceDirectMethod", LeafDeviceMethodCallback, null).Wait();
-
-                    ConsoleKeyInfo input;
-                    while(true)
-                    {
-                        Console.WriteLine("Press 1 to send message and any other key for exit.");
-                        input = Console.ReadKey();
-                        if(input.Key != ConsoleKey.D1)
-                        {
-                            break;
-                        }
-                        SendMessage().Wait();
-                    }
-                    return 0;
-                });
-
-                app.Execute(args);
-                Console.ReadLine();
-            }
-
-            private static CommandLineApplication app = new CommandLineApplication();
-            private static CommandOption connectionStringOption;
-            private static CommandOption certificateOption;
-            private static CommandOption gatewayHostNameOption;
             private static DeviceClient deviceClient;
 
-            /// <summary>
-            /// Initializes the instance of the CommandLineApplication
-            /// </summary>
-            private static void InitializeApp()
+            static void Main(string[] args)
             {
-                app.Name = "LeafDeviceApp";
-                app.Description = "Leaf device to communicate with edge gateway device.";
+                Console.Title = "LeafDeviceApp";
+                Parser.Default.ParseArguments<Options>(args)
+                    .WithParsed<Options>(o =>
+                    {
+                        InstallCertificate(o.certificateOption);
 
-                app.HelpOption("-?|-h|--help");
+                        string iotHubConnectionString = GetConnectionString(o.connectionStringOption);
+                        string gatewayHost = GetGatewayHostName(o.gatewayHostNameOption);
+                        string deviceConnectionString = $"{iotHubConnectionString};GatewayHostName={gatewayHost}";
+                        deviceClient = DeviceClient.CreateFromConnectionString(deviceConnectionString);
+                        deviceClient.SetMethodHandlerAsync("LeafDeviceDirectMethod", LeafDeviceMethodCallback, null).Wait();
 
-                connectionStringOption = app.Option(
-                    "-x|--connection",
-                    @"IoT Hub Connection String e.g HostName=hubname.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=xxxxxx;",
-                    CommandOptionType.SingleValue);
-
-                certificateOption = app.Option(
-                    "-c|--certificate",
-                    "File path to Root CA certificate in PEM format",
-                    CommandOptionType.SingleValue);
-
-                gatewayHostNameOption = app.Option(
-                    "-g|--gateway-host-name",
-                    "Fully qualified domain name of the edge device acting as a gateway. e.g. iotedge-xxx.westus2.cloudapp.azure.com ",
-                    CommandOptionType.SingleValue);
+                        ConsoleKeyInfo input;
+                        while (true)
+                        {
+                            Console.WriteLine("Press 1 to send message and any other key for exit.");
+                            input = Console.ReadKey();
+                            if (input.Key != ConsoleKey.D1)
+                            {
+                                break;
+                            }
+                            SendMessage().Wait();
+                        }
+                    });
+                
+                Console.ReadLine();
             }
 
             /// <summary>
             /// Looks for a certificate either passed as a parameter or in the CA_CERTIFICATE_PATH
             /// environment variable and, if present, attempts to install the certificate
             /// </summary>
-            private static void InstallCertificate()
+            private static void InstallCertificate(string certificateOption)
             {
                 string certificatePath;
-                if (!certificateOption.HasValue())
+                if (string.IsNullOrEmpty(certificateOption))
                 {
                     certificatePath = Environment.GetEnvironmentVariable("CA_CERTIFICATE_PATH");
                 }
                 else
                 {
-                    certificatePath = certificateOption.Value();
+                    certificatePath = certificateOption;
                 }
 
                 if (!String.IsNullOrWhiteSpace(certificatePath))
@@ -184,18 +163,17 @@ This part describes how to develop the Windows console application in the develo
             /// If the connection string wasn't passed method prompts for the connection string.
             /// </summary>
             /// <returns></returns>
-            private static string GetConnectionString()
+            private static string GetConnectionString(string connectionStringOption)
             {
                 string connectionString;
 
-                if (!connectionStringOption.HasValue())
+                if (string.IsNullOrEmpty(connectionStringOption))
                 {
                     connectionString = Environment.GetEnvironmentVariable("DEVICE_CONNECTION_STRING");
-                    app.ShowHint();
                 }
                 else
                 {
-                    connectionString = connectionStringOption.Value();
+                    connectionString = connectionStringOption;
                 }
 
                 while (String.IsNullOrWhiteSpace(connectionString))
@@ -213,18 +191,17 @@ This part describes how to develop the Windows console application in the develo
             /// If the gateway host name wasn't passed method prompts for the gateway host name.
             /// </summary>
             /// <returns></returns>
-            private static string GetGatewayHostName()
+            private static string GetGatewayHostName(string gatewayHostNameOption)
             {
                 string gatewayHostName;
 
-                if (!gatewayHostNameOption.HasValue())
+                if (string.IsNullOrEmpty(gatewayHostNameOption))
                 {
                     gatewayHostName = Environment.GetEnvironmentVariable("GATEWAY_HOST_NAME");
-                    app.ShowHint();
                 }
                 else
                 {
-                    gatewayHostName = gatewayHostNameOption.Value();
+                    gatewayHostName = gatewayHostNameOption;
                 }
 
                 while (String.IsNullOrWhiteSpace(gatewayHostName))
@@ -277,8 +254,8 @@ This part describes how to develop the Windows console application in the develo
 1. In the VS Code explorer, open **EdgeSolution** > **LeafDeviceApp** > **LeafDeviceApp.csproj** and add below entry inside the Project node:  
     ```
     <ItemGroup>
-        <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.18.1" />
-        <PackageReference Include="Microsoft.Extensions.CommandLineUtils" Version="1.1.1" /> 
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.41.3" /> 
     </ItemGroup>
     ```
 

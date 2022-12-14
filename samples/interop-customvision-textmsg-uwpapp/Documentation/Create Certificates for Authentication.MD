@@ -12,30 +12,14 @@
 - [ ] [Troubleshooting](./Troubleshooting.MD) 
 ---
 # Step 4: Create Certificates for Authentication
-This part describes the relevant steps to create sample certificates for the authentication between downstream device and IoT Edge.
+This part describes the relevant steps to create sample certificates for the authentication between downstream device and IoT edge.
 
 * **To create a sample PKI with certificate validity for one month**  
- Complete the steps within the [Create certificates](https://docs.microsoft.com/azure/iot-edge/tutorial-machine-learning-edge-05-configure-edge-device#create-certificates) section of [Tutorial: Configure an IoT Edge device](https://docs.microsoft.com/azure/iot-edge/tutorial-machine-learning-edge-05-configure-edge-device).  
-    > **Note:** You only need to generate certificates and do not need to upload them to Azure Key Vault as described in the section following Create certificates.. 
+ Complete the steps within the steps of [Create demo certificates to test IoT Edge device features](https://learn.microsoft.com/en-us/azure/iot-edge/how-to-create-transparent-gateway?view=iotedge-1.4&tabs=eflow#create-demo-certificates).  
 
 * **To generate customizable test certificates**  
-Follow the steps described in [Generate test certificates for Edge Gateway](https://github.com/Azure-Samples/IoTEdgeAndMlSample/tree/master/CreateCertificates) to create sample certificates to use for the interop solution. It generates certificates with default subject name "turbofanGateway" and 30 days validity. To extend the validity of certificates (or) to change the subject name, make the following modifications to **dockerfile** then rebuild the docker image.
+Follow the steps described in [Generate test certificates for Edge Gateway](https://github.com/Azure-Samples/IoTEdgeAndMlSample/tree/master/CreateCertificates) to create sample certificates to use for the interop solution. It generates certificates with default subject name "turbofanGateway" and 30 days validity. To extend the validity of certificates (or) to change the subject name, make the following modifications to **dockerfile** then re-build the docker image.
 
-    * _To extend the certificate validity to 365 days_
-        1. Replace `RUN yum -y install openssl git \` with `RUN yum -y install openssl git sed \`
-      
-        1. Add following extra line after `&& chmod 700 startup.sh`
-            ```powershell
-            RUN sed -i -e '/days_till_expire/s/30/365/' certGen.sh
-            ```
-
-    * _To customize the subject name_  
-        1. Add the below line before the "ENTRYPOINT [ "/work/startup.sh" ]
-            ```powershell
-            RUN sed -i -e 's/turbofanGateway/sampleedgedevice/' startup.sh
-            ```
 You can also use your own root CA certificate in case you have a (test) PKI for downstream devices and edge devices. In any of the two latter cases, replace the private key, certificate chain, and root CA cert.
-
-Copy the above generated sample PKI certificates i.e. private key 'new-edge-device.key.pem', certificate chain 'new-edge-device-full-chain.cert.pem', root CA cert 'azure-iot-test-only.root.ca.cert.pem' for authenticating the IoT Edge Device to the folder 'C:\certs' for future use.
 
 Go to [Next Step](./Develop%20the%20Windows%20C%23%20UWP%20Application.MD)  
