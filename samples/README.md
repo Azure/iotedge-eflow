@@ -4,11 +4,11 @@
 
 # Azure EFLOW Samples
 
-This repo contains samples to help customers get started with Azure IoT Edge for Linux on Windows (EFLOW). Many of these samples demonstrate end-to-end scenarios such as detecting defects on a manufacturing line, as well samples that focus on specific features such as TPM passthrough. Serveral samples demonstrate interoperatibility between Windows 10 and the EFLOW Linux VM. For more information on EFLOW, please visit the [EFLOW documentation](https://docs.microsoft.com/en-us/windows/iot/iot-enterprise/azure-iot-edge-for-linux-on-windows).
+This repo contains samples to help customers get started with Azure IoT Edge for Linux on Windows (EFLOW). Many of these samples demonstrate end-to-end scenarios such as detecting defects on a manufacturing line, as well samples that focus on specific features such as TPM passthrough. Serveral samples demonstrate interoperatibility between Windows and the EFLOW Linux VM. For more information on EFLOW, please visit the [EFLOW documentation](https://docs.microsoft.com/en-us/windows/iot/iot-enterprise/azure-iot-edge-for-linux-on-windows).
 
 ## Prerequisites
 
-1. Some samples require Visual Studio and the Windows Software Development Kit (SDK) for Windows 10. A free copy of Visual Studio Community Edition with support for building Universal Windows Platform apps can be found on [Windows Dev Center](http://go.microsoft.com/fwlink/p/?LinkID=280676)
+1. Some samples require Visual Studio and the Windows Software Development Kit (SDK) for Windows 10 or Windows 11. A free copy of Visual Studio Community Edition with support for building Universal Windows Platform apps can be found on [Windows Dev Center](http://go.microsoft.com/fwlink/p/?LinkID=280676)
 2. Additionally, to stay on top of the latest updates to Windows and the development tools, become a Windows Insider by joining the [Windows Insider Program](https://insider.windows.com/) (optional).
 
 > **Note:** If you are unfamiliar with Git and GitHub, you can download the entire collection as a 
@@ -29,6 +29,7 @@ First party samples that illustrate end-to-end scenarios, focusing on Edge AI.
 
 
 #### Third-Party Samples
+Additional samples created by third-party partners. Links may point to repositories or webpages not hosted or maintained by Microsoft. 
 |Sample           | Name           | Description      |  
 |-----------------|----------------|------------------| 
 |![image](https://user-images.githubusercontent.com/7762651/209264369-65efc8b4-232f-46ea-a74e-fd3ebb923abe.png)|  [Industrial Safety and Impeller Defect Detection](https://github.com/scalers-ai/factorysolutions) | Created by [Scalers AI](https://www.scalers.ai/), this sample uses Intel iGPU-accelerated computer vision for anomaly detection in a manufacturing environment.  For more information and links to the video guide visit [this blog post](https://techcommunity.microsoft.com/t5/internet-of-things-blog/simplify-and-accelerate-development-and-deployment-of-computer/ba-p/3546418).
