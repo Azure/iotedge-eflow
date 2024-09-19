@@ -8,7 +8,7 @@
     ╚═╝  ╚═╝ ╚══════╝  ╚═════╝  ╚═╝  ╚═╝ ╚══════╝     ╚══════╝ ╚═╝      ╚══════╝  ╚════╝    ╚═╝   ╚═╝
 
 # Azure IoT Edge for Linux on Windows
-Welcome to the home of Azure IoT Edge for Linux on Windows, a composite project enabling the abilty to run Linux-based Edge modules on Windows using a curated virtual machine based on [CBL Mariner Linux](https://github.com/microsoft/CBL-Mariner) with [Azure IoT Edge](https://github.com/Azure/iotedge) built-in.  
+Welcome to the home of Azure IoT Edge for Linux on Windows, a composite project enabling the abilty to run Linux-based Edge modules on Windows using a curated virtual machine based on [Azure Linux](https://github.com/microsoft/azurelinux) with [Azure IoT Edge](https://github.com/Azure/iotedge) built-in.  
 
 
 _Azure IoT Edge for Linux on Windows supports the following versions:_
