@@ -22,6 +22,7 @@ New-Variable -Option Constant -ErrorAction SilentlyContinue -Name eflowProducts 
     "Azure IoT Edge CR ARM64" = "https://aka.ms/AzEFLOWMSI-CR-ARM64"
     "Azure IoT Edge 1.4 LTS X64"   = "https://aka.ms/AzEFLOWMSI_1_4_LTS_X64"
     "Azure IoT Edge 1.4 LTS ARM64" = "https://aka.ms/AzEFLOWMSI_1_4_LTS_ARM64"
+    "Azure IoT Edge 1.5 LTS X64"   = "https://aka.ms/AzEFLOWMSI_1_5_LTS_X64"
 }
 
 New-Variable -Option Constant -ErrorAction SilentlyContinue -Name eflowProvisioningProperties -Value @{

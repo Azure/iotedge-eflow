@@ -1,8 +1,8 @@
 {
     "schemaVersion":"1.1",
     "version":"1.0",
-    "eflowProduct" : "Azure IoT Edge LTS",
-    "eflowProductUrl" : "https://aka.ms/AzEFLOW-X64-1_5_2_21114",
+    "eflowProduct" : "Azure IoT Edge 1.5 LTS X64",
+    "eflowProductUrl" : "https://aka.ms/AzEFLOWMSI_1_5_LTS_X64",
     "installOptions":{
         "installPath":"d:\\eflow\\",
         "vhdxPath":"d:\\eflow\\vhdx"
