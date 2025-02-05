@@ -161,7 +161,7 @@ function Test-EadUserConfigNetwork {
                 Write-Host "Error: adapterName required for External switch" -ForegroundColor Red
                 $errCnt += 1
             } else {
-                $nwadapters = (Get-NetAdapter -Physical) | Where-Object { $_.Status -eq "Up" }
+                $nwadapters = (Get-NetAdapter -Physical) | Where-Object { $_.Status -eq 'Up' -and $_.ConnectorPresent } | Select-Object -First 1
                 if ($nwadapters.Name -notcontains ($nwCfg.adapterName)) {
                     Write-Host "Error: $($nwCfg.adapterName) not found. External switch creation will fail." -ForegroundColor Red
                     $errCnt += 1
@@ -630,7 +630,15 @@ function Invoke-EadEflowInstall {
     }
     Write-Host "Installing $reqProduct from $url"
     $ProgressPreference = 'SilentlyContinue'
-    Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
+    
+    # BSINGH - Custom  check
+    if (Test-Path -Path ".\AzureIoTEdge.msi") {
+        Write-Host "Using existing AzureIoTEdge.msi file"
+    } else {
+        Write-Host "Downloading AzureIoTEdge.msi..."
+        Invoke-WebRequest $url -OutFile .\AzureIoTEdge.msi
+    }
+    
     $argList = '/I AzureIoTEdge.msi /qn '
     if ($eflowConfig.installOptions) {
         $installPath = $eflowConfig.installOptions.installPath
@@ -644,7 +652,7 @@ function Invoke-EadEflowInstall {
     }
     Write-Host $argList
     Start-Process msiexec.exe -Wait -ArgumentList $argList
-    Remove-Item .\AzureIoTEdge.msi
+    # Remove-Item .\AzureIoTEdge.msi
     $ProgressPreference = 'Continue'
     Write-Host "$reqProduct successfully installed"
     return $true
@@ -1030,7 +1038,7 @@ function New-EadEflowVmSwitch {
 
         New-NetNat -Name "$($nwCfg.vSwitchName)-NAT" -InternalIPInterfaceAddressPrefix $natPrefix |  Out-Null
     } else {
-        $nwadapters = (Get-NetAdapter -Physical -ErrorAction SilentlyContinue) | Where-Object { $_.Status -eq "Up" }
+        $nwadapters = (Get-NetAdapter -Physical -ErrorAction SilentlyContinue) | Where-Object { $_.Status -eq 'Up' -and $_.ConnectorPresent } | Select-Object -First 1
         if ($nwadapters.Name -notcontains ($nwCfg.adapterName)) {
             Write-Host "Error: $($nwCfg.adapterName) not found. External switch not created." -ForegroundColor Red
             return $false

@@ -2,8 +2,42 @@
     "schemaVersion":"1.1",
     "version":"1.0",
     "eflowProduct" : "Azure IoT Edge LTS",
+    "eflowProductUrl" : "https://aka.ms/AzEFLOW-X64-1_5_2_21114",
+    "installOptions":{
+        "installPath":"d:\\eflow\\",
+        "vhdxPath":"d:\\eflow\\vhdx"
+    },
     "enduser":{
         "acceptEula" : "Yes",
-        "acceptOptionalTelemetry" : "Yes"
+        "acceptOptionalTelemetry" : "No"
+    },
+    "network":{
+        "adapterName": "Ethernet",
+        "vswitchName" : "ExternalSwitch",
+        "vswitchType" : "External",
+        "ip4Address": "192.168.52.2",
+        "ip4GatewayAddress": "192.168.52.21",
+        "ip4PrefixLength" : "24",
+        "useHostProxy" : false,
+        "httpProxy":"",
+        "httpsProxy":"",
+        "ftpProxy" :"",
+        "dnsServers":["8.8.8.8"]
+    },
+    "vmConfig":{
+        "cpuCount" : 2,
+        "memoryInMB" : 2048
+    },
+    "eflowProvisioning":{
+        "provisioningType" : "",
+        "devConnString" : "",
+        "iotHubHostname" : "",
+        "deviceId" : "",
+        "scopeId" : "",
+        "symmKey": "",
+        "registrationId" : "",
+        "identityCertPath" : "",
+        "identityPrivKeyPath" : "",
+        "globalEndpoint" : ""
     }
 }
