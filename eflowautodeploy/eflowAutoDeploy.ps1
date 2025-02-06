@@ -1133,11 +1133,11 @@ function Enable-Ping {
     Write-Host "Ping enabled on EFLOW VM."
 }
 
-$remoteDaemonJsonPathTemp = "/tmp/daemon.json"
-$remoteDaemonJsonPath = "/etc/docker/daemon.json"
-
 # Function to update the EFLOW VM docker configuration
 function Update-DockerConfig {
+    $remoteDaemonJsonPathTemp = "/tmp/daemon.json"
+    $remoteDaemonJsonPath = "/etc/docker/daemon.json"
+
     try{
         Write-Host "Update the EFLOW VM docker configuration..."
 
@@ -1158,6 +1158,43 @@ function Update-DockerConfig {
     }
 }
 
+function Add-ConfigSettings {
+    $tomlFile = "/etc/aziot/config.toml"
+    $tomlConfigFile = "eflow-tomlconfig.txt"
+    $vmTempFile = "/tmp/toml-config-temp.txt"  # Temporary file inside EFLOW VM
+
+    try {
+        # Copy the TOML config file into the EFLOW VM
+        Write-Host "Copying TOML config file to EFLOW VM..."
+        Copy-EflowVmFile -fromFile (Join-Path $PSScriptRoot $tomlConfigFile) -toFile $vmTempFile -pushFile
+
+        # Append the config file inside EFLOW VM
+        Write-Host "Appending TOML config to $tomlFile inside EFLOW VM..."
+        Invoke-EflowVmCommand -command "sudo bash -c 'cat $vmTempFile >> $tomlFile'"
+
+        Write-Host "TOML config appended successfully."
+
+        # Apply the configuration changes inside EFLOW VM
+        Write-Host "Applying configuration to Azure IoT Edge..."
+        Invoke-EflowVmCommand -command "sudo iotedge config apply"
+
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "Configuration applied successfully."
+        }
+        else {
+            Write-Error "Failed to apply configuration. Exit code: $LASTEXITCODE"
+        }
+
+        # Cleanup: Remove the temporary file inside EFLOW VM
+        Write-Host "Cleaning up temporary files..."
+        Invoke-EflowVmCommand -command "sudo rm -f $vmTempFile"
+        Write-Host "Cleanup complete."
+    }
+    catch {
+        Write-Error "Error: $_"
+    }
+}
+
 ### MAIN ###
 # Get Host PC information on loading of this script
 Get-HostPcInfo
@@ -1166,6 +1203,7 @@ if ($AutoDeploy) {
     if (Start-EadWorkflow) {
         Enable-Ping
         Update-DockerConfig
+        Add-ConfigSettings
         Write-Host "Deployment Successful"
     } else {
         Write-Error -Message "Deployment failed" -Category OperationStopped
