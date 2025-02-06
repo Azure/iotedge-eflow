@@ -1133,6 +1133,31 @@ function Enable-Ping {
     Write-Host "Ping enabled on EFLOW VM."
 }
 
+$remoteDaemonJsonPathTemp = "/tmp/daemon.json"
+$remoteDaemonJsonPath = "/etc/docker/daemon.json"
+
+# Function to update the EFLOW VM docker configuration
+function Update-DockerConfig {
+    try{
+        Write-Log "Update the EFLOW VM docker configuration..."
+
+        # Upload the daemon.json to a temp location on the EFLOW VM
+        Write-Host "Uploading daemon.json to EFLOW VM tmp..."
+        Copy-EflowVmFile -fromFile (Join-Path $PSScriptRoot "eflow-dockerdaemon.json") -toFile $remoteDaemonJsonPathTemp -pushFile
+
+        # Move it to /etc/docker using sudo
+        Write-Host "Moving it /etc/docker..."
+        Invoke-EflowVmCommand -Command "sudo mv '$remoteDaemonJsonPathTemp' $remoteDaemonJsonPath"
+
+        # Restart Docker to apply new configuration
+        Write-Host "Restarting Docker service to apply changes..."
+        Invoke-EflowVmCommand -Command "sudo systemctl restart docker"
+    }
+    catch {
+        Write-Log "Failed to update the EFLOW VM container logging configuration: $($_.Exception.Message)" "ERROR"
+    }
+}
+
 ### MAIN ###
 # Get Host PC information on loading of this script
 Get-HostPcInfo
@@ -1140,6 +1165,7 @@ Get-HostPcInfo
 if ($AutoDeploy) {
     if (Start-EadWorkflow) {
         Enable-Ping
+        Update-DockerConfig
         Write-Host "Deployment Successful"
     } else {
         Write-Error -Message "Deployment failed" -Category OperationStopped
