@@ -1127,12 +1127,19 @@ function Start-EadWorkflow {
     return $true
 }
 
+function Enable-Ping {
+    Write-Host "Enabling ping on EFLOW VM..."
+    Invoke-EflowVmCommand "sudo iptables -A INPUT -p icmp --icmp-type 8 -s 0/0 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT"
+    Write-Host "Ping enabled on EFLOW VM."
+}
+
 ### MAIN ###
 # Get Host PC information on loading of this script
 Get-HostPcInfo
 # If autodeploy switch is specified, start eflow deployment with the default json file path (.\eflow-userconfig.json)
 if ($AutoDeploy) {
     if (Start-EadWorkflow) {
+        Enable-Ping
         Write-Host "Deployment Successful"
     } else {
         Write-Error -Message "Deployment failed" -Category OperationStopped
