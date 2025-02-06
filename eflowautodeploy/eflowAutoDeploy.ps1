@@ -1139,7 +1139,7 @@ $remoteDaemonJsonPath = "/etc/docker/daemon.json"
 # Function to update the EFLOW VM docker configuration
 function Update-DockerConfig {
     try{
-        Write-Log "Update the EFLOW VM docker configuration..."
+        Write-Host "Update the EFLOW VM docker configuration..."
 
         # Upload the daemon.json to a temp location on the EFLOW VM
         Write-Host "Uploading daemon.json to EFLOW VM tmp..."
@@ -1154,7 +1154,7 @@ function Update-DockerConfig {
         Invoke-EflowVmCommand -Command "sudo systemctl restart docker"
     }
     catch {
-        Write-Log "Failed to update the EFLOW VM container logging configuration: $($_.Exception.Message)" "ERROR"
+        Write-Host "Failed to update the EFLOW VM container logging configuration: $($_.Exception.Message)" "ERROR"
     }
 }
 
