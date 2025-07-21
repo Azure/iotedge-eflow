@@ -18,7 +18,7 @@ Remove-Item -Recurse -Force -Path "$env:UserProfile\.wssd\nodectl"
 
 & "$env:ProgramFiles\Azure IoT Edge\nodectl.exe" security login --loginpath "$env:Programdata\wssdagent\nodelogin.yaml" --identity
 Start-Sleep 15
-Copy-Item -Path "$env:UserProfile\.wssd\nodectl\cloudconfig"  -Destination "$env:Programdata\azure iot edge\protected\.wssd\cloudconfig" -Force
+Copy-Item -Path "$env:UserProfile\.wssd\nodectl\cloudconfig" -Destination "$env:Programdata\azure iot edge\protected\.wssd\cloudconfig" -Force
 
 Remove-Item -Recurse -Force -Path "$env:UserProfile\.wssd\nodectl"
 
