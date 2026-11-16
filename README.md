@@ -11,16 +11,9 @@
 Welcome to the home of Azure IoT Edge for Linux on Windows, a composite project enabling the abilty to run Linux-based Edge modules on Windows using a curated virtual machine based on [Azure Linux](https://github.com/microsoft/azurelinux) with [Azure IoT Edge](https://github.com/Azure/iotedge) built-in.  
 
 
-_Azure IoT Edge for Linux on Windows supports the following versions:_
-- 1.4 LTS using Azure IoT Edge 1.4 LTS - **Generally Available**. 
-  - [Generally Availability Announcement](https://aka.ms/AzEFLOW-LTS-Blog)
+**EFLOW 1.6 LTS** is the latest long-term support release of Azure IoT Edge for Linux on Windows. It includes Azure IoT Edge 1.6 LTS on Azure Linux 3.0 and is available for X64/AMD64 devices only.
 
-- Continuous Release (CR) using Azure IoT Edge 1.3 currently in **Public Preview**. 
-  - [Public Preview Announcement](https://azure.microsoft.com/en-us/updates/public-preview-azure-iot-edge-for-linux-on-windows-eflow-update/)
-  
-_Azure IoT Edge for Linux on Windows unsupported versions:_
-
- - 1.1 LTS using Azure IoT Edge 1.1 LTS - **End of Life as of December 13, 2022**. 
+[Download EFLOW 1.6.1.11026](https://www.microsoft.com/en-us/download/details.aspx?id=108917)
 
 ## Getting Started
 
